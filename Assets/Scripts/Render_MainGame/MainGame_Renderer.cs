@@ -26,7 +26,6 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
-			print(RespawnNodes);
 			RespawnNodes = false;
 			GameObject.Find("GameControl").GetComponent<GameController>().NodeChange = false;
 			// Delete Existing
@@ -35,7 +34,6 @@ public class MainGame_Renderer : MonoBehaviour {
 			}
 			Nodes = new List<GameObject>();
 			NodeIDX = new List<int>();
-			print("GetNodes");
 			GetNodes();
 		}
 		// Check for newly purchased nodes

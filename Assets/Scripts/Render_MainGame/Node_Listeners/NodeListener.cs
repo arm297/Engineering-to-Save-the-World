@@ -18,7 +18,6 @@ public class NodeListener : MonoBehaviour {
 		purchase.onClick.AddListener(PurchaseNode);
 		//test = gameObject.transform.Find("Test").GetComponent<Button>();
 		test.onClick.AddListener(TestNode);	
-		print("initialized "+idx);
 	}
 
 	// Send purchase request and idx to GameController

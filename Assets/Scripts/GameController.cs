@@ -274,6 +274,19 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].Purchaseable = false;
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
+				// Populate Parent Information
+				// Get List of Neighboring Nodes
+				List<int> neighbors = NeighborFinder(idx);
+				// Get List of Purchased non-broken Neighbors
+				List<int> parents = new List<int>();
+				foreach (int idxj in neighbors){
+					if(NodeList[idxj].Purchased && !NodeList[idxj].Broken){
+						parents.Add(idxj);
+					}
+				}
+				// Save Parents to node idx
+				NodeList[idx].Parents = parents;
+
 				return "Purchased Node ";
 			}else{
 				return "Insufficient Funds";
