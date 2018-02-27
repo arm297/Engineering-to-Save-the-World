@@ -15,27 +15,31 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
-	public bool RespawnNodes = true;
+	public bool RespawnNodes = false;
 
 	// Use this for initialization
 	void Start () {
-		GetNodes();
+		RespawnNodes = true;
+		//GetNodes();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(RespawnNodes){
+		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
+			print(RespawnNodes);
 			RespawnNodes = false;
+			GameObject.Find("GameControl").GetComponent<GameController>().NodeChange = false;
 			// Delete Existing
 			foreach(GameObject node in Nodes){
 				Destroy(node);
 			}
 			Nodes = new List<GameObject>();
 			NodeIDX = new List<int>();
+			print("GetNodes");
 			GetNodes();
 		}
 		// Check for newly purchased nodes
-		GetNodes();
+		//GetNodes();
 	}
 
 	// Instantiate Nodes if visible
@@ -46,11 +50,8 @@ public class MainGame_Renderer : MonoBehaviour {
 		gc = temp_GC.GetComponent<GameController>();
 		var temp = gc.NodeList;
 		
-		//float X_Space = (float)CanvasWidth / gc.Width;
-		//float Y_Space = (float)CanvasHeight / gc.Height;
-
-		int idx = 0;
 		foreach (var node in temp){
+			int idx = node.IDX;
 			if(DisplayAllNodes){
 				Nodes.Add(CreateNodeGameObject(node,idx));
 				NodeIDX.Add(idx);
@@ -64,7 +65,6 @@ public class MainGame_Renderer : MonoBehaviour {
 					}
 				}
 			}
-			idx = idx + 1;
 		}
 	}
 
@@ -78,6 +78,24 @@ public class MainGame_Renderer : MonoBehaviour {
 		GameObject NodeGameObject =  (GameObject)Instantiate(Node, new Vector3(x*X_Space, y*Y_Space, 0), Quaternion.identity);
 		NodeGameObject.transform.SetParent(canvas.transform);
 		NodeGameObject.GetComponent<NodeListener>().idx = idx;
+		NodeGameObject.GetComponent<NodeListener>().InitializeNode();
+		// If node is purchaseable, then set Purchase Button to active
+		if (node.Purchaseable){
+			NodeGameObject.GetComponent<NodeListener>().purchase.interactable = true;
+		}else{
+			NodeGameObject.GetComponent<NodeListener>().purchase.interactable = false;
+			NodeGameObject.GetComponent<NodeListener>().HidePurchaseButton();
+		}
+		//todo implement testing
+		//TESTING IS CURRENTLY DISABLED
+		bool test_disabled = true;
+		// If node is purchased and not tested, then set Test Button to active
+		if (!node.Tested && node.Purchased && !test_disabled){
+			NodeGameObject.GetComponent<NodeListener>().test.interactable = true;
+		}else{
+			NodeGameObject.GetComponent<NodeListener>().test.interactable = false;
+			NodeGameObject.GetComponent<NodeListener>().HideTestButton();
+		}
 		return NodeGameObject;
 	}
 }

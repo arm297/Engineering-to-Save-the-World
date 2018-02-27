@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour {
 	public float InitialLabor = 20;
 	public float InitialFame = 0;
 	public float EventChance = 0.5f;
+	public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
 
 
 	// LOADABLE SCENES
@@ -50,7 +51,7 @@ public class GameController : MonoBehaviour {
 	//The below class stores Node Data. It is callable through GameObject.
     public class NodeData
     {
-        public int ID { get; set; }
+        public int IDX { get; set; }
 		public string Name { get; set; }
 		public int X { get; set; }
 		public int Y { get; set; }
@@ -123,14 +124,16 @@ public class GameController : MonoBehaviour {
 		int n_starting_purchaseable = 5;  // Initial number of visible nodes at start of game
 
 		// Loop through horizontal
+		int nodeIndex = 0; // index
 		for (int i = 0; i <= X; i++)
         {
 			// Loop through vertical
 			for (int j = 0; j <= Y; j++)
 			{
 				NodeData n = new NodeData();
-				n.ID = i*Y + j;
-				n.Name = "node "+n.ID;
+				n.IDX = nodeIndex;
+				nodeIndex += 1;
+				n.Name = "node "+n.IDX;
 				n.X = i;
 				n.Y = j;
 				n.CostActual = BaseCost * Random.Range(0.8f, 1.5f);
@@ -211,9 +214,12 @@ public class GameController : MonoBehaviour {
 			if(node.Purchased){
 				List<int> neighbors = NeighborFinder(idx);
 				foreach (int idxj in neighbors){
-					NodeList[idxj].Purchaseable = true;
-					NodeList[idxj].Visible = true;
-					NodeList[idxj].Obscured = false;
+					if(!NodeList[idxj].Purchased)
+					{
+						NodeList[idxj].Purchaseable = true;
+						NodeList[idxj].Visible = true;
+						NodeList[idxj].Obscured = false;
+					}	
 				}
 			}else if(node.Purchaseable){
 				List<int> neighbors = NeighborFinder(idx);
@@ -221,8 +227,6 @@ public class GameController : MonoBehaviour {
 					NodeList[idxj].Visible = true;
 				}
 			}
-
-			idx = idx + 1;
 		}
 	}
 
@@ -256,6 +260,27 @@ public class GameController : MonoBehaviour {
 		Player.Name = "todo";
 		Player.Title = "Project Manager";
 		Player.Fame = InitialFame;
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	// Functions that alter GameController Data
+
+	// Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
+	public string PurchaseNode(int idx){
+		if(NodeList[idx].Purchaseable){
+			if(NodeList[idx].CostActual <= Player.Funds){
+				Player.Funds = Player.Funds - NodeList[idx].CostActual;
+				NodeList[idx].Purchased = true;
+				NodeList[idx].Purchaseable = false;
+				NodeNeighborhoodCheck(idx);
+				NodeChange = true;
+				return "Purchased Node ";
+			}else{
+				return "Insufficient Funds";
+			}
+		}else{
+			return "Node not Purchaseable.";
+		}
 	}
 
 }

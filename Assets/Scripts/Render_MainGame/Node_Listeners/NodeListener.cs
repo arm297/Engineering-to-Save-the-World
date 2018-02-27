@@ -7,25 +7,25 @@ public class NodeListener : MonoBehaviour {
 
 	// The ONLY piece of data copied and stored (for identification)
 	public int idx;
+	public Button purchase; // the purchase button
+	public Button test;  // the test button
+	private bool Initialized = false;
 
 	// Use this for initialization
 	void Start () {
-		Button purchase = gameObject.transform.Find("Purchase").GetComponent<Button>();
+		InitializeNode();
+		//purchase = gameObject.transform.Find("Purchase").GetComponent<Button>();
 		purchase.onClick.AddListener(PurchaseNode);
-		Button test = gameObject.transform.Find("Test").GetComponent<Button>();
+		//test = gameObject.transform.Find("Test").GetComponent<Button>();
 		test.onClick.AddListener(TestNode);	
+		print("initialized "+idx);
 	}
 
 	// Send purchase request and idx to GameController
 	// Or Control Logic Here with understanding that it could be moved to GameController
 	void PurchaseNode(){
-		//todo: check if adequate funds exist
-		//todo: subtract node cost from funds
-		print(idx);
-		// Mark Node as purchased
-		GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].Purchased = true;
-		// Search for neighbors and mark as 'Visible' (handled in GameController.NodeNeighboorhoodCheck())
-		GameObject.Find("GameControl").GetComponent<GameController>().NodeNeighborhoodCheck(idx);
+		// Use GameController convienence function to purchase node idx
+		GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
 	}
 
 	// Method tests node. May result in either this node breaking, or other untested nodes.
@@ -33,4 +33,25 @@ public class NodeListener : MonoBehaviour {
 	void TestNode(){
 
 	}
+
+	// Abstracted Initialization, as Start() will not run before end of MainGame_Renderer
+	//  and as MainGame_Renderer requires buttons to be initialized prior to displaying buttons appropriately
+	public void InitializeNode(){
+		if(!Initialized){
+			purchase = gameObject.transform.Find("Purchase").GetComponent<Button>();
+			test = gameObject.transform.Find("Test").GetComponent<Button>();
+			Initialized = true;
+		}
+	}
+
+	// Hides Purchase Button
+	public void HidePurchaseButton(){
+		gameObject.transform.Find("Purchase").transform.localScale = new Vector3(0, 0, 0);
+	}
+
+	// Hides Test Button
+	public void HideTestButton(){
+		gameObject.transform.Find("Test").transform.localScale = new Vector3(0, 0, 0);
+	}	
+
 }
