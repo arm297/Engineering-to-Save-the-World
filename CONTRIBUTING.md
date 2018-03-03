@@ -1,4 +1,10 @@
-# Guidelines
+# Contribution Details and Guidelines
+
+## General
+
+This project is implemented using Unity. Anyone wishing to learn Unity can look through and attempt their [tutorials](https://unity3d.com/learn/tutorials). The [Unity API](https://docs.unity3d.com/ScriptReference/) provides further reference on using their library. 
+
+The behavioral scripts are writen in C#. A good tutorial for learning C# can found [here](http://csharp.net-tutorials.com/).
 
 ### C# Coding Style
 
@@ -16,8 +22,12 @@ A quick summary:
 For larger changes and modifying files multiple people are working on, commit your changes to branches.
 
 1. Add informative comments explaining what you changed and why, instead of how.
-2. When you create a pull request for your branch, make sure it is rebased on top of master.
+2. When you create a pull request for your branch, make sure it is rebased, or merged on top of master. See more information about rebasing vs merging [here](https://hackernoon.com/git-merge-vs-rebase-whats-the-diff-76413c117333).
 3. Before creating a pull request, be sure that your modifications still build and run the project.
 4. If you changed a file someone else is working on, be sure to notify then, and try to make them review your changes.
 
 For more information, refer to the [GitHub Help Page](https://help.github.com/).
+
+### General Issues
+
+If you notice an issue or can think of a good feature to add, place a description of the task under Issues.
