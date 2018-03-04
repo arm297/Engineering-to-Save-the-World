@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainGame_Renderer : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	public GameObject Node;  // Must drag and drop Node prefab onto Node in Unity
 	public float X_Space;  // Spacing between nodes (horizontal)
 	public float Y_Space;  // Spacing between nodes (vertical)
+	public GameObject ProfileSettingPrefab; // Profile setting prefab
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
@@ -95,5 +97,32 @@ public class MainGame_Renderer : MonoBehaviour {
 			NodeGameObject.GetComponent<NodeListener>().HideTestButton();
 		}
 		return NodeGameObject;
+	}
+
+	// Changes the profile setting, includes name, fund, and labor
+	public void ProfileSettingChange() {
+		GameObject ProfileBox = GameObject.Find ("Profile");
+		GameObject SettingButtonGO = GameObject.Find ("SettingButton");
+
+		if (SettingButtonGO.GetComponentInChildren<Text> ().text == "Setting") { // Start profile setting
+			GameObject ProfileSettingBox = (GameObject)Instantiate(ProfileSettingPrefab, ProfileBox.transform.position, Quaternion.identity, ProfileBox.transform);
+			ProfileSettingBox.name = "ProfileSettingBox";
+			SettingButtonGO.GetComponentInChildren<Text> ().text = "Apply";
+		} else if (SettingButtonGO.GetComponentInChildren<Text> ().text == "Apply") { // Apply the profile setting
+			GameObject ProfileSettingBox = GameObject.Find("ProfileSettingBox");
+			GameObject.Find ("ProfileNameText").GetComponent<Text> ().text = GameObject.Find ("ProfileNameInputField").GetComponent<InputField> ().text;
+			GameObject.Find ("ProfileFundText").GetComponent<Text> ().text = GameObject.Find ("ProfileFundInputField").GetComponent<InputField> ().text;
+			GameObject.Find ("ProfileLaborText").GetComponent<Text> ().text = GameObject.Find ("ProfileLaborInputField").GetComponent<InputField> ().text;
+			/* Changes directly on Player profile
+			 * GameObject GameControlGO = GameObject.Find ("GameControl");
+			 * GameControlGO.GetComponent<GameController> ().Player.Name = GameObject.Find ("ProfileNameInputField").GetComponent<InputField> ().text;
+			 * GameControlGO.GetComponent<GameController> ().Player.Funds = float.Parse(GameObject.Find ("ProfileFundInputField").GetComponent<InputField> ().text);
+			 * GameControlGO.GetComponent<GameController> ().Player.Labor = float.Parse(GameObject.Find ("ProfileLaborInputField").GetComponent<InputField> ().text);
+			*/
+			SettingButtonGO.GetComponentInChildren<Text> ().text = "Setting";
+			Destroy (ProfileSettingBox);
+		} else { // Error Fix
+			SettingButtonGO.GetComponentInChildren<Text> ().text = "Setting";
+		}
 	}
 }
