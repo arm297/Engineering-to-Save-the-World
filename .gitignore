@@ -11,10 +11,8 @@ ExportedObj/
 obj/
 *.svd
 *.userprefs
-/*.csproj
 *.pidb
 *.suo
-/*.sln
 *.user
 *.unityproj
 *.booproj
@@ -24,7 +22,6 @@ obj/
 # ============ #
 .DS_Store
 .DS_Store?
-._*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
