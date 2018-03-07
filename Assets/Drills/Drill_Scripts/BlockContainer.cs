@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /**
- * Behavior for containers to place dragged objects into.
+ * Behavior for containers to place dragged objects into. This container can
+ * only take one dragged object.
  */
 public class BlockContainer : MonoBehaviour {
-
-    // Whether the current block is full. 
-    bool full;
-
-    // Whether the block can hold multiple components.
-    public bool containMultiple;
 
     // Highlight color when dragged object is over block.
     public Color highlightColor;
@@ -22,11 +17,14 @@ public class BlockContainer : MonoBehaviour {
     // Renderer for this container block.
     private Renderer blockRenderer;
 
+    // Whether the current block is full. 
+    private bool isFilled = false;
+
     // Bounds for this container block.
     private Bounds blockBounds;
 
-    // Drag-dropped object contained by this block, if any.
-    DragDrop containedObject;
+    // Drag-droppeds object contained by this block, if any.
+    private DragDrop containedObject;
 
 	// Use this for initialization
 	void Start() {
@@ -55,6 +53,24 @@ public class BlockContainer : MonoBehaviour {
     // Restores the block's color to the original color.
     public void RestoreColor() {
         blockRenderer.material.color = defaultColor;
+    }
+
+    // Adds a contained object if the container is not filled. Returns whether
+    // the object was added.
+    public bool AddContainedObject(DragDrop dragObject) {
+        if (!isFilled) {
+            containedObject = dragObject;
+            isFilled = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Removes the contained object of this block.
+    public void RemoveContainedObject() {
+        isFilled = false;
+        containedObject = null;
     }
 
     // Returns whether the bounds intersect in 2D space.

@@ -21,6 +21,9 @@ public class DragDropSnapInto : DragDrop {
     // Renderers of possible objects to snap into.
     private List<Renderer> snapIntoRenderers;
 
+    // Current object snapped into, or null is no containing object.
+    private GameObject containingBlock;
+
     // Checks if dragged object is over possible "snap into" location. If it 
     // is, dragged object is "snapped into" new region, depending on the
     // settings for snapping into. Otherwise, returns object to original 
@@ -30,21 +33,32 @@ public class DragDropSnapInto : DragDrop {
         foreach(Renderer r in snapIntoRenderers) {
             BlockContainer rBlock = r.GetComponent<BlockContainer>();
             if (rBlock.Intersects2D(GetComponent<DragDrop>())) {
-                overSnapRegion = true;
- 
-                // Snaps object into region
-                if (snapCenter) {
-                    SnapIntoCenter(r.gameObject);
-                } else {
-                
+
+                if (rBlock.AddContainedObject(GetComponent<DragDrop>())) {
+                    containingBlock = rBlock.gameObject;
+                    overSnapRegion = true;
+                    // Snaps object into region
+                    if (snapCenter) {
+                        SnapIntoCenter(r.gameObject);
+                    } else {
+                    
+                    }
+                    break;
                 }
-                break;
             }
         }
-
+ 
         // Resets dragged object if not over "snap into" region.
         if (!overSnapRegion) {
             transform.position = originalPos;
+        }
+    }
+
+    // Resets the containing block, if there is one.
+    void OnMouseDown() {
+        if (containingBlock != null) {
+            containingBlock.GetComponent<BlockContainer>().RemoveContainedObject();
+            containingBlock = null;
         }
     }
 
@@ -55,12 +69,6 @@ public class DragDropSnapInto : DragDrop {
         snapIntoObjects = new List<GameObject>(
             GameObject.FindGameObjectsWithTag("snap_into"));
         snapIntoRenderers = new List<Renderer>();
-
-        // If object expands into region, store minimum size.
-        if (snapEntire) {
-            originalSize = objectRenderer.bounds.size();
-        }
-
         foreach(GameObject go in snapIntoObjects) {
             snapIntoRenderers.Add(go.GetComponent<Renderer>());
         }
@@ -74,7 +82,7 @@ public class DragDropSnapInto : DragDrop {
 
     // Moves the dragged object into the region, but not into the center.    
     private void SnapIntoRegion(GameObject snapToRegion) {
-        Vector3 snapToPos = SnapIntoRegion.transform.position;
+        Vector3 snapToPos = snapToRegion.transform.position;
         Vector3 dragObjectPos = transform.position;
 
         // Get the screen coordinates of drag object and "snap into" region.
@@ -82,13 +90,13 @@ public class DragDropSnapInto : DragDrop {
         Vector3 screenDragObjectPos = Camera.main.WorldToScreenPoint(dragObjectPos);
 
         // Find new position for the dragged object.
-        float dx = 0.5;
-        float dz = 0.5;
+        float dx = 0.5f;
+        float dz = 0.5f;
         transform.position = new Vector3(
             dragObjectPos.x + dx, 
             dragObjectPos.y, 
             dragObjectPos.z + dz);
-        Vector3 screenMovedPos = Camera.main.WorldToScreenPoint(transform.temp);
+        Vector3 screenMovedPos = Camera.main.WorldToScreenPoint(transform.position);
         float xCoeff = dx / (screenMovedPos.x - screenDragObjectPos.x);
         float zCoeff = dz / (screenMovedPos.z - screenDragObjectPos.z);
         float xMove = xCoeff * (screenSnapToPos.x - screenDragObjectPos.x);
