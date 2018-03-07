@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 /**
  * Basic Drag drop behavior. Highlights moused over objects and moves selected
@@ -22,24 +21,13 @@ public class DragDrop : MonoBehaviour {
     protected bool selected;
 
     // Highlight moused over objects
-    protected void OnMouseEnter()
-    {
+    protected void OnMouseEnter() {
         objectRenderer.material.color = highlightColor;
     }
 
     // Reset default color of object.
-    protected void OnMouseExit()
-    {
-        if (!selected)
-        {
+    protected void OnMouseExit() {
             objectRenderer.material.color = defaultColor;
-        }
-    }
-
-
-    protected void OnMouseDown()
-    {
-        selected = true;
     }
 
     protected void OnMouseDrag()
@@ -56,14 +44,8 @@ public class DragDrop : MonoBehaviour {
                 positionMove.z);
     }
 
-    protected void OnMouseUpAsButton()
-    {
-        selected = false;   
-    }
-
     // Use this for initialization
-    void Start ()
-    {
+    protected void Start() {
         objectRenderer = GetComponent<Renderer>();
         defaultColor = objectRenderer.material.color;
 	}
