@@ -9,7 +9,8 @@ using UnityEngine;
 public class BlockContainer : MonoBehaviour {
 
     // Highlight color when dragged object is over block.
-    public Color highlightColor;
+    [SerializeField]
+    private Color highlightColor;
 
     // Original color of this container block.
     private Color defaultColor;
@@ -62,7 +63,8 @@ public class BlockContainer : MonoBehaviour {
             containedObject = dragObject;
             isFilled = true;
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -79,13 +81,5 @@ public class BlockContainer : MonoBehaviour {
               || b2.min.x > b1.max.x
               || b1.min.z > b2.max.z
               || b2.min.z > b1.max.z);
-    }
-
-    private List<Vector2> GetCorners2D(Bounds bounds) {
-        Vector2 topRight = new Vector2(bounds.max.x, bounds.max.z);
-        Vector2 topLeft = new Vector2(bounds.min.x, bounds.max.z);
-        Vector2 bottomRight = new Vector2(bounds.min.x, bounds.max.z);
-        Vector2 bottomLeft = new Vector2(bounds.min.x, bounds.min.z);
-        return new List<Vector2>() {topRight, topLeft, bottomRight, bottomLeft};
     }
 }

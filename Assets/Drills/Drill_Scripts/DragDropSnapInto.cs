@@ -10,7 +10,8 @@ using UnityEngine.UI;
 public class DragDropSnapInto : DragDrop {
 
     // Whether the object should snap into center.
-    public bool snapCenter;
+    [SerializeField]
+    private bool snapCenter;
 
     // Original location of the dragged object
     private Vector3 originalPos;
