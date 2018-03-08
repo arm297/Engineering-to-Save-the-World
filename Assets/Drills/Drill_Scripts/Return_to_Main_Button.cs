@@ -26,19 +26,21 @@ public class Return_to_Main_Button : MonoBehaviour {
 		Camera.main.gameObject.active = false; // Disable camera (cannot have more than 2 audio listeners)
 		//GameController.GetComponent<GameControllerScript>().ReturnToMainGame();
 		Debug.Log("Returning to main game...");
-		SceneManager.LoadScene("Master_Scene",LoadSceneMode.Single);//Additive);
+		SceneManager.LoadScene("MainGame",LoadSceneMode.Single);//Additive);
 
-		GameObject c = GameObject.Find("NodeGroup");
-		CanvasGroup cg = c.GetComponent<CanvasGroup>();
-		cg.alpha = 1f;
-     	cg.blocksRaycasts = true;
-		c = GameObject.Find("MainScene");
-		cg = c.GetComponent<CanvasGroup>();
-		cg.alpha = 1f; //this makes everything transparent
-     	cg.blocksRaycasts = true; //this prevents the UI element to receive input events
+        //TODO: Reenable all features when game controller is fixed.
+ 
+		//GameObject c = GameObject.Find("NodeGroup");
+		//CanvasGroup cg = c.GetComponent<CanvasGroup>();
+		//cg.alpha = 1f;
+     	//cg.blocksRaycasts = true;
+		//GameObject c = GameObject.Find("MainGame");
+		//Canvas cg = c.GetComponent<Canvas>();
+		//cg.alpha = 1f; //this makes everything transparent
+     	//cg.blocksRaycasts = true; //this prevents the UI element to receive input events
 		bool success = GO_with_ScoreScript.GetComponent<game_controller>().success;
 		Debug.Log("return to main game..."+success);
-		GameController.GetComponent<GameControllerScript>().ReturnToMainGame(success);
+		//GameController.GetComponent<GameControllerScript>().ReturnToMainGame();
 		//Camera.main.gameObject.active = true; // Disable camera (cannot have more than 2 audio listeners)
 
 		//c.SetActive(false);
