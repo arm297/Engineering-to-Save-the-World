@@ -30,7 +30,13 @@ public class NodeListener : MonoBehaviour {
 	// Method tests node. May result in either this node breaking, or other untested nodes.
 	// todo
 	void TestNode(){
+		List<GameController.NodeData> nodeList = GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList;
 
+		foreach (GameController.NodeData eachNode in nodeList) {
+			if (eachNode.Purchased) {
+				// Purchased condition
+			}
+		}
 	}
 
 	// Abstracted Initialization, as Start() will not run before end of MainGame_Renderer
