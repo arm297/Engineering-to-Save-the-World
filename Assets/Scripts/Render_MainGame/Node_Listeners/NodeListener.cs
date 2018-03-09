@@ -27,18 +27,6 @@ public class NodeListener : MonoBehaviour {
 		GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
 	}
 
-	// Method tests node. May result in either this node breaking, or other untested nodes.
-	// todo
-	void TestNode(){
-		List<GameController.NodeData> nodeList = GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList;
-
-		foreach (GameController.NodeData eachNode in nodeList) {
-			if (eachNode.Purchased) {
-				// Purchased condition
-			}
-		}
-	}
-
 	// Abstracted Initialization, as Start() will not run before end of MainGame_Renderer
 	//  and as MainGame_Renderer requires buttons to be initialized prior to displaying buttons appropriately
 	public void InitializeNode(){
@@ -57,6 +45,25 @@ public class NodeListener : MonoBehaviour {
 	// Hides Test Button
 	public void HideTestButton(){
 		gameObject.transform.Find("Test").transform.localScale = new Vector3(0, 0, 0);
-	}	
+	}
+
+	// When "Test" button pressed, it may result in either this node breaking, or other untested nodes.
+	public void TestNode(){
+		List<GameController.NodeData> nodeList = GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList;
+
+		foreach (GameController.NodeData eachNode in nodeList) {
+			if (eachNode.Purchased) {
+				// Purchased node condition
+			}
+
+			if (eachNode.Tested) {
+				// Tested node condition
+			}
+
+			if (eachNode.Broken) {
+				// Broken node condition
+			}
+		}
+	}
 
 }
