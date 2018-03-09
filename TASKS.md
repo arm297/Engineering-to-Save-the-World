@@ -21,7 +21,8 @@ COMP| | |3| | |Rebuild Renderer| |Brighid
 INPRG|4-Mar| |4| | |Rebuild Player Profile Display| |Yong
  | | | |1| | |Reattach display canvas| 
 INPRG|?| |5| | |Reattach Drills & Minigames| |Andrew
- | | | |1| | |Refer to correct handles in GameController| 
+ | | | |1| | |Reorganize drill source code|
+ | | | |2| | |Refer to correct handles in GameController| 
 COMP| | |6| | |Document new systems| |Brighid
  | | | |1| | |GameController| 
  | | | |2| | |Renderer| 
@@ -32,12 +33,14 @@ INPRG|?| |1| | |Identify settings & logic of interest| |
  | | |2| | |Test play with settings to identify improvement areas| | 
  | | |3| | |Document improvements| | 
 INPRG|?|3| | |Build Test System| | |Brighid
-INPRG|?|4| | |Player Score System| | |Brighid
- | | |1| | |Score system| | 
- | | |2| | |Display Score| | 
- | | |3| | |Initialize minimum system requirements| | 
- | |5| | |Aesthetics of gameplay| | |
- | | | | | |Connecting Lines| | 
+INPRG|?|4| | |Renderer System| | |Yong
+ | | | |1| | |Score system| | 
+ | | | |2| | |Display Score| | 
+ | | | |3| | |Initialize minimum system requirements| | 
+ | |5| | |Aesthetics of gameplay| | |Andrew
+ | | | |1| |Connecting Lines| | 
+ | |6| | |Code organization| | |Andrew
+ | | | |1| |Create folder for shared base behaviors| |
  | | | | | |todo| | 
 
  ### Resources
