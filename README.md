@@ -14,6 +14,8 @@ See our current [tasks summary](Documents/TasksProgress.md).
 ### Guidelines
 Make sure that any additional changes to this project follow the [Coding Guidelines](Documents/CodingGuideline.md). </br>
 In order to developing, look up the developing [Developing Guidelines](Documents/DevelopingGuideline.md).
+File List and Description
+* [GameCtonroller.cs](Documents/GameControllerDescription.md)
 
 ### Reference
 The previous repository for this project can be found [here](https://github.com/hpmsora/Project---Engineering-to-Save-the-world/tree/master).
