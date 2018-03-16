@@ -1,4 +1,4 @@
-# MainGameRenderer.cs\
+# MainGameRenderer.cs
 [Back To Main](/README.md)
 
 Reads NodeList Data in GameController and renders visible nodes on screen.
