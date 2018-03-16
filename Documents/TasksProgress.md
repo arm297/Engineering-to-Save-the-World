@@ -3,7 +3,6 @@
 <br />
 
 ### Action Log
-
 |**Status**|**ECD**|**ID**|**Sub ID**|**TASK**|**DETAILS**|   |**Person**|
 |:--------:|------:|:-----|:---------|:-------|:----------|:-:|---------:|
 |INPRG| |1| |Convert to single persisent pre-initialized datasource| | | |
@@ -46,4 +45,5 @@
 This table was generated using the [Markdown Table Generator](https://jakebathman.github.io/Markdown-Table-Generator/).
 
 </br>
+
 [Back To Main](/README.md)
