@@ -1,5 +1,5 @@
 # Developing Guidline
-[Back To Maain](/README.md)
+[Back To Main](/README.md)
 
 ### Prototype
 ![alt text](Images/Prototype.png)
