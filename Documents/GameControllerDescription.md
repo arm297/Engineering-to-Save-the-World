@@ -5,6 +5,7 @@ To do: Create trigger function which loads Drill Scene </br>
 To do: Create trigger function which loads Event</br>
 
 * Attributes:
+
   * NodeList: A list of NodeData which stores relevant information for each Node. NodeData is a class which stores attributes for a single node
   * Player: An implementation of PlayerProfile, which is a class that stores player info, such as funds, labor, name, score
   * Height: The height of the node grid, in nodes. This affects NodeList initialization.
@@ -18,6 +19,7 @@ To do: Create trigger function which loads Event</br>
   * UI_Menu: This is the scene name for the user interface menu
 
 * Functions:
+
   * Start() </br>
   Initializes the game, the NodelList and the Player, as well as loading the MainGame.
   * LoadScene(string scene_name) </br>
