@@ -9,7 +9,7 @@ Systems Engineering is one of the fastest growing and most highly demand enginee
 This project requires Unity to build and run. Instructions for Unity installation can be found [here](https://docs.unity3d.com/Manual/InstallingUnity.html).
 
 ### Current Progress
-See our current [tasks summary](DOCUMENTS/TasksProgress.md).
+See our current [tasks summary](Documents/TasksProgress.md).
 
 ### Guidelines
 Make sure that any additional changes to this project follow the [Coding Guidelines](Documents/CodingGuideline.md). </br>
