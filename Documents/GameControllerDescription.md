@@ -1,4 +1,6 @@
 # GameController.cs
+[Back To Main](/README.md)
+
 This class stores all persistent data, currently for the NodeList and Player </br>
 To do: Create reward and penalty library within GameController </br>
 To do: Create trigger function which loads Drill Scene </br>
@@ -64,3 +66,7 @@ This class stores player information. The class is nested within GameController.
     * Name: string value for the player’s name
     * Title: string value for the player’s title
     * Fame: the amount of fame that the player has
+
+</br>
+
+[Back To Main](/README.md)
