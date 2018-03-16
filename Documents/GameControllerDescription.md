@@ -17,28 +17,21 @@ To do: Create trigger function which loads Event</br>
   * MainGame: This is the scene name of the ‘Main Game’ which displays and renders nodes
   * UI_Menu: This is the scene name for the user interface menu
 
-Functions:
-
-Start()
-Description: Initializes the game, the NodelList and the Player, as well as loading the MainGame.
-
-LoadScene(string scene_name)
-Description: Calls the SceneManager to load the scene_name. Note: scene_name must match the string value on the Unity Build List.
-
-InitializeNodeList()
-Description: Generates the NodeList with randomly generated nodes, iterating through each node in Width and in Height, generating a NodeList with a dimension of Width * Height.
-
-NodeNeighborhoodCheck()
-Description: Checks for purchased nodes, if purchased, then sets neighboring nodes to visible.
-
-NodeNeighborhoodCheck(int idx)
-Description: Sets neigbhoring nodes of NodeList[idx] to visible.
-
-NeighborFinder(int idx)
-Description: Returns a list of indexes for nodes neigbhoring NodeList[idx]
-
-InitializePlayerProfile()
-Description: Initializes the Player Profile depending on start parameters
+* Functions:
+  * Start() </br>
+  Initializes the game, the NodelList and the Player, as well as loading the MainGame.
+  * LoadScene(string scene_name) </br>
+  Calls the SceneManager to load the scene_name. Note: scene_name must match the string value on the Unity Build List.
+  * InitializeNodeList() </br>
+  Generates the NodeList with randomly generated nodes, iterating through each node in Width and in Height, generating a NodeList with a dimension of Width * Height.
+  * NodeNeighborhoodCheck() </br>
+  Checks for purchased nodes, if purchased, then sets neighboring nodes to visible.
+  * NodeNeighborhoodCheck(int idx) </br>
+  Sets neigbhoring nodes of NodeList[idx] to visible.
+  * NeighborFinder(int idx) </br>
+  Returns a list of indexes for nodes neigbhoring NodeList[idx]
+  * InitializePlayerProfile() </br>
+  Initializes the Player Profile depending on start parameters
 
 
 
