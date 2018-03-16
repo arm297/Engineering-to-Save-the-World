@@ -12,8 +12,8 @@ This project requires Unity to build and run. Instructions for Unity installatio
 See our current [tasks summary](DOCUMENTS/TASKS.md).
 
 ### Guidelines
-Make sure that any additional changes to this project follow the [Coding Guidelines](DOCUMENTS/CONTRIBUTING.md). </br>
-In order to developing, look up the developing [Developing Guidelines](DOCUMENTS/DevelopingGuiddline).
+Make sure that any additional changes to this project follow the [Coding Guidelines](Documents/CONTRIBUTING.md). </br>
+In order to developing, look up the developing [Developing Guidelines](Documents/DevelopingGuiddline).
 
 ### Reference
 The previous repository for this project can be found [here](https://github.com/hpmsora/Project---Engineering-to-Save-the-world/tree/master).
