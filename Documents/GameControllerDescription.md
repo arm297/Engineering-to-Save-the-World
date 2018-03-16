@@ -66,6 +66,8 @@ This class stores player information. The class is nested within GameController.
     * Name: string value for the player’s name
     * Title: string value for the player’s title
     * Fame: the amount of fame that the player has
+    * TestestScore: the amount of score player has been tested
+    * ExpectedScore: the amount of score based on player puchased or tested
 
 </br>
 
