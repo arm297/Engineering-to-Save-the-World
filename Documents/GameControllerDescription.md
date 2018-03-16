@@ -1,8 +1,8 @@
 # GameController.cs
-Description: This class stores all persistent data, currently for the NodeList and Player
-To do: Create reward and penalty library within GameController
-To do: Create trigger function which loads Drill Scene
-To do: Create trigger function which loads Event
+This class stores all persistent data, currently for the NodeList and Player </br>
+To do: Create reward and penalty library within GameController </br>
+To do: Create trigger function which loads Drill Scene </br>
+To do: Create trigger function which loads Event</br>
 
 * Attributes:
   * NodeList: A list of NodeData which stores relevant information for each Node. NodeData is a class which stores attributes for a single node
