@@ -4,9 +4,9 @@
 
 ### Action Log
 
-**Status**|**ECD**|**ID**| | |**DESCRIPTION OF TASK**| | |**Person**
-:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
-INPRG| |1| | |Convert to single persisent pre-initialized datasource| | | 
+**Status**|**ECD**|**ID**|**TASK**| **DETAILS**| |**Person**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+INPRG|1|||Convert to single persisent pre-initialized datasource||
 COMP| | |1| | |Convert Data Structures| |Brighid
  | | | |1| | |Node Data| 
  | | | |2| | |Profile Data| 
