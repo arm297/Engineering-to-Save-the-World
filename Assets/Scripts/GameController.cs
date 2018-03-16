@@ -77,6 +77,7 @@ public class GameController : MonoBehaviour {
 	//todo: Allow player to set Name
 	//todo: Award Title and Fame for succesful Events
 	//todo: Base level of opportunity on Fame And/Or Title
+	//todo: Save the scores: Tested and Expecting
 	public class PlayerProfile
 	{
 		public float Funds { get; set; }
@@ -84,6 +85,8 @@ public class GameController : MonoBehaviour {
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public float Fame { get; set; }
+		public float TestedScore { get; set; }
+		public float ExpectedScore { get; set; }
 	}
 
 	///////////////////////////////////////

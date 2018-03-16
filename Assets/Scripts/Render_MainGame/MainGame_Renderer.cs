@@ -23,6 +23,9 @@ public class MainGame_Renderer : MonoBehaviour {
 	void Start () {
 		RespawnNodes = true;
 		//GetNodes();
+
+		// Initialize the scores
+		UpdateScore ();
 	}
 	
 	// Update is called once per frame
@@ -40,6 +43,9 @@ public class MainGame_Renderer : MonoBehaviour {
 		}
 		// Check for newly purchased nodes
 		//GetNodes();
+
+		// Keep updating the score
+		UpdateScore();
 	}
 
 	// Instantiate Nodes if visible
@@ -99,7 +105,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		return NodeGameObject;
 	}
 
-	// Changes the profile setting, includes name, fund, and labor
+	// Changes the profile setting, includes name, fund, and labor (GO stands for GameObject)
 	public void ProfileSettingChange() {
 		GameObject ProfileBox = GameObject.Find ("Profile");
 		GameObject SettingButtonGO = GameObject.Find ("SettingButton");
@@ -124,5 +130,18 @@ public class MainGame_Renderer : MonoBehaviour {
 		} else { // Error Fix
 			SettingButtonGO.GetComponentInChildren<Text> ().text = "Setting";
 		}
+	}
+
+	// Update the score upon the GameController's Player Profile (GO stands for GameObject)
+	public void UpdateScore() {
+		GameController gc;
+		GameObject GameControllerGO = GameObject.Find ("GameControl");
+		GameObject TestedScoreTextGO = GameObject.Find ("TestedScoreTest");
+		GameObject ExpectedScoreTextGO = GameObject.Find ("ExpectingScoreTest");
+
+		gc = GameControllerGO.GetComponent<GameController> ();
+
+		TestedScoreTextGO.GetComponent<Text> ().text = gc.Player.TestedScore.ToString ("0.00");
+		ExpectedScoreTextGO.GetComponent<Text> ().text = gc.Player.ExpectedScore.ToString ("0.00");
 	}
 }
