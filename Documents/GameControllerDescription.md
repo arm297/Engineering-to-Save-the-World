@@ -20,22 +20,22 @@ To do: Create trigger function which loads Event</br>
   * UI_Menu: This is the scene name for the user interface menu
 
 * Functions:
-  * Start() </br>
+  * Start()
   Initializes the game, the NodelList and the Player, as well as loading the MainGame.
-  * LoadScene(string scene_name) </br>
+  * LoadScene(string scene_name)
   Calls the SceneManager to load the scene_name. Note: scene_name must match the string value on the Unity Build List.
-  * InitializeNodeList() </br>
+  * InitializeNodeList()
   Generates the NodeList with randomly generated nodes, iterating through each node in Width and in Height, generating a NodeList with a dimension of Width * Height.
-  * NodeNeighborhoodCheck() </br>
+  * NodeNeighborhoodCheck()
   Checks for purchased nodes, if purchased, then sets neighboring nodes to visible.
-  * NodeNeighborhoodCheck(int idx) </br>
+  * NodeNeighborhoodCheck(int idx)
   Sets neigbhoring nodes of NodeList[idx] to visible.
-  * NeighborFinder(int idx) </br>
+  * NeighborFinder(int idx)
   Returns a list of indexes for nodes neigbhoring NodeList[idx]
-  * InitializePlayerProfile() </br>
+  * InitializePlayerProfile()
   Initializes the Player Profile depending on start parameters
 
-* NodeData </br>
+* NodeData
 This class stores information for a single node. The class is nested within GameController.cs.
   * NodeData Attributes:
     * ID: unique ID assigned to each node
@@ -67,7 +67,7 @@ This class stores player information. The class is nested within GameController.
     * Title: string value for the player’s title
     * Fame: the amount of fame that the player has
     * TestestScore: the amount of score player has been tested
-    * ExpectedScore: the amount of score based on player puchased or tested
+    * ExpectingScore: the amount of score based on player puchased or tested
 
 </br>
 

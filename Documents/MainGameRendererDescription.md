@@ -22,6 +22,10 @@ Reads NodeList Data in GameController and renders visible nodes on screen.
   Gets all visible nodes from GameController.NodeList and appends node ID to NodeIDX and appends Nodes with a GameObject node
   * CreateNodeGameObject(node, idx)
   Builds the node GameObject and returns the node.
+  * ProfileSettingChange()
+  Profile setting button functionality for changing the score manually.
+  * UpdateScore()
+  Keep score change upon the GameController's Player Profile ExpectingScore and TestedScore
 
 </br>
 
