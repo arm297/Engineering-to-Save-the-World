@@ -5,17 +5,17 @@ To do: Create trigger function which loads Drill Scene
 To do: Create trigger function which loads Event
 
 * Attributes:
-** NodeList: A list of NodeData which stores relevant information for each Node. NodeData is a class which stores attributes for a single node
-** Player: An implementation of PlayerProfile, which is a class that stores player info, such as funds, labor, name, score
-** Height: The height of the node grid, in nodes. This affects NodeList initialization.
-** Width: The width of the node grid, in nodes. This affects NodeList initializatio
-** InitialFunds: The amount of funds that the player begins with: Affects PlayerProfile initialization
-** InitialLabor: The amount of labor that the player begins with: Affects PlayerProfile initialization
-** InitialFame: The amount of fame that the player begins with: Affects PlayerProfile initialization
-** EventChance: The chance that an event will occur
-** list_of_drills: This is the list of all drill scenes which could be loaded
-** MainGame: This is the scene name of the ‘Main Game’ which displays and renders nodes
-** UI_Menu: This is the scene name for the user interface menu
+  * NodeList: A list of NodeData which stores relevant information for each Node. NodeData is a class which stores attributes for a single node
+  * Player: An implementation of PlayerProfile, which is a class that stores player info, such as funds, labor, name, score
+  * Height: The height of the node grid, in nodes. This affects NodeList initialization.
+  * Width: The width of the node grid, in nodes. This affects NodeList initializatio
+  * InitialFunds: The amount of funds that the player begins with: Affects PlayerProfile initialization
+  * InitialLabor: The amount of labor that the player begins with: Affects PlayerProfile initialization
+  * InitialFame: The amount of fame that the player begins with: Affects PlayerProfile initialization
+  * EventChance: The chance that an event will occur
+  * list_of_drills: This is the list of all drill scenes which could be loaded
+  * MainGame: This is the scene name of the ‘Main Game’ which displays and renders nodes
+  * UI_Menu: This is the scene name for the user interface menu
 
 Functions:
 
