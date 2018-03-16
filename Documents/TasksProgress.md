@@ -42,5 +42,8 @@
 |INPRG| |12| |Code organization| | |Andrew|
 | | | |1| |Create folder for shared base behaviors| | |
 
- ### Resources
- This table was generated using the [Markdown Table Generator](https://jakebathman.github.io/Markdown-Table-Generator/).
+### Resources
+This table was generated using the [Markdown Table Generator](https://jakebathman.github.io/Markdown-Table-Generator/).
+
+</br>
+[Back To Main](/README.md)
