@@ -28,7 +28,7 @@
 | | | |3| |Listeners| | |
 | | | |4| |Profile Display| | |
 |INPRG| |8| |Optimize Game Settings & Logic| | |Team|
-|INPRG| |9| |Identify settings & logic of interest| | | |
+|INPRG| |9| |Identify settings & logic of interest| | |Team|
 | | | |1| |Test play with settings to identify improvement areas| | |
 | | | |2| |Document improvements| | |
 |INPRG| |9| |Build Test System| | |Brighid|
