@@ -31,7 +31,9 @@
 |INPRG| |9| |Identify settings & logic of interest| | |Team|
 | | | |1| |Test play with settings to identify improvement areas| | |
 | | | |2| |Document improvements| | |
-|INPRG| |9| |Build Test System| | |Brighid|
+|INPRG| |9| |Build Test System| | |Yong|
+| | | |1| |Determine purchasing condition data| | |
+| | | |2| |Build algorithm| | |
 |INPRG| |10| |Renderer System| | |Yong|
 | | | |1| |Score system| | |
 | | | |2| |Display Score| | |
