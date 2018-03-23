@@ -19,7 +19,7 @@
 | | | |3| |Update Scene| | |
 |INPRG| |5| |Rebuild Player Profile Display| | |Yong|
 | | | |1| |Reattach display canvas| |
-|INPRG| |6| | |Reattach Drills & Minigames| | |Andrew|
+|INPRG| |6| |Reattach Drills & Minigames| | | |Andrew|
 | | | |1| |Reorganize drill source code| |
 | | | |2| |Refer to correct handles in GameController| |
 |COMP| |7| |Document new systems| | |Brighid|
