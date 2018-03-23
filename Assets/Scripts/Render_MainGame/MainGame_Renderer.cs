@@ -14,6 +14,10 @@ public class MainGame_Renderer : MonoBehaviour {
 	public float X_Space;  // Spacing between nodes (horizontal)
 	public float Y_Space;  // Spacing between nodes (vertical)
 	public GameObject ProfileSettingPrefab; // Profile setting prefab
+	public Material RequirementParentChild; // Material of connection between required parent and child
+	public Material NonRequirementParentChild; // Material of connection between optional parent and child
+	public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
+	public float LineWidth = 0.4f; // width of lines
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
@@ -23,11 +27,8 @@ public class MainGame_Renderer : MonoBehaviour {
 	void Start () {
 		RespawnNodes = true;
 		//GetNodes();
-
-		// Initialize the scores
-		UpdateScore ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
@@ -37,15 +38,17 @@ public class MainGame_Renderer : MonoBehaviour {
 			foreach(GameObject node in Nodes){
 				Destroy(node);
 			}
+			foreach(GameObject line in Lines){
+				Destroy(line);
+			}
 			Nodes = new List<GameObject>();
 			NodeIDX = new List<int>();
+			Lines = new List<GameObject>();
 			GetNodes();
+			DrawConnections();
 		}
 		// Check for newly purchased nodes
 		//GetNodes();
-
-		// Keep updating the score
-		UpdateScore();
 	}
 
 	// Instantiate Nodes if visible
@@ -55,7 +58,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		GameObject temp_GC = GameObject.Find("GameControl");
 		gc = temp_GC.GetComponent<GameController>();
 		var temp = gc.NodeList;
-		
+
 		foreach (var node in temp){
 			int idx = node.IDX;
 			if(DisplayAllNodes){
@@ -77,7 +80,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Creates a node gameobject based on input parameters
 	GameObject CreateNodeGameObject(GameController.NodeData node, int idx){
 		Canvas canvas = gameObject.GetComponent<Canvas>();
-		
+
 		int x = node.X;
 		int y = node.Y;
 		//todo: get other parameters from node & tie to node's visual/hover-over
@@ -105,7 +108,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		return NodeGameObject;
 	}
 
-	// Changes the profile setting, includes name, fund, and labor (GO stands for GameObject)
+	// Changes the profile setting, includes name, fund, and labor
 	public void ProfileSettingChange() {
 		GameObject ProfileBox = GameObject.Find ("Profile");
 		GameObject SettingButtonGO = GameObject.Find ("SettingButton");
@@ -131,17 +134,67 @@ public class MainGame_Renderer : MonoBehaviour {
 			SettingButtonGO.GetComponentInChildren<Text> ().text = "Setting";
 		}
 	}
+	// Will go through GameObject Nodes and draw appropriate connectiosn
+	public void DrawConnections(){
+		int i = 0;
+		foreach(GameObject node2 in Nodes){
+			int idx = NodeIDX[i];
+			List<int> requirements = GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].RequiredParents;
+			List<int> parents = GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].Parents;
+			// Draw Requirements
+			//todo: consider adding additional logic:
+			//	if both parents are purchased then draw different lines
+			//	else if two few requirements are purchased then draw different line
+			//	or draw line to spot where non-visible requirement node resides for child
+			foreach(int jdx in requirements){
+				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
+				if (gameObject_idx >= 0){
+					Debug.Log(gameObject_idx);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, RequirementParentChild);
+					Lines.Add(line);
+				}
+			}
+			// Draw Parents
+			foreach(int jdx in parents){
+				int gameObject_idx = NodeIDX.IndexOf(jdx);
+				if (gameObject_idx >= 0){
+					Debug.Log(gameObject_idx);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, NonRequirementParentChild);
+					Lines.Add(line);
+				}
+			}
 
-	// Update the score upon the GameController's Player Profile (GO stands for GameObject)
-	public void UpdateScore() {
-		GameController gc;
-		GameObject GameControllerGO = GameObject.Find ("GameControl");
-		GameObject TestedScoreTextGO = GameObject.Find ("TestedScoreTest");
-		GameObject ExpectedScoreTextGO = GameObject.Find ("ExpectingScoreTest");
+			i += 1;
+		}
+	}
 
-		gc = GameControllerGO.GetComponent<GameController> ();
+	// Takes the 2 node GameObjects
+	// Draws a line between the nodes
+	public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Material mat){
+		Canvas canvas = gameObject.GetComponent<Canvas>();
+		Vector3 startPos = Node1.transform.position;
+		Vector3 endPos = Node2.transform.position;
+		GameObject lineGameObject =  (GameObject)Instantiate(Node, startPos, Quaternion.identity);
+		//lineGameObject.transform.SetParent(Node1.transform);
+		LineRenderer lineRenderer = lineGameObject.AddComponent<LineRenderer>();
+		lineRenderer.material = mat;
+		lineRenderer.widthMultiplier = LineWidth;
+		lineRenderer.SetPosition(0,startPos);
+		lineRenderer.SetPosition(1,endPos);
+		Debug.Log("");
+		Debug.Log(startPos.ToString());
+		Debug.Log(endPos.ToString());
+		return lineGameObject;
 
-		TestedScoreTextGO.GetComponent<Text> ().text = gc.Player.TestedScore.ToString ("0.00");
-		ExpectedScoreTextGO.GetComponent<Text> ().text = gc.Player.ExpectedScore.ToString ("0.00");
+//GL.PushMatrix();
+//GL.MultMatrix(transform.localToWorldMatrix);
+
+//		GL.Begin(GL.LINES);
+		//mat.SetPass(0);
+//		GL.Color(Color.black);
+//		GL.Vertex(startPos);
+//		GL.Vertex(endPos);
+//		GL.End();
+//		GL.PopMatrix();
 	}
 }
