@@ -2,57 +2,83 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /**
- * Basic Drag drop behavior. Highlights moused over objects and moves selected
- * objects.
+ * Basic Drag drop behavior for a UI object. Highlights moused over objects and
+ * moves selected objects.
  */
 //namespace Drill {
 
-public class DragDrop : MonoBehaviour {
+public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
 
-        // Renderer of drag-dropped object
-        protected Renderer objectRenderer;
+        // Highlight color for moused over objects
+        [SerializeField]
+        protected Color highlightColor;
 
         // Original color of dragged object
         private Color defaultColor;
 
-        // Highlight color for moused over objects
-        [SerializeField]
-        private Color highlightColor;
+        // Material of this object, if any.
+        private Material dragMaterial = null;
+
+        // Original material color of the dragged object, if any.
+        private Color materialColor;
+
+        // Renderer of drag-dropped object
+        protected CanvasRenderer objectRenderer;
+
+        // Rectangle transform for this drag object
+        protected RectTransform objectTransform;
+
+        // Original sibling index of this dragged object
+        private int defaultSiblingIndex;
 
         // Highlight moused over objects
         protected void OnMouseEnter() 
         {
-            objectRenderer.material.color = highlightColor;
+            objectRenderer.SetColor(highlightColor);
+            if (dragMaterial != null) {
+                dragMaterial.color = highlightColor;
+            }
         }
 
         // Reset default color of object.
         protected void OnMouseExit() 
         {
-            objectRenderer.material.color = defaultColor;
+            objectRenderer.SetColor(defaultColor);
+            if (dragMaterial != null) {
+                dragMaterial.color = materialColor;
+            }                                       
         }
 
-        protected void OnMouseDrag()
+        public void OnBeginDrag(PointerEventData eventData)
         {
-            float screenDistance = Camera.main.WorldToScreenPoint(
-                    gameObject.transform.position).z;
-   
-            // Move to new point bounded by screen width and length.
-            Vector3 positionMove = Camera.main.ScreenToWorldPoint(new Vector3(
-                    Mathf.Clamp(Input.mousePosition.x, 0, Screen.width),
-                    Mathf.Clamp(Input.mousePosition.y, 0, Screen.height),
-                    screenDistance));
-            transform.position = new Vector3(positionMove.x,
-                    transform.position.y,
-                    positionMove.z);
+            objectTransform.SetAsLastSibling();
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+            mousePos.z = transform.position.z;
+            transform.position = mousePos;
+        }
+
+        public void OnEndDrag(PointerEventData eventData) 
+        {
+            objectTransform.SetSiblingIndex(defaultSiblingIndex);
         }
 
         // Use this for initialization
         protected void Start() 
         {
-            objectRenderer = GetComponent<Renderer>();
-            defaultColor = objectRenderer.material.color;
+            objectRenderer = GetComponent<CanvasRenderer>();
+            objectTransform = gameObject.transform as RectTransform;
+            defaultColor = objectRenderer.GetColor();
+            defaultSiblingIndex = objectTransform.GetSiblingIndex();
+            if ((dragMaterial = objectRenderer.GetMaterial()) != null) {
+            materialColor = dragMaterial.color;
+            }
 	    }
     }
 //}
