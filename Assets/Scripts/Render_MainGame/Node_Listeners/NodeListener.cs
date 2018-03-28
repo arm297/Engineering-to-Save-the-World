@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class NodeListener : MonoBehaviour {
+public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler{
 
 	// The ONLY piece of data copied and stored (for identification)
 	public int idx;
 	public Button purchase; // the purchase button
 	public Button test;  // the test button
 	private bool Initialized = false;
+	public Transform NodeInfoPos;
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +19,39 @@ public class NodeListener : MonoBehaviour {
 		//purchase = gameObject.transform.Find("Purchase").GetComponent<Button>();
 		purchase.onClick.AddListener(PurchaseNode);
 		//test = gameObject.transform.Find("Test").GetComponent<Button>();
-		test.onClick.AddListener(TestNode);	
+		test.onClick.AddListener(TestNode);
+		// Initailize NodeInfo
+		string NodeInfo = "Node Info:";
+		NodeInfo += "\nCost:\t" + GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].CostActual;
+		NodeInfo += "\nFeature Information";
+		int count = 0;
+		foreach(string f in GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].ParameterNames){
+			NodeInfo += "\n" + f + ":\t" + GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].ParameterActuals[count];
+			count += 1;
+		}
+		NodeInfo += "\nTested:\t" + GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Tested;
+		NodeInfo += "\nPurchased:\t" + GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchased;
+
+		NodeInfoPos = gameObject.transform.Find("NodeInfo").transform;
+		gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(0, 0, 0);
+		gameObject.transform.Find("NodeInfo").GetComponent<TextMesh>().text = NodeInfo;
+
+	}
+
+	private bool isOver = false;
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+			Debug.Log("Mouse enter");
+			gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(10,10,10);//NodeInfoPos.localScale;
+			isOver = true;
+	}
+
+	public void OnPointerExit(PointerEventData eventData)
+	{
+			Debug.Log("Mouse exit");
+			gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(0, 0, 0);
+			isOver = false;
 	}
 
 	// Send purchase request and idx to GameController

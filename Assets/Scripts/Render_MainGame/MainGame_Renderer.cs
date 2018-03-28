@@ -18,6 +18,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	public Material NonRequirementParentChild; // Material of connection between optional parent and child
 	public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
 	public float LineWidth = 0.4f; // width of lines
+	public Button EndTurn;
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
@@ -26,11 +27,24 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		RespawnNodes = true;
+		EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
+		//EndTurn.onClick.AddListener(Update);
 		//GetNodes();
+	}
+
+	// Listeners
+	public void EndTurnListener(){
+		GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
+		Update();
+
 	}
 
 	// Update is called once per frame
 	void Update () {
+
+		//todo: logic to only updateprofile when something interesting happens
+		UpdateProfile();
+
 		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
 			RespawnNodes = false;
 			GameObject.Find("GameControl").GetComponent<GameController>().NodeChange = false;
@@ -88,6 +102,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		NodeGameObject.transform.SetParent(canvas.transform);
 		NodeGameObject.GetComponent<NodeListener>().idx = idx;
 		NodeGameObject.GetComponent<NodeListener>().InitializeNode();
+
 		// If node is purchaseable, then set Purchase Button to active
 		if (node.Purchaseable){
 			NodeGameObject.GetComponent<NodeListener>().purchase.interactable = true;
@@ -149,7 +164,6 @@ public class MainGame_Renderer : MonoBehaviour {
 			foreach(int jdx in requirements){
 				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
 				if (gameObject_idx >= 0){
-					Debug.Log(gameObject_idx);
 					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, RequirementParentChild);
 					Lines.Add(line);
 				}
@@ -158,7 +172,6 @@ public class MainGame_Renderer : MonoBehaviour {
 			foreach(int jdx in parents){
 				int gameObject_idx = NodeIDX.IndexOf(jdx);
 				if (gameObject_idx >= 0){
-					Debug.Log(gameObject_idx);
 					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, NonRequirementParentChild);
 					Lines.Add(line);
 				}
@@ -181,20 +194,15 @@ public class MainGame_Renderer : MonoBehaviour {
 		lineRenderer.widthMultiplier = LineWidth;
 		lineRenderer.SetPosition(0,startPos);
 		lineRenderer.SetPosition(1,endPos);
-		Debug.Log("");
-		Debug.Log(startPos.ToString());
-		Debug.Log(endPos.ToString());
 		return lineGameObject;
 
-//GL.PushMatrix();
-//GL.MultMatrix(transform.localToWorldMatrix);
+	}
 
-//		GL.Begin(GL.LINES);
-		//mat.SetPass(0);
-//		GL.Color(Color.black);
-//		GL.Vertex(startPos);
-//		GL.Vertex(endPos);
-//		GL.End();
-//		GL.PopMatrix();
+	// Called to update the Render_MainGame.Utility.Profile.(Fund&Labor)
+	public void UpdateProfile(){
+		GameObject.Find ("ProfileFundText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().Player.Funds;
+		GameObject.Find ("ProfileLaborText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor;
+		GameObject.Find ("ProfileTurnText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().PastTurns.NumberOfTurns;
+		//Debug.Log(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor);
 	}
 }

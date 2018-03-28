@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour {
 
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
+	public TurnData PastTurns = new TurnData();
 	public int Height = 100;
 	public int Width = 100;
 	public float InitialFunds = 1000;
@@ -31,6 +32,8 @@ public class GameController : MonoBehaviour {
 	public float ParentChance = 0.5f; // chance that an existing node within distance of new node is a parent nodes
 	public float RequirementsToParent = .2f; // chance that a parent is a requirement to purchase new node
 	public float ExpectedUntestedNodeReliability = 0.98f; // 1 = no penalty, 0 = ultimate penalty
+	public float InitialLaborPerTurn = 20.0f;  // Amount of Fund Change that occurs each turn (are funds renewed or depleted?)
+	public int MaxNumberOfTurns = 10;  // Number of Turns allowed in game
 
 
 	// LOADABLE SCENES
@@ -76,7 +79,22 @@ public class GameController : MonoBehaviour {
 				public List<int> Children {get; set; }
 				public float ProbabilityToFail {get; set; }
 				public float ParentExpectedReliability {get; set; }
+				public float LaborCost { get; set; }
     }
+
+	// the below class stores turn data as well as refreshable resources.
+		public class TurnData
+		{
+			public float NumberOfTurns { get; set;}
+			public float LaborPerTurn { get; set;}
+			public float FundChangePerTurn { get; set;}
+			public List<int> CurrentTurnNodesBought {get; set;}
+			public List<int> CurrentTurnNodesTested {get; set;}
+			//public List<int> CurrentTurnEventsOccurred {get; set;}
+			public List<List<int>> NodesBoughtByTurn { get; set;}
+			public List<List<int>> NodesTestedByTurn { get; set;}
+			//public List<List<string>> EventsOccurredByTurn {get; set;}
+		}
 
 	//Stores player data
 	//todo: Display Name, Title, Fame in game
@@ -100,6 +118,7 @@ public class GameController : MonoBehaviour {
 		// Call Node Initialization
 		InitializeNodeList();
 		InitializePlayerProfile();
+		InitializeTurnData();
 		LoadScene(MainGame);
 	}
 
@@ -121,7 +140,8 @@ public class GameController : MonoBehaviour {
 		//todo: Add additional knobs to control game initiation (as opposed to manual entries).
 		// Parameters used in generation of node
 
-		float BaseCost = 1;
+		float BaseCost = 10;
+		float BaseLabor = 5;
 
 		// Populate Grid (X wide and Y deep)
 		int X = Width;
@@ -173,6 +193,7 @@ public class GameController : MonoBehaviour {
 				n.ProbabilityToFail = Random.Range(.01f,.3f);
 				n.Obscured = true;
 				n.ParentExpectedReliability = 1;
+				n.LaborCost = BaseLabor * Random.Range(0.8f, 1.5f);
 
 				// Identify Parent, RequiredParents, Children
 				int npidx = 0;
@@ -310,14 +331,29 @@ public class GameController : MonoBehaviour {
 		Player.Fame = InitialFame;
 	}
 
+	// Initialize Turn Data
+	void InitializeTurnData(){
+		PastTurns.LaborPerTurn = InitialLaborPerTurn;
+		PastTurns.FundChangePerTurn = 0.0f;
+		PastTurns.CurrentTurnNodesBought = new List<int>();
+		PastTurns.CurrentTurnNodesTested = new List<int>();
+		PastTurns.NodesBoughtByTurn = new List<List<int>>();
+		PastTurns.NodesTestedByTurn = new List<List<int>>();
+
+		PastTurns.NumberOfTurns = 0;
+	}
+
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
 	// Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
 	public string PurchaseNode(int idx){
 		if(NodeList[idx].Purchaseable){
-			if(NodeList[idx].CostActual <= Player.Funds){
+			if(NodeList[idx].CostActual <= Player.Funds
+			&& NodeList[idx].LaborCost <= Player.Labor
+			){
 				Player.Funds = Player.Funds - NodeList[idx].CostActual;
+				Player.Labor = Player.Labor - NodeList[idx].LaborCost;
 				NodeList[idx].Purchased = true;
 				NodeList[idx].Purchaseable = false;
 				NodeNeighborhoodCheck(idx);
@@ -325,6 +361,8 @@ public class GameController : MonoBehaviour {
 				// calculate expected reliability based on parent state upon purchase
 				float parentStateOnPurchase = AssessParentState(idx);
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
+				// append TurnData with node idx purchase
+				PastTurns.CurrentTurnNodesBought.Add(idx);
 				return "Purchased Node ";
 			}else{
 				return "Insufficient Funds";
@@ -347,11 +385,37 @@ public class GameController : MonoBehaviour {
 			float runningMult = 1.0f; // For parents in parallel (i.e. loop below)
 			foreach(int parentIDX in parents){
 				// Stop recursive function once a parent is found with non-Tested
-				if (!NodeList[parentIDX].Tested){
+				if (!NodeList[parentIDX].Tested && NodeList[parentIDX].Purchased){
 					runningMult *= (1 - ExpectedUntestedNodeReliability * AssessParentState(parentIDX));
 				}
 			}
 			return runningMult;
+	}
+
+	// Moves Current Turn Data into past turn
+	// Updates Player with changed labor and funds
+	// Resets Current Turn Data
+	public void CommitTurn(){
+		Player.Funds += PastTurns.FundChangePerTurn;
+		Player.Labor = PastTurns.LaborPerTurn;
+		PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
+		PastTurns.NodesTestedByTurn.Add(PastTurns.CurrentTurnNodesTested);
+		PastTurns.CurrentTurnNodesBought = new List<int>();
+		PastTurns.CurrentTurnNodesTested = new List<int>();
+		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
+		//Debug.Log(Player.Labor);
+		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
+				|| Player.Funds <= 0.0f){
+			// Begin End of game routine
+				EndGame();
+		}
+	}
+
+	// End of Game
+	// Tally up Score
+	// Victory or Defeat
+	public void EndGame(){
+
 	}
 
 }
