@@ -8,9 +8,9 @@ using UnityEngine.EventSystems;
  * Basic Class for connection creation, highlighting, and deletion.
  */
 
-namespace Drill
+namespace Drills
 {
-    class Connection
+    class Connection : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
 
         [SerializeField]
@@ -27,8 +27,20 @@ namespace Drill
 
         private Color defaultColor;
 
-        void Start() {
+        public void OnPointerClick(PointerEventData eventData) {
 
+        }
+
+        public void OnPointerEnter(PointerEventData eventData) {
+
+        }
+
+        public void OnPointerExit(PointerEventData eventData) {
+
+        }
+
+        void Start() {
+            
         }
 
 

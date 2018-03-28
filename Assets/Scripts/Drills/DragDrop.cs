@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/**
- * Basic Drag drop behavior for a UI object. Highlights moused over objects and
- * moves selected objects.
- */
-//namespace Drill {
-
-public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler,
+namespace Drills {
+    /**
+     * Basic Drag drop behavior for a UI object. Highlights moused over objects and
+     * moves selected objects.
+     */
+    public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler,
     IPointerEnterHandler, IPointerExitHandler {
 
         // Highlight color for moused over objects
@@ -104,4 +103,5 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             }
 	    }
     }
-//}
+
+}
