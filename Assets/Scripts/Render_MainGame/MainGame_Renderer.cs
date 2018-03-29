@@ -102,6 +102,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		NodeGameObject.transform.SetParent(canvas.transform);
 		NodeGameObject.GetComponent<NodeListener>().idx = idx;
 		NodeGameObject.GetComponent<NodeListener>().InitializeNode();
+
 		// If node is purchaseable, then set Purchase Button to active
 		if (node.Purchaseable){
 			NodeGameObject.GetComponent<NodeListener>().purchase.interactable = true;
