@@ -43,6 +43,10 @@ public class GameController : MonoBehaviour {
 	public List<float> SystemParameters = new List<float>{0.0f, 0.0f, 0.0f, 0.0f};
 	public List<float> MinRequiredSystemParameters = new List<float>{100.0f, 200.0f, 150.0f, 40.0f};
 
+    public delegate void FinishGameFunction(int score, bool victory); //Clears the game when the game is over
+    public FinishGameFunction FinishGame;
+
+
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
 	private string[] list_of_drills = {
@@ -425,7 +429,8 @@ public class GameController : MonoBehaviour {
 		PastTurns.CurrentTurnNodesBought = new List<int>();
 		PastTurns.CurrentTurnNodesTested = new List<int>();
 		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
-		//Debug.Log(Player.Labor);
+        //Debug.Log(Player.Labor);
+        Debug.Log(PastTurns.NumberOfTurns);
 		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
 				|| Player.Funds <= 0.0f){
 			// Begin End of game routine
@@ -457,6 +462,14 @@ public class GameController : MonoBehaviour {
 	// Victory or Defeat
 	public void EndGame(){
 
+        // Taly up the score for this game.
+        int score = 0;
+        bool victory = false;
+        if (FinishGame != null)
+        {
+            FinishGame(score, victory);
+        }
+       
 	}
 
 }

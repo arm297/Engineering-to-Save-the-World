@@ -22,6 +22,9 @@ public class MainGame_Renderer : MonoBehaviour {
 	public Sprite PurchasedImage;
 	public Sprite SystReqImage;
 
+    // Ending game.
+    public GameObject EndGamePanel;
+
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
 	public bool RespawnNodes = false;
@@ -29,10 +32,13 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		RespawnNodes = true;
+        EndTurn = GameObject.Find("EndTurn").GetComponent<Button>();
 		EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
-		//EndTurn.onClick.AddListener(Update);
-		//GetNodes();
-	}
+        GameObject.Find("GameControl").GetComponent<GameController>().FinishGame += EndGame;
+        EndGamePanel.SetActive(false);
+        //EndTurn.onClick.AddListener(Update);
+        //GetNodes();
+    }
 
 	// Listeners
 	public void EndTurnListener(){
@@ -43,7 +49,6 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
 		//todo: logic to only updateprofile when something interesting happens
 		UpdateProfile();
 		UpdateSystemScoreDisplay();
@@ -234,4 +239,29 @@ public class MainGame_Renderer : MonoBehaviour {
 				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
 			}
 	}
+    
+	// Called when the game ends.
+    public void EndGame(int score, bool victory) {
+        Debug.Log("Finished the game");
+        if (EndGamePanel == null)
+        {
+            Debug.Log(EndTurn.name);
+        }
+        EndGamePanel.SetActive(true);
+        GameObject.Find ("GameOverScoreText").GetComponent<Text> ().text = "Final Score: " + score;
+        GameObject.Find("GameOverText").GetComponent<Text>().text = victory ? "You Win" : "You Lose";
+    }
+
+	// Cleanup method for delegates.
+    public void OnDestroy()
+    {
+        if (GameObject.Find("GameControl") != null)
+            GameObject.Find("GameControl").GetComponent<GameController>().FinishGame -= EndGame;
+    }
+
+	// Called to quit the game.
+    public void ExitGame() {
+        Application.Quit();
+    }
+
 }
