@@ -34,6 +34,14 @@ public class GameController : MonoBehaviour {
 	public float ExpectedUntestedNodeReliability = 0.98f; // 1 = no penalty, 0 = ultimate penalty
 	public float InitialLaborPerTurn = 20.0f;  // Amount of Fund Change that occurs each turn (are funds renewed or depleted?)
 	public int MaxNumberOfTurns = 10;  // Number of Turns allowed in game
+	public List<string> ParameterNames = new List<string>{
+		"Parameter A",
+		"Parameter B",
+		"Parameter C",
+		"Parameter D"
+	};
+	public List<float> SystemParameters = new List<float>{0.0f, 0.0f, 0.0f, 0.0f};
+	public List<float> TargetSystemParameters  = new List<float>{20.0f, 15.0f, 13.0f, 21.0f};
 
 
 	// LOADABLE SCENES
@@ -175,12 +183,7 @@ public class GameController : MonoBehaviour {
 					n.ParameterActuals[0] * Random.Range(.95f,1.3f),
 					n.ParameterActuals[0] * Random.Range(.95f,1.3f)
 				};
-				n.ParameterNames = new List<string>{
-					"Parameter A",
-					"Parameter B",
-					"Parameter C",
-					"Parameter D"
-				};
+				n.ParameterNames = ParameterNames;
 				n.Purchased = false;
 				n.Visible = false;
 				n.Purchaseable = false;
@@ -222,6 +225,7 @@ public class GameController : MonoBehaviour {
 
 				NodeList.Add(n);
 			}
+			CalculateSystemFeautures();
 		}
 
 
@@ -342,7 +346,6 @@ public class GameController : MonoBehaviour {
 
 		PastTurns.NumberOfTurns = 0;
 	}
-
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
@@ -363,6 +366,7 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
+				CalculateSystemFeautures();
 				return "Purchased Node ";
 			}else{
 				return "Insufficient Funds";
@@ -396,6 +400,7 @@ public class GameController : MonoBehaviour {
 	// Updates Player with changed labor and funds
 	// Resets Current Turn Data
 	public void CommitTurn(){
+		CalculateSystemFeautures();
 		Player.Funds += PastTurns.FundChangePerTurn;
 		Player.Labor = PastTurns.LaborPerTurn;
 		PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
@@ -408,6 +413,24 @@ public class GameController : MonoBehaviour {
 				|| Player.Funds <= 0.0f){
 			// Begin End of game routine
 				EndGame();
+		}
+	}
+
+	// updates global for parameter values at system level
+	public void CalculateSystemFeautures(){
+
+		foreach(NodeData node in NodeList){
+			if(node.Purchased){
+				if (node.ParameterActuals.Count != SystemParameters.Count){
+					SystemParameters = node.ParameterActuals;
+				}else{
+					int count = 0;
+					foreach(float val in node.ParameterActuals){
+						SystemParameters[count] += val;
+						count += 1;
+					}
+				}
+			}
 		}
 	}
 
