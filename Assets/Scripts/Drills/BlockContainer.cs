@@ -12,6 +12,15 @@ namespace Drills {
      */
     public class BlockContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
+        // Function types for actions performed during drop and pick up.
+        public delegate void OnBlockAction();
+
+        // Function called when dragged object is placed in block.
+        public OnBlockAction OnBlockPlaced;
+
+        // Function called when dragged object is picked up from block.
+        public OnBlockAction OnBlockRemoved;
+
         // Highlight color when dragged object is over block.
         [SerializeField]
         private Color highlightColor;
@@ -33,9 +42,6 @@ namespace Drills {
 
         // Drag-dropped hovering object if any.
         private DragDropSnapInto hoverObject;
-
-        // Previous container of object dragged over this container.
-        private BlockContainer prevContainer;
 
         // Use this for initialization
         void Start()
@@ -61,8 +67,7 @@ namespace Drills {
             {
                 hoverObject = dragdrop;
                 dragdrop.returnPosition = transform.position;
-                prevContainer = dragdrop.containingBlock;
-                dragdrop.containingBlock = GetComponent<BlockContainer>();
+                dragdrop.returnParent = transform;
             }
         }
 
@@ -72,11 +77,14 @@ namespace Drills {
             {
                 blockRenderer.SetColor(defaultColor);
             }
-            if (hoverObject != null && hoverObject.returnPosition == transform.position)
+            if (eventData != null && eventData.pointerDrag != null)
+            {
+                hoverObject = eventData.pointerDrag.GetComponent<DragDropSnapInto>();
+            }
+            if (hoverObject != null)
             {
                 hoverObject.returnPosition = hoverObject.originalPos;
-                hoverObject.containingBlock = prevContainer;
-                prevContainer = null;
+                hoverObject.returnParent = hoverObject.originalParent;
                 hoverObject = null;
             }
         }
@@ -97,7 +105,11 @@ namespace Drills {
             {
                 containedObject = dragObject;
                 isFilled = true;
-                blockRenderer.SetColor(Color.cyan);
+                blockRenderer.SetColor(dragObject.GetComponent<CanvasRenderer>().GetMaterial().color);
+                if (OnBlockPlaced != null)
+                {
+                    OnBlockPlaced();
+                }
                 return true;
             }
             return false;
@@ -106,8 +118,13 @@ namespace Drills {
         // Removes the contained object of this block.
         public void RemoveContainedObject()
         {
+            blockRenderer.SetColor(defaultColor);
             isFilled = false;
             containedObject = null;
+            if (OnBlockRemoved != null)
+            {
+                OnBlockRemoved();
+            }
         }
 
         // Returns whether the bounds intersect in 2D space.

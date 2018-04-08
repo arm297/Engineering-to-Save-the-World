@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class InitOnAction : MonoBehaviour {
 
+    [HideInInspector]
+    public GameObject[] initObject;
+
 	// Use this for initialization
 	void Start () {
 		

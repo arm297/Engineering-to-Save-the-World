@@ -57,6 +57,8 @@ namespace Drills {
         public new void OnBeginDrag(PointerEventData eventData)
         {
             base.OnBeginDrag(eventData);
+            returnParent = originalParent;
+            transform.parent = returnParent;
             GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
@@ -68,10 +70,11 @@ namespace Drills {
         public new void OnEndDrag(PointerEventData eventData)
         {
             base.OnEndDrag(eventData);
-            if (containingBlock != null)
+            if (returnParent != originalParent)
             {
-                containingBlock.GetComponent<BlockContainer>().RemoveContainedObject();
-                containingBlock = null;
+                containingBlock = returnParent.GetComponent<BlockContainer>();
+                Debug.Log(containingBlock);
+                containingBlock.AddContainedObject(GetComponent<DragDropSnapInto>());
             }
             transform.position = returnPosition;
             GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -96,7 +99,10 @@ namespace Drills {
         // Update is called once per frame
         void Update()
         {
-
+            if (containingBlock != null)
+            {
+                Debug.Log("I'm Contained.");
+            }
         }
 
         // Moves the dragged object into the center of the given region.

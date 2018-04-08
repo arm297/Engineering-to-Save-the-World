@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
 Description:
 This class controls scene and event management and stores Node & Player data.
 This is the only script to be sustained across scenes.
@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour {
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
+	public static DrillScore drillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float InitialFunds = 1000;
@@ -121,6 +122,12 @@ public class GameController : MonoBehaviour {
 		public string Title { get; set; }
 		public float Fame { get; set; }
 	}
+
+	    // Stores the score from the last drill.
+    public class DrillScore
+    {
+        public float score { get; set; }
+    }
 
 	///////////////////////////////////////
 	// INITIALIZATION
@@ -368,6 +375,23 @@ public class GameController : MonoBehaviour {
 		PastTurns.NumberOfTurns = 0;
 	}
 
+	    // Functions that get the chance for a drill to run.
+    void ChanceForDrill(){
+        int randomNumber = Random.Range(0, 100);
+		if (randomNumber < EventChance * 100)
+        {
+            Debug.Log("Event System Activated.");
+
+			// Select which drill to run.
+			randomNumber = Random.Range(0, list_of_drills.Length - 1);
+            sceneToRun = list_of_drills[randomNumber];
+
+            // Load New Scene
+            LoadScene(sceneToRun);
+
+        }
+    }
+
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
@@ -429,6 +453,8 @@ public class GameController : MonoBehaviour {
 		PastTurns.CurrentTurnNodesBought = new List<int>();
 		PastTurns.CurrentTurnNodesTested = new List<int>();
 		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
+
+		ChanceForDrill();
         //Debug.Log(Player.Labor);
         Debug.Log(PastTurns.NumberOfTurns);
 		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
@@ -436,7 +462,7 @@ public class GameController : MonoBehaviour {
 			// Begin End of game routine
 				EndGame();
 		}
-				CalculateSystemFeautures();
+		CalculateSystemFeautures();
 	}
 
 	// updates global for parameter values at system level

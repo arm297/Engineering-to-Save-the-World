@@ -14,6 +14,7 @@ namespace Drills
         Button returnButton;
         // Drill game controller.
         GameObject gameController;
+        [HideInInspector]
         // Score computation object.
         public GameObject scoreCalculator;
 

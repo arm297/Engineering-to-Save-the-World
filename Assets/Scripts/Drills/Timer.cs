@@ -52,10 +52,6 @@ namespace Drills {
             clock.text = timeRemaining.ToString();
         }
 
-        private void OnDestroy() {
-
-        }
-
         // Update is called once per frame
         void Update()
         {
@@ -71,6 +67,7 @@ namespace Drills {
                 {
                     timeRemaining = 0;
                     isActive = false;
+                    OnTimerEnd();
                 }
                 clock.text = timeRemaining.ToString();
             }
