@@ -41,8 +41,7 @@ public class GameController : MonoBehaviour {
 		"Parameter D"
 	};
 	public List<float> SystemParameters = new List<float>{0.0f, 0.0f, 0.0f, 0.0f};
-	public List<float> TargetSystemParameters  = new List<float>{20.0f, 15.0f, 13.0f, 21.0f};
-
+	public List<float> MinRequiredSystemParameters = new List<float>{100.0f, 200.0f, 150.0f, 40.0f};
 
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
@@ -88,6 +87,7 @@ public class GameController : MonoBehaviour {
 				public float ProbabilityToFail {get; set; }
 				public float ParentExpectedReliability {get; set; }
 				public float LaborCost { get; set; }
+				public bool SystReq { get; set; }
     }
 
 	// the below class stores turn data as well as refreshable resources.
@@ -183,7 +183,12 @@ public class GameController : MonoBehaviour {
 					n.ParameterActuals[0] * Random.Range(.95f,1.3f),
 					n.ParameterActuals[0] * Random.Range(.95f,1.3f)
 				};
-				n.ParameterNames = ParameterNames;
+				n.ParameterNames = new List<string>{
+					"Parameter A",
+					"Parameter B",
+					"Parameter C",
+					"Parameter D"
+				};
 				n.Purchased = false;
 				n.Visible = false;
 				n.Purchaseable = false;
@@ -197,6 +202,7 @@ public class GameController : MonoBehaviour {
 				n.Obscured = true;
 				n.ParentExpectedReliability = 1;
 				n.LaborCost = BaseLabor * Random.Range(0.8f, 1.5f);
+				n.SystReq = false;
 
 				// Identify Parent, RequiredParents, Children
 				int npidx = 0;
@@ -240,6 +246,17 @@ public class GameController : MonoBehaviour {
 			NodeList[idx].Purchaseable = true;
 			NodeList[idx].Visible = true;
 			NodeList[idx].Obscured = false;
+		}
+
+		//Set System Requirements
+		foreach(NodeData n in NodeList){
+			int chance = (int)Random.Range(0, 30);
+			if (chance <= 1){
+				int idx = n.IDX;
+				NodeList[idx].SystReq = true;
+				NodeList[idx].Visible = true;
+
+			}
 		}
 
 	}
@@ -346,6 +363,7 @@ public class GameController : MonoBehaviour {
 
 		PastTurns.NumberOfTurns = 0;
 	}
+
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
@@ -366,7 +384,7 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
-				CalculateSystemFeautures();
+						CalculateSystemFeautures();
 				return "Purchased Node ";
 			}else{
 				return "Insufficient Funds";
@@ -400,7 +418,6 @@ public class GameController : MonoBehaviour {
 	// Updates Player with changed labor and funds
 	// Resets Current Turn Data
 	public void CommitTurn(){
-		CalculateSystemFeautures();
 		Player.Funds += PastTurns.FundChangePerTurn;
 		Player.Labor = PastTurns.LaborPerTurn;
 		PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
@@ -414,6 +431,7 @@ public class GameController : MonoBehaviour {
 			// Begin End of game routine
 				EndGame();
 		}
+				CalculateSystemFeautures();
 	}
 
 	// updates global for parameter values at system level

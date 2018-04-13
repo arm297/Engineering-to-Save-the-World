@@ -19,7 +19,8 @@ public class MainGame_Renderer : MonoBehaviour {
 	public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
 	public float LineWidth = 0.4f; // width of lines
 	public Button EndTurn;
-	public GameObject EmptyLine;
+	public Sprite PurchasedImage;
+	public Sprite SystReqImage;
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
@@ -189,7 +190,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		Canvas canvas = gameObject.GetComponent<Canvas>();
 		Vector3 startPos = Node1.transform.position;
 		Vector3 endPos = Node2.transform.position;
-		GameObject lineGameObject =  (GameObject)Instantiate(EmptyLine, startPos, Quaternion.identity);
+		GameObject lineGameObject =  (GameObject)Instantiate(Node, startPos, Quaternion.identity);
 		//lineGameObject.transform.SetParent(Node1.transform);
 		LineRenderer lineRenderer = lineGameObject.AddComponent<LineRenderer>();
 		lineRenderer.material = mat;
@@ -209,22 +210,19 @@ public class MainGame_Renderer : MonoBehaviour {
 	}
 
 	// Called to update display of player performance
-	// todo: move target system performance to separate, collapsable window
 	public void UpdateSystemScoreDisplay(){
 		List<string> names = GameObject.Find ("GameControl").GetComponent<GameController>().ParameterNames;
 		List<float> values = GameObject.Find ("GameControl").GetComponent<GameController>().SystemParameters;
+
 		//Debug.Log(values);
 		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text = "System Feautures:";
 		for(int i=0; i < names.Count; i++){
 			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
 		}
-
-		//TargetSystemParameters
-		List<float> target_values = GameObject.Find ("GameControl").GetComponent<GameController>().TargetSystemParameters;
-		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n\nTarget System Feautures:";
-		for(int i=0; i < names.Count; i++){
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + target_values[i];
-		}
+			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
+			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
+			for(int i=0; i < names.Count; i++){
+				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
+			}
 	}
-
 }
