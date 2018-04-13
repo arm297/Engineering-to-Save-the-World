@@ -5,7 +5,7 @@
 ### Action Log
 |**Status**|**ECD**|**ID**|**Sub ID**|**TASK**|**DETAILS**|   |**Person**|
 |:--------:|------:|:-----|:---------|:-------|:----------|:-:|---------:|
-|INPRG| |1| |Convert to single persisent pre-initialized datasource| | |Brighid|
+|COMP| |1| |Convert to single persisent pre-initialized datasource| | |Brighid|
 |COMP| |2| |Convert Data Structures| | |Brighid|
 | | | |1| |Node Data| | |
 | | | |2| |Profile Data| | |
@@ -17,7 +17,7 @@
 | | | |1| |Node Grid| | |
 | | | |2| |Node Display| | |
 | | | |3| |Update Scene| | |
-|INPRG| |5| |Rebuild Player Profile Display| | |Yong|
+|COMP| |5| |Rebuild Player Profile Display| | |Yong|
 | | | |1| |Reattach display canvas| |
 |INPRG| |6| |Reattach Drills & Minigames| | | |Andrew|
 | | | |1| |Reorganize drill source code| |
@@ -27,21 +27,36 @@
 | | | |2| |Renderer| | |
 | | | |3| |Listeners| | |
 | | | |4| |Profile Display| | |
-|INPRG| |8| |Optimize Game Settings & Logic| | |Team|
-|INPRG| |9| |Identify settings & logic of interest| | |Team|
+|COMP| |8| |Optimize Game Settings & Logic| | |Team|
+|COMP| |9| |Identify settings & logic of interest| | |Team|
 | | | |1| |Test play with settings to identify improvement areas| | |
 | | | |2| |Document improvements| | |
 |INPRG| |9| |Build Test System| | |Yong|
-| | | |1| |Determine purchasing condition data| | |
-| | | |2| |Build algorithm| | |
-|INPRG| |10| |Renderer System| | |Yong|
+|COMP| | |1| |Determine purchasing condition data| | |
+|COMP| | |2| |Build algorithm| | |
+| | | |3|Build function to calculate actual performance criteria when tested| | |Yong|
+| | | |4|Attach listener on test button to test function| | |Yong|
+| | | |5|Update GameControl NodeList with actual performance criteria| | |Yong|
+|COMP| |10| |Renderer System| | |Yong|
 | | | |1| |Score system| | |
 | | | |2| |Display Score| | |
 | | | |3| |Initialize minimum system requirements| | |
 |INPRG| |11| |Aesthetics of gameplay| | |Andrew|
-| | | |1| |Connecting Lines| | |
+|COMP| | |1| |Connecting Lines| | |
+|COMP| | |2| |Node Visibility Changes on Selection| | |
+|INPRG| | |3| |Correct camera display of game (allow scroll)| | |
 |INPRG| |12| |Code organization| | |Andrew|
 | | | |1| |Create folder for shared base behaviors| | |
+|INPRG| |13| |Event System 2.0| | |Team|
+|INPRG| |14| |End Game Function| | |Andrew|
+|INPRG| |13| |Score Function| | |Yong|
+| | | |1|Allow user to estimate weights with minigame| | | |
+| | | |2|Generate actual weights for end game comparison| | | |
+| | | |3|Display estimated weights upon user request| | | |
+| | | |4|Calculate end score based on actual weights| | | |
+| | | |5|Store end weights in GameControl for EndGame Function| | | |
+
+
 
 ### Resources
 This table was generated using the [Markdown Table Generator](https://jakebathman.github.io/Markdown-Table-Generator/).
