@@ -123,6 +123,15 @@ public class MainGame_Renderer : MonoBehaviour {
 			NodeGameObject.GetComponent<NodeListener>().test.interactable = false;
 			NodeGameObject.GetComponent<NodeListener>().HideTestButton();
 		}
+
+		if (node.SystReq){
+			NodeGameObject.GetComponent<Image>().sprite = SystReqImage;
+		}
+		if (node.Purchased){
+			NodeGameObject.GetComponent<Image>().sprite = PurchasedImage; 
+		}
+
+
 		return NodeGameObject;
 	}
 
