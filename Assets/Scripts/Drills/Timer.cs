@@ -20,8 +20,11 @@ namespace Drills {
         [HideInInspector]
         public bool isPaused = false;
 
-        // 
-        public delegate void OnTimerEnd();
+        // End timer function type.
+        public delegate void OnTimerEndFunction();
+
+        // Function called on timer end.
+        public OnTimerEndFunction OnTimerEnd;
 
         // Initial number of seconds set for timer.
         [SerializeField]
@@ -49,7 +52,7 @@ namespace Drills {
         {
             timeRemaining = initialTime;
             clock = GetComponent<Text>();
-            clock.text = timeRemaining.ToString();
+            clock.text = ((int)timeRemaining).ToString();
         }
 
         // Update is called once per frame
@@ -69,7 +72,7 @@ namespace Drills {
                     isActive = false;
                     OnTimerEnd();
                 }
-                clock.text = timeRemaining.ToString();
+                clock.text = ((int)timeRemaining).ToString();
             }
         }
     }

@@ -2,20 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< HEAD
-public class DrillController : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-}
-=======
 namespace Drills
 {
 
@@ -76,6 +62,7 @@ namespace Drills
 
         }
 
+        // Release all resources held by the Drill Controller.
         private void OnDestroy()
         {
             if (started) {
@@ -83,6 +70,7 @@ namespace Drills
             }
         }
 
+        // Set up game for Drill Controller.
         public void BeginGame()
         {
             gameTimer.OnTimerEnd += EndGame;
@@ -93,6 +81,7 @@ namespace Drills
             endGameButton.SetActive(true);
         }
 
+        // Handle drill ending for game.
         public void EndGame()
         {
             gameTimer.isActive = false;
@@ -101,7 +90,7 @@ namespace Drills
             ShowAnswers();
         }
 
-
+        // Hide answers for initial game setup.
         private void HideAnswers()
         {
             foreach(GameObject go in answers)
@@ -110,6 +99,7 @@ namespace Drills
             }
         }
 
+        // Display answers at end of drill.
         private void ShowAnswers()
         {
             foreach (GameObject go in answers)
@@ -118,6 +108,7 @@ namespace Drills
             }
         }
 
+        // Compute the score of the game.
         private float ComputeScore()
         {
             return score;
@@ -126,4 +117,3 @@ namespace Drills
     }
 
 }
->>>>>>> Added prefab inits

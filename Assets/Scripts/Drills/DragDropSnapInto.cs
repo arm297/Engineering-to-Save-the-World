@@ -22,12 +22,16 @@ namespace Drills {
         [HideInInspector]
         public Vector3 returnPosition;
 
+        // Parent of the object on drop.
+        [HideInInspector]
+        public Transform returnParent;
+
         // Parent to return to.
         [HideInInspector]
         public Transform originalParent;
 
         // Correct parent to drop object into for score.
-        public BlockContainer parentInto;
+        public BlockContainer correctParent;
 
         // Possible object to snap into
         private List<BlockContainer> snapIntoObjects;
@@ -38,24 +42,6 @@ namespace Drills {
         // Current object snapped into, or null is no containing object.
         [HideInInspector]
         public BlockContainer containingBlock;
-
-        // Checks if dragged object is over possible "snap into" location. If it 
-        // is, dragged object is "snapped into" new region, depending on the
-        // settings for snapping into. Otherwise, returns object to original 
-        // position.
-        void OnMouseUpAsButton()
-        {
-            //if (returnPosition != originalPos) {
-            //    containingBlock.AddContainedObject(GetComponent<DragDropSnapInto>());
-            //}             
-            //transform.position = returnPosition;
-        }
-
-        // Resets the containing block, if there is one.
-        void OnMouseDown()
-        {
-
-        }
 
         public new void OnBeginDrag(PointerEventData eventData)
         {

@@ -51,16 +51,7 @@ public class GameController : MonoBehaviour {
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
 	private string[] list_of_drills = {
-		"reliability_cost_drill_level_1",
-		"reliability_cost_drill_level_2",
-		"reliability_cost_drill_level_3",
-		"reliability_cost_drill_level_4",
-		"reliability_cost_drill_level_5",
-		"concept_sketch_interface",
-		"drill_1",
-		"drill_2",
-		"good_requirement_bad_requirement",
-		"technical_readiness_level"};
+		"Assignment Question 1"};
 	private string MainGame = "MainGame";
 	private string UI_Menu = "UI_Menu";
 
@@ -384,7 +375,7 @@ public class GameController : MonoBehaviour {
 
 			// Select which drill to run.
 			randomNumber = Random.Range(0, list_of_drills.Length - 1);
-            sceneToRun = list_of_drills[randomNumber];
+            string sceneToRun = list_of_drills[randomNumber];
 
             // Load New Scene
             LoadScene(sceneToRun);
@@ -497,5 +488,10 @@ public class GameController : MonoBehaviour {
         }
        
 	}
+
+	// Called to quit the game.
+    public void ExitGame() {
+        Application.Quit();
+    }
 
 }

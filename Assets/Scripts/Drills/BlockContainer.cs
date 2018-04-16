@@ -12,14 +12,9 @@ namespace Drills {
      */
     public class BlockContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
-        // Function types for actions performed during drop and pick up.
-        public delegate void OnBlockAction();
-
-        // Function called when dragged object is placed in block.
-        public OnBlockAction OnBlockPlaced;
-
-        // Function called when dragged object is picked up from block.
-        public OnBlockAction OnBlockRemoved;
+        // Whether the current block is full. 
+        [HideInInspector]
+        public bool isFilled { get; private set; }
 
         // Highlight color when dragged object is over block.
         [SerializeField]
@@ -31,11 +26,14 @@ namespace Drills {
         // Renderer for this container block.
         private CanvasRenderer blockRenderer;
 
-        // Whether the current block is full. 
-        private bool isFilled = false;
+        // Function types for actions performed during drop and pick up.
+        public delegate void OnBlockAction();
 
-        // Transform for this container block.
-        private RectTransform blockTransform;
+        // Function called when dragged object is placed in block.
+        public OnBlockAction OnBlockPlaced;
+
+        // Function called when dragged object is picked up from block.
+        public OnBlockAction OnBlockRemoved;
 
         // Drag-droppeds object contained by this block, if any.
         private DragDropSnapInto containedObject;
@@ -46,11 +44,13 @@ namespace Drills {
         // Use this for initialization
         void Start()
         {
+            isFilled = false;
             blockRenderer = GetComponent<CanvasRenderer>();
             defaultColor = blockRenderer.GetColor();
-            blockTransform = gameObject.transform as RectTransform;
         }
 
+        // When the pointer enters, set Block color and the location of any 
+        // dragged object.
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (containedObject == null)
@@ -71,6 +71,9 @@ namespace Drills {
             }
         }
 
+
+        // When the pointer exits, reset Block color and the location of any 
+        // dragged object.
         public void OnPointerExit(PointerEventData eventData)
         {
             if (containedObject == null)
