@@ -26,6 +26,9 @@ namespace Drills {
         [HideInInspector]
         public Transform originalParent;
 
+        // Correct parent to drop object into for score.
+        public BlockContainer parentInto;
+
         // Possible object to snap into
         private List<BlockContainer> snapIntoObjects;
 

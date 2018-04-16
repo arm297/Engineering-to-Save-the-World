@@ -89,14 +89,6 @@ namespace Drills {
             }
         }
 
-        // Get component which object can snap into, or null if no such component
-        // exists.
-        public bool Intersects2D(DragDrop dragObject)
-        {
-            RectTransform dragTransform = dragObject.GetComponent<RectTransform>();
-            return Intersect2D(dragTransform, blockTransform);
-        }
-
         // Adds a contained object if the container is not filled. Returns whether
         // the object was added.
         public bool AddContainedObject(DragDropSnapInto dragObject)
@@ -126,23 +118,7 @@ namespace Drills {
                 OnBlockRemoved();
             }
         }
-
-        // Returns whether the bounds intersect in 2D space.
-        static bool Intersect2D(RectTransform rt1, RectTransform rt2)
-        {
-            Rect r1 = GetWorldRect(rt1);
-            Rect r2 = GetWorldRect(rt2);
-            // return r1.Overlaps(r2);
-            return true;
-        }
-
-        static Rect GetWorldRect(RectTransform rt)
-        {
-            Vector3[] worldCorners = new Vector3[4];
-            rt.GetWorldCorners(worldCorners);
-            float width = worldCorners[4].x - worldCorners[0].x;
-            float height = worldCorners[1].y - worldCorners[0].y;
-            return new Rect(worldCorners[0].x, worldCorners[0].y, width, height);
-        }
+    
     }
+
 }

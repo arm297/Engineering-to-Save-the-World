@@ -11,7 +11,7 @@ namespace Drills
         private double reliability;
 
         // Target reliability.
-        private double targetReliability - 0.97;
+        private double targetReliability = 0.97;
 
         // Target cost.
         private double targetCost = 15;

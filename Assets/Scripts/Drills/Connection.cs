@@ -12,20 +12,30 @@ namespace Drills
 {
     class Connection : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-
+        // Moused over highlight color for connections.
         [SerializeField]
         private Color mousedOverColor;
 
+        // Selected highlight color for fields.
         [SerializeField]
         private Color selectedColor;
 
+        // First endpoint of the connection.
         [SerializeField]
-        private GameObject connectionEnd1;
+        private BlockContainer connectionEnd1;
 
+        // Second endpoint of the connection.
         [SerializeField]
-        private GameObject connectionEnd2;
+        private BlockContainer connectionEnd2;
 
+        // Original color of the connection segments.
         private Color defaultColor;
+
+        // Whether the connection segments are active.
+        private bool activeSegments;
+
+        private List<GameObject> segments = new List<GameObject>();
+        private List<GameObject> callouts = new List<GameObject>();
 
         public void OnPointerClick(PointerEventData eventData) {
 
@@ -40,12 +50,17 @@ namespace Drills
         }
 
         void Start() {
-            
+            activeSegments = false;
+            GameObject[] children;
         }
 
 
         public void Enable() {
+            activeSegments = true;
+           foreach(GameObject segment in segments)
+            {
 
+            }
         }
 
         public void Disable() {
