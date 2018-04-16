@@ -77,6 +77,7 @@ namespace Drills
         private void OnDestroy() {
             connectionEnd1.OnBlockPlaced -= Enable;
             connectionEnd1.OnBlockRemoved -= Disable;
+
             connectionEnd2.OnBlockPlaced -= Enable;
             connectionEnd2.OnBlockRemoved -= Disable;
         }
@@ -88,15 +89,17 @@ namespace Drills
                 activeSegments = true;
                 foreach(GameObject segment in segments) {
                     segment.SetActive(true);
-                    callouts.SetActive(false);
+                }
+                foreach (GameObject callout in callouts) {
+                    callout.SetActive(false);
                 }
             }
         }
 
         // Disable to game object if both endpoints are not filled.
         public void Disable() {
-            if (activeSegments && !connectionEnd1.isFilled 
-                && !connectionEnd2.isFilled) {
+            if (activeSegments && connectionEnd1.IsEmpty() 
+                && connectionEnd2.IsEmpty()) {
                 activeSegments = false;
                 foreach(GameObject segment in segments)
                 {

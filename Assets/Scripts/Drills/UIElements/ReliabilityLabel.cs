@@ -5,7 +5,12 @@ using UnityEngine.UI;
 
 namespace Drills {
 
-public class ReliabilityLabel : MonoBehaviour {
+/**
+ * Class for the individual labels of the reliability nodes.
+ * 
+ * Handles the reliability and the cost of each individual label.
+ */
+public class ReliabilityLabel : DragDrop {
 
 	// Cost of dragging the label into the system.
 	public double cost = 1.0;
@@ -27,27 +32,24 @@ public class ReliabilityLabel : MonoBehaviour {
 
 	// Reliability threshold to make labels high cost.
 	private static readonly float midCostThreshold = 2.1f;
-
-	// Use this for initialization
-	void Start () {
+	
+	// Initializes the reliability labels during the start.
+	protected override void Setup() {
+		base.Setup();
 		Text labelText = transform.GetChild(0).GetComponent<Text>();
 		labelText.text += " " + reliability;
-		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		if (reliability < lowCostThreshold) {
-			renderer.SetColor(cheapColor);
+			defaultColor = cheapColor;
 		}
 		else if (reliability < midCostThreshold) {
-			renderer.SetColor(midColor);
+			defaultColor = midColor;
 		}
 		else {
-			renderer.SetColor(highColor);
+			defaultColor = highColor;
 		}
+		objectRenderer.SetColor(defaultColor);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
 
 }

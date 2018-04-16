@@ -12,12 +12,8 @@ namespace Drills {
      */
     public class BlockContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
-        // Whether the current block is full. 
-        [HideInInspector]
-        public bool isFilled { get; private set; }
-
         // Drag-droppeds object contained by this block, if any.
-        public DragDropSnapInto containedObject { get; private set; }
+        public DragDrop containedObject { get; set; }
 
         // Highlight color when dragged object is over block.
         [SerializeField]
@@ -29,6 +25,9 @@ namespace Drills {
         // Renderer for this container block.
         private CanvasRenderer blockRenderer;
 
+        // Drag-dropped hovering object if any.
+        private DragDrop hoverObject;
+
         // Function types for actions performed during drop and pick up.
         public delegate void OnBlockAction();
 
@@ -38,71 +37,79 @@ namespace Drills {
         // Function called when dragged object is picked up from block.
         public OnBlockAction OnBlockRemoved;
 
-        // Drag-dropped hovering object if any.
-        private DragDropSnapInto hoverObject;
-
-        // Use this for initialization
-        void Start()
-        {
-            isFilled = false;
-            blockRenderer = GetComponent<CanvasRenderer>();
-            defaultColor = blockRenderer.GetColor();
-        }
-
         // When the pointer enters, set Block color and the location of any 
         // dragged object.
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (containedObject == null)
-            {
+        public void OnPointerEnter(PointerEventData eventData) {
+            Debug.Log("Entered");
+            if (IsEmpty()) {
                 blockRenderer.SetColor(highlightColor);
                 blockRenderer.SetAlpha(1);
-            }
-            if (eventData.pointerDrag == null)
-            {
-                return;
-            }
-            DragDropSnapInto dragdrop = eventData.pointerDrag.GetComponent<DragDropSnapInto>();
-            if (!isFilled && dragdrop != null)
-            {
-                hoverObject = dragdrop;
-                dragdrop.returnPosition = transform.position;
-                dragdrop.returnParent = transform;
+                Debug.Log("Is Empty");
+                if (eventData.pointerDrag == null) {
+                    return;
+                }
+                Debug.Log("Dragging object success");
+                DragDrop dragdrop = eventData.pointerDrag.GetComponent<DragDrop>();
+                if (dragdrop != null) {
+                    hoverObject = dragdrop;
+                    dragdrop.returnPosition = transform.position;
+                    dragdrop.returnParent = transform;
+                }
             }
         }
 
 
         // When the pointer exits, reset Block color and the location of any 
         // dragged object.
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (containedObject == null)
-            {
+        public void OnPointerExit(PointerEventData eventData) {
+            Debug.Log("Exited");
+            if (IsEmpty()) {
                 blockRenderer.SetColor(defaultColor);
             }
-            if (eventData != null && eventData.pointerDrag != null)
-            {
-                hoverObject = eventData.pointerDrag.GetComponent<DragDropSnapInto>();
+            if (eventData != null && eventData.pointerDrag != null) {
+                hoverObject = eventData.pointerDrag.GetComponent<DragDrop>();
             }
-            if (hoverObject != null)
-            {
-                hoverObject.returnPosition = hoverObject.originalPos;
+            if (hoverObject != null) {
+                hoverObject.returnPosition = hoverObject.originalPosition;
                 hoverObject.returnParent = hoverObject.originalParent;
                 hoverObject = null;
             }
         }
 
+        // Use this for initialization. This method cannot be overridden to
+        // ensure consistent behavior in subclasses.
+        void Start() {
+            Setup();            
+        }
+
+        // Initializes the drag-dropped object. This must be overridden in
+        // subclasses.
+        protected virtual void Setup() {
+            blockRenderer = GetComponent<CanvasRenderer>();
+            defaultColor = blockRenderer.GetColor();
+        }
+
+        // Returns whether this block contained a drag-dropped object.
+        public bool IsFilled() {
+            return containedObject != null;
+        }
+
+        // Returns whether this container is empty.
+        public bool IsEmpty() {
+            return containedObject == null;
+        }
+
         // Adds a contained object if the container is not filled. Returns whether
         // the object was added.
-        public bool AddContainedObject(DragDropSnapInto dragObject)
-        {
-            if (!isFilled)
-            {
+        public bool AddContainedObject(DragDrop dragObject) {
+            if (IsEmpty()) {
                 containedObject = dragObject;
-                isFilled = true;
+
+                // Sets the color to the contained object's color.
                 blockRenderer.SetColor(dragObject.GetComponent<CanvasRenderer>().GetMaterial().color);
-                if (OnBlockPlaced != null)
-                {
+
+                // Call delegate if provided.
+                if (OnBlockPlaced != null) {
                     OnBlockPlaced();
                 }
                 return true;
@@ -114,10 +121,10 @@ namespace Drills {
         public void RemoveContainedObject()
         {
             blockRenderer.SetColor(defaultColor);
-            isFilled = false;
             containedObject = null;
-            if (OnBlockRemoved != null)
-            {
+
+            // Call delegate if provided.
+            if (OnBlockRemoved != null) {
                 OnBlockRemoved();
             }
         }
