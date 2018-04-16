@@ -11,6 +11,18 @@ namespace Drills
         [SerializeField]
         private uint levelID;
 
+        // The display to show the calculated reliability results.
+        [SerializeField]
+        private GameObject reliabilityDisplay;
+
+        // The parent game object of the reliability nodes.
+        [SerializeField]
+        private GameObject nodesParent;
+
+        // The parent game object for the reliability labels.
+        [SerializeField]
+        private GameObject labelsParent;
+
         // Total reliability.
         private double reliability;
 
@@ -27,22 +39,42 @@ namespace Drills
         private bool targetReached = false;
 
         // The nodes of the reliability diagram.
-        private List<ReliabilityNodes> nodes;
+        private List<GameObject> nodes;
 
         // The labels for the reliability drill.
-        private List<ReliabilityLabels> labels;
+        private List<GameObject> labels;
 
         // The mapping correct blocks for each of the nodes.
-        private SortedDictionary<BlockContainer, int> correctBlocks;
+        private SortedDictionary<GameObject, GameObject> containingBlocks;
 
         // Use this for initialization
         void Start() {
-
+            nodes = GetChildrenWithTag(nodesParent, "snap_into");
+            labels = GetChildrenWithTag(labelsParent, "block");
+            containingBlocks = new SortedDictionary<GameObject, GameObject>();
+            foreach (GameObject node in nodes) {
+                GameObject label = null;
+                BlockContainer container = node.GetComponent<BlockContainer>();
+                
+            }
         }
 
         // Update is called once per frame
         void Update() {
 
+        }
+
+        // Get all children of a game object with a specified tag.
+        public static List<GameObject> GetChildrenWithTag(GameObject parent,
+                                                          string tag) {
+            List<GameObject> taggedChildren = new List<GameObject>();
+            foreach (Transform childTransform in parent.transform) {
+                GameObject child = childTransform.gameObject;
+                if (child.tag == tag) {
+                    taggedChildren.Add(child);
+                }
+            }
+            return taggedChildren;
         }
     }
 

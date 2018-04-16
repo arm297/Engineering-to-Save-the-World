@@ -16,6 +16,9 @@ namespace Drills {
         [HideInInspector]
         public bool isFilled { get; private set; }
 
+        // Drag-droppeds object contained by this block, if any.
+        public DragDropSnapInto containedObject { get; private set; }
+
         // Highlight color when dragged object is over block.
         [SerializeField]
         private Color highlightColor;
@@ -34,9 +37,6 @@ namespace Drills {
 
         // Function called when dragged object is picked up from block.
         public OnBlockAction OnBlockRemoved;
-
-        // Drag-droppeds object contained by this block, if any.
-        private DragDropSnapInto containedObject;
 
         // Drag-dropped hovering object if any.
         private DragDropSnapInto hoverObject;

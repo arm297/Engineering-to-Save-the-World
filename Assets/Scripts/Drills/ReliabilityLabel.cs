@@ -23,24 +23,24 @@ public class ReliabilityLabel : MonoBehaviour {
     private static readonly Color highColor = new Color(1, 0, 0, 1);
 
 	// Reliability threshold to make labels medium cost.
-	private static readonly float lowCostThreshold = 1.1;
+	private static readonly float lowCostThreshold = 1.1f;
 
 	// Reliability threshold to make labels high cost.
-	private static readonly float midCostThreshold = 2.1;
+	private static readonly float midCostThreshold = 2.1f;
 
 	// Use this for initialization
 	void Start () {
-		Text labelText = transform.getChild(0).GetComponent<Text>();
-		labelText += " " + reliability;
+		Text labelText = transform.GetChild(0).GetComponent<Text>();
+		labelText.text += " " + reliability;
 		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		if (reliability < lowCostThreshold) {
-			CanvasRenderer.SetColor(cheapColor);
+			renderer.SetColor(cheapColor);
 		}
 		else if (reliability < midCostThreshold) {
-			CanvasRenderer.SetColor(midColor);
+			renderer.SetColor(midColor);
 		}
 		else {
-			CanvasRenderer.SetColor(highColor);
+			renderer.SetColor(highColor);
 		}
 	}
 	
