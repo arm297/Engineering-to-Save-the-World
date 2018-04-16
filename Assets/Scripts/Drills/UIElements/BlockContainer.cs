@@ -12,6 +12,9 @@ namespace Drills {
      */
     public class BlockContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
+        // ID for matching block with dragged components.
+        public int blockID;
+
         // Drag-droppeds object contained by this block, if any.
         public DragDrop containedObject { get; set; }
 
@@ -40,7 +43,6 @@ namespace Drills {
         // When the pointer enters, set Block color and the location of any 
         // dragged object.
         public void OnPointerEnter(PointerEventData eventData) {
-            Debug.Log("Entered");
             if (IsEmpty()) {
                 blockRenderer.SetColor(highlightColor);
                 blockRenderer.SetAlpha(1);
@@ -62,7 +64,6 @@ namespace Drills {
         // When the pointer exits, reset Block color and the location of any 
         // dragged object.
         public void OnPointerExit(PointerEventData eventData) {
-            Debug.Log("Exited");
             if (IsEmpty()) {
                 blockRenderer.SetColor(defaultColor);
             }
@@ -76,17 +77,10 @@ namespace Drills {
             }
         }
 
-        // Use this for initialization. This method cannot be overridden to
-        // ensure consistent behavior in subclasses.
-        void Start() {
-            Setup();            
-        }
-
-        // Initializes the drag-dropped object. This must be overridden in
-        // subclasses.
-        protected virtual void Setup() {
+        // Use this for initialization.
+        public virtual void Start() {
             blockRenderer = GetComponent<CanvasRenderer>();
-            defaultColor = blockRenderer.GetColor();
+            defaultColor = blockRenderer.GetColor();           
         }
 
         // Returns whether this block contained a drag-dropped object.

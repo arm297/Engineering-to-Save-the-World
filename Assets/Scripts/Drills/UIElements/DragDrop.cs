@@ -12,6 +12,9 @@ namespace Drills {
     public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler,
     IPointerEnterHandler, IPointerExitHandler {
 
+        // ID for matching dragged object with blocks. 
+        public int dragID;
+
         // Highlight color for moused over objects
         [SerializeField]
         private Color highlightColor;
@@ -116,13 +119,7 @@ namespace Drills {
 
         // Use this for initialization. This method cannot be overridden to
         // ensure consistent behavior in subclasses.
-        void Start() {
-            Setup();
-	    }
-
-        // Initializes the drag-dropped object. This must be overridden in
-        // subclasses.
-        protected virtual void Setup() {
+        public virtual void Start() {
             originalPosition = transform.position;
             originalParent = transform.parent;
             objectRenderer = GetComponent<CanvasRenderer>();
@@ -131,7 +128,8 @@ namespace Drills {
             if ((dragMaterial = objectRenderer.GetMaterial()) != null) {
                 materialColor = dragMaterial.color;
             }
-        }
+	    }
+
     }
 
 }

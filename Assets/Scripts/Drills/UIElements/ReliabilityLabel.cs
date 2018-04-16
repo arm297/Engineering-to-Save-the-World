@@ -34,8 +34,8 @@ public class ReliabilityLabel : DragDrop {
 	private static readonly float midCostThreshold = 2.1f;
 	
 	// Initializes the reliability labels during the start.
-	protected override void Setup() {
-		base.Setup();
+	public override void Start() {
+		base.Start();
 		Text labelText = transform.GetChild(0).GetComponent<Text>();
 		labelText.text += " " + reliability;
 		if (reliability < lowCostThreshold) {

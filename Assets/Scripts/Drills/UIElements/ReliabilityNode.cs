@@ -16,8 +16,18 @@ public class ReliabilityNode : BlockContainer {
 	public ReliabilityLabel containedLabel;
 
 	// Setup for this node.
-	protected override void Setup() {
+	public override void Start() {
 		// Currently no additional class.
+	}
+
+	// Update is called once per frame.
+	void Update() {
+		if (IsFilled() && containedLabel == null) {
+			containedLabel = (ReliabilityLabel)containedObject;
+		}
+		else if (IsEmpty() && containedLabel != null) {
+			containedLabel = null;
+		}
 	}
 }
 
