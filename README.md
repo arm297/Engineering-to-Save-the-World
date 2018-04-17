@@ -17,7 +17,7 @@ See our current [tasks summary](Documents/TasksProgress.md).
 Make sure that any additional changes to this project follow the [Coding Guidelines](Documents/CodingGuideline.md). </br>
 In order to developing, look up the developing [Developing Guidelines](Documents/DevelopingGuideline.md).
 File List and Description
-* [GameCtonroller.cs](Documents/GameControllerDescription.md)
+* [GameController.cs](Documents/GameControllerDescription.md)
 * [MainGameRenderer.cs](Documents/MainGameRendererDescription.md)
 * [NodeListener.cs](Documents/NodeListenerDescription.md)
 
