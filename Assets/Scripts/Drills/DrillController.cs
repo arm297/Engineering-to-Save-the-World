@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Drills
 {
 
+    /*
+    The Controller for the drills. This class handles the transitions between
+    drill states.
+    */
     public class DrillController : MonoBehaviour
     {
         // Function types
@@ -13,7 +19,7 @@ namespace Drills
 
         // Function to be called at the beginning of the drill.
         [HideInInspector]
-        public InitFunction Init;
+        public InitFunction InitDrill;
 
         // Whether this game has started.
         private bool started = false;
@@ -25,46 +31,28 @@ namespace Drills
         [SerializeField]
         private Timer gameTimer;
 
-        // The start menu for this game.
+        // The display for the drill.
         [SerializeField]
-        private GameObject startMenu;
+        private DrillDisplay display;
 
-        // The end button for this game.
+        // The score handler for computing the score.
         [SerializeField]
-        private GameObject endGameButton;
-
-        // The button to return to main.
-        [SerializeField]
-        private GameObject returnToMainButton;
-
-        // The answer game objects.
-        private GameObject[] answers;
-
-        // The final score of this game.
-        private float score = 0;
+        private ScoreHandler scoreCalculator;
 
         // Use this for initialization
-        void Start()
-        {
-            answers = GameObject.FindGameObjectsWithTag("answer");
-            HideAnswers();
-            endGameButton.SetActive(false);
-            returnToMainButton.SetActive(false);
-            if (Init != null)
-            {
-                Init();
+        void Start() {
+            if (InitDrill != null) {
+                InitDrill();
             }
         }
 
         // Update is called once per frame
-        void Update()
-        {
+        void Update() {
 
         }
 
         // Release all resources held by the Drill Controller.
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             if (started) {
                 gameTimer.OnTimerEnd -= EndGame;
             }
@@ -77,41 +65,22 @@ namespace Drills
             gameTimer.isActive = true;
             started = true;
             isActive = true;
-            startMenu.SetActive(false);
-            endGameButton.SetActive(true);
+            display.BeginGame();
+            
         }
 
         // Handle drill ending for game.
-        public void EndGame()
-        {
+        public void EndGame() {
             gameTimer.isActive = false;
-            endGameButton.SetActive(false);
-            returnToMainButton.SetActive(true);
-            ShowAnswers();
+            display.EndGame();
         }
 
-        // Hide answers for initial game setup.
-        private void HideAnswers()
+        void ReturnToMainGame()
         {
-            foreach(GameObject go in answers)
-            {
-                go.SetActive(false);
-            }
-        }
+            //Camera.main.gameObject.SetActive(false);
+            Debug.Log("Returning to main game...");
+            SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
 
-        // Display answers at end of drill.
-        private void ShowAnswers()
-        {
-            foreach (GameObject go in answers)
-            {
-                go.SetActive(true);
-            }
-        }
-
-        // Compute the score of the game.
-        private float ComputeScore()
-        {
-            return score;
         }
 
     }

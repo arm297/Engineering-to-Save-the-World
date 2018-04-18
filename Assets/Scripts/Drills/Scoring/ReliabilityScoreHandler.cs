@@ -86,6 +86,10 @@ public class ReliabilityScoreHandler : ScoreHandler {
 			}
 		}
 	}
+
+    public override void DisplayScoreInfo() {
+
+    }
 }
 
 }

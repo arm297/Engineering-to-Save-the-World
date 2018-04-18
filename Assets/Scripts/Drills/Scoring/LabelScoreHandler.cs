@@ -47,6 +47,11 @@ public class LabelScoreHandler : ScoreHandler {
 		}
 		return score;
 	}
+
+	public override void DisplayScoreInfo() {
+        statusText.text = "Game Over!";
+        scoreText.text = "Final Score: " + score;
+	}
 }
 
 }
