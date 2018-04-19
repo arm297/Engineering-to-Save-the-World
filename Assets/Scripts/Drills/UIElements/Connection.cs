@@ -10,8 +10,7 @@ using UnityEngine.EventSystems;
 
 namespace Drills
 {
-    class Connection : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
-    {
+    class Connection : MonoBehaviour {
         // Moused over highlight color for connections.
         [SerializeField]
         private Color mousedOverColor;
@@ -35,32 +34,22 @@ namespace Drills
         private bool activeSegments;
 
         // Individual segmemts of the drill.
-        private List<GameObject> segments = new List<GameObject>();
+        private List<ConnectionSegment> segments = 
+            new List<ConnectionSegment>();
 
         // Individual callouts of the drill.
         private List<GameObject> callouts = new List<GameObject>();
-
-
-        public void OnPointerClick(PointerEventData eventData) {
-
-        }
-
-        public void OnPointerEnter(PointerEventData eventData) {
-
-        }
-
-        public void OnPointerExit(PointerEventData eventData) {
-
-        }
 
         // Use this for initialization.
         void Start() {
             activeSegments = false;
 
             // Set the different elements of the connection.
-            foreach (GameObject segment in transform) {
+            foreach (GameObject go in transform) {
+                ConnectionSegment segment = go.GetComponent<ConnectionSegment>();
+                segment.OnMouseEnter() 
                 segments.Add(segment);
-                callouts.Add(segment.transform.GetChild(0).gameObject);
+                callouts.Add(go.transform.GetChild(0).gameObject);
             }
 
             // Show connections when block is placed in endpoint.
@@ -87,8 +76,8 @@ namespace Drills
         public void Enable() {
             if (!activeSegments) {
                 activeSegments = true;
-                foreach(GameObject segment in segments) {
-                    segment.SetActive(true);
+                foreach(ConnectionSegment segment in segments) {
+                    segment.gameObject.SetActive(true);
                 }
                 foreach (GameObject callout in callouts) {
                     callout.SetActive(false);
@@ -101,10 +90,16 @@ namespace Drills
             if (activeSegments && connectionEnd1.IsEmpty() 
                 && connectionEnd2.IsEmpty()) {
                 activeSegments = false;
-                foreach(GameObject segment in segments)
-                {
-                    segment.SetActive(false);
+                foreach(ConnectionSegment segment in segments) {
+                    segment.gameObject.SetActive(false);
                 }
+            }
+        }
+
+        // Highlight the segments of the connection.
+        public void HiglightSegment() {
+            foreach (ConnectionSegment segment in segmemts) {
+
             }
         }
     }
