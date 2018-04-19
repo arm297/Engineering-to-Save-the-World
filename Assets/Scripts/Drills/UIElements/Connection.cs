@@ -27,11 +27,11 @@ namespace Drills
         [SerializeField]
         private BlockContainer connectionEnd2;
 
-        // Original color of the connection segments.
-        private Color defaultColor;
-
         // Whether the connection segments are active.
         private bool activeSegments;
+
+        // Whether this connection has been selected.
+        private bool isSelected = false;
 
         // Individual segmemts of the drill.
         private List<ConnectionSegment> segments = 
@@ -97,10 +97,30 @@ namespace Drills
         }
 
         // Highlight the segments of the connection.
-        public void HiglightSegment() {
-            foreach (ConnectionSegment segment in segmemts) {
-
+        public void HiglightMousedSegments() {
+            foreach (ConnectionSegment segment in segments) {
+                segment.SetColor(mousedOverColor);
             }
+        }
+
+        // Reset the color of the segments of the connection.
+        public void ResetSegmentColors() {
+            foreach (ConnectionSegment segment in segments) {
+                segment.ResetColor();
+            }
+        }
+
+        // Toggles the selected color of this connection.
+        public void ColorSelectedSegments() {
+            if (isSelected) {
+                ResetSegmentColors();
+            }
+            else {
+                foreach(ConnectionSegment segment in segments) {
+                    segments.SetColor(selectedColor);
+                }
+            }
+            isSelected = !isSelected;
         }
     }
 }
