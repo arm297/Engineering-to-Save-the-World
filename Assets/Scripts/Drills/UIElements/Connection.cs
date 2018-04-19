@@ -35,7 +35,7 @@ namespace Drills
 
         // Individual segmemts of the drill.
         private List<ConnectionSegment> segments = 
-            new List<ConnectionSegment>();
+                new List<ConnectionSegment>();
 
         // Individual callouts of the drill.
         private List<GameObject> callouts = new List<GameObject>();
@@ -47,7 +47,6 @@ namespace Drills
             // Set the different elements of the connection.
             foreach (GameObject go in transform) {
                 ConnectionSegment segment = go.GetComponent<ConnectionSegment>();
-                segment.OnMouseEnter() 
                 segments.Add(segment);
                 callouts.Add(go.transform.GetChild(0).gameObject);
             }
@@ -117,7 +116,7 @@ namespace Drills
             }
             else {
                 foreach(ConnectionSegment segment in segments) {
-                    segments.SetColor(selectedColor);
+                    segment.SetColor(selectedColor);
                 }
             }
             isSelected = !isSelected;

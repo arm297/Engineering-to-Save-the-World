@@ -17,13 +17,13 @@ public class ConnectionSegment : MonoBehaviour, IPointerEnterHandler,
 	public delegate void MouseAction();
 
 	// Called whenever the mouse clicks on this segment.
-	public event MouseAction OnMouseClicked();
+	public event MouseAction OnMouseClicked;
 
 	// Called whenever this connection segment is moused over.
-	public event MouseAction OnMouseEnter();
+	public event MouseAction OnMouseEnter;
 
 	// Called whenever the mouse exits this segment.
-	public event MouseAction OnMouseExit();
+	public event MouseAction OnMouseExit;
 
 	// The default color of the segment. 
 	private Color defaultColor;
@@ -51,24 +51,24 @@ public class ConnectionSegment : MonoBehaviour, IPointerEnterHandler,
 
 	// Use this for initialization
 	void Start () {
-		defaultColor = GetComponent<CanvasRenderer>().color;
+		defaultColor = GetComponent<CanvasRenderer>().GetColor();
 		callout = transform.GetChild(0).gameObject;
 	}
 
 	//Sets the color of the individual segment.
-	public SetColor(Color c) {
+	public void SetColor(Color c) {
 		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		renderer.SetColor(c);
 	}
 
 	// Resets the color of the individual segment.
-	public resetColor() {
+	public void ResetColor() {
 		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		renderer.SetColor(defaultColor);
 	}
 
 	// Toggles to callout state based on the provided argument.
-	public SetCalloutActive(bool active) {
+	public void SetCalloutActive(bool active) {
 		callout.SetActive(active);
 	}
 
