@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
 Description:
 This class controls scene and event management and stores Node & Player data.
 This is the only script to be sustained across scenes.
@@ -21,7 +21,6 @@ public class GameController : MonoBehaviour {
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
-	public static DrillScore drillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float InitialFunds = 1000;
@@ -44,14 +43,19 @@ public class GameController : MonoBehaviour {
 	public List<float> SystemParameters = new List<float>{0.0f, 0.0f, 0.0f, 0.0f};
 	public List<float> MinRequiredSystemParameters = new List<float>{100.0f, 200.0f, 150.0f, 40.0f};
 
-    public delegate void FinishGameFunction(int score, bool victory); //Clears the game when the game is over
-    public FinishGameFunction FinishGame;
-
-
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
 	private string[] list_of_drills = {
-		"Assignment Question 1"};
+		"reliability_cost_drill_level_1",
+		"reliability_cost_drill_level_2",
+		"reliability_cost_drill_level_3",
+		"reliability_cost_drill_level_4",
+		"reliability_cost_drill_level_5",
+		"concept_sketch_interface",
+		"drill_1",
+		"drill_2",
+		"good_requirement_bad_requirement",
+		"technical_readiness_level"};
 	private string MainGame = "MainGame";
 	private string UI_Menu = "UI_Menu";
 
@@ -113,12 +117,6 @@ public class GameController : MonoBehaviour {
 		public string Title { get; set; }
 		public float Fame { get; set; }
 	}
-
-	    // Stores the score from the last drill.
-    public class DrillScore
-    {
-        public float score { get; set; }
-    }
 
 	///////////////////////////////////////
 	// INITIALIZATION
@@ -366,23 +364,6 @@ public class GameController : MonoBehaviour {
 		PastTurns.NumberOfTurns = 0;
 	}
 
-	    // Functions that get the chance for a drill to run.
-    void ChanceForDrill(){
-        int randomNumber = Random.Range(0, 100);
-		if (randomNumber < EventChance * 100)
-        {
-            Debug.Log("Event System Activated.");
-
-			// Select which drill to run.
-			randomNumber = Random.Range(0, list_of_drills.Length - 1);
-            string sceneToRun = list_of_drills[randomNumber];
-
-            // Load New Scene
-            LoadScene(sceneToRun);
-
-        }
-    }
-
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
@@ -444,16 +425,13 @@ public class GameController : MonoBehaviour {
 		PastTurns.CurrentTurnNodesBought = new List<int>();
 		PastTurns.CurrentTurnNodesTested = new List<int>();
 		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
-
-		ChanceForDrill();
-        //Debug.Log(Player.Labor);
-        Debug.Log(PastTurns.NumberOfTurns);
+		//Debug.Log(Player.Labor);
 		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
 				|| Player.Funds <= 0.0f){
 			// Begin End of game routine
 				EndGame();
 		}
-		CalculateSystemFeautures();
+				CalculateSystemFeautures();
 	}
 
 	// updates global for parameter values at system level
@@ -479,19 +457,6 @@ public class GameController : MonoBehaviour {
 	// Victory or Defeat
 	public void EndGame(){
 
-        // Taly up the score for this game.
-        int score = 0;
-        bool victory = false;
-        if (FinishGame != null)
-        {
-            FinishGame(score, victory);
-        }
-       
 	}
-
-	// Called to quit the game.
-    public void ExitGame() {
-        Application.Quit();
-    }
 
 }
