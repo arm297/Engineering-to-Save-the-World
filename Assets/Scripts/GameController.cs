@@ -76,10 +76,11 @@ public class GameController : MonoBehaviour {
 		public List<float> ParameterActuals { get; set; }
 		public List<float> ParameterEstimated { get; set; }
 		public List<string> ParameterNames { get; set; }
+		public bool Purchaseable { get; set; }
 		public bool Purchased { get; set; }
 		public bool Visible { get; set; }
 		public bool Obscured {get; set; }
-		public bool Purchaseable { get; set; }
+		public bool Testable { get; set; }
 		public bool Tested { get; set; }
 		public bool Broken { get; set; }
 		public float CostToFix { get; set; }
@@ -196,9 +197,10 @@ public class GameController : MonoBehaviour {
 					"Parameter C",
 					"Parameter D"
 				};
+				n.Purchaseable = false;
 				n.Purchased = false;
 				n.Visible = false;
-				n.Purchaseable = false;
+				n.Testable = false;
 				n.Tested = false;
 				n.Broken = false;
 				n.CostToFix = n.CostActual * Random.Range(.2f,.7f);
@@ -566,6 +568,7 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].Purchased = true;
 				NodeList[idx].Purchaseable = false;
 				NodeList[idx].Obscured = false;
+				NodeList[idx].Testable = true;
 
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
@@ -574,10 +577,10 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
-						CalculateSystemFeautures();
-						ObscuredVisiblityNeighborSetter();
+				CalculateSystemFeautures();
+
 				return "Purchased Node ";
-			}else{
+			} else {
 				return "Insufficient Funds";
 			}
 		}else{
