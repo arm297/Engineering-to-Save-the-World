@@ -49,6 +49,12 @@
 |INPRG| |12| |Code organization| | |Andrew|
 | | | |1| |Create folder for shared base behaviors| | |
 |INPRG| |13| |Event System 2.0| | |Team|
+| | | |1| |Storing the stat| | |
+| | | |2| |Display stat| | |
+| | | |3| |Allowing imporving stat| | |
+| | | |4| |Generate stat event| | |
+| | | |5| |Role against the stat| | |
+| | | |6| |Enforing the outcome| | |
 |INPRG| |14| |End Game Function| | |Andrew|
 | | | |1| |Fill in End Game Function with handle to calculate score and stop gameplay| | |
 | | | |2| |Discountinue user interaction| | |
