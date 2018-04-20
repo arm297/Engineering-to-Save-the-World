@@ -22,7 +22,8 @@
 | | | |1| |Reattach display canvas| |
 |INPRG| |6| |Reattach Drills & Minigames| | | |Andrew|
 | | | |1| |Reorganize drill source code| |
-| | | |2| |Refer to correct handles in GameController| |
+| | | |2| |Improve drill functionality| |
+|COMP| | |3| |Refer to correct handles in GameController| |
 |COMP| |7| |Document new systems| | |Brighid|
 | | | |1| |GameController| | |
 | | | |2| |Renderer| | |
@@ -46,8 +47,9 @@
 |COMP| | |1| |Connecting Lines| | |
 |COMP| | |2| |Node Visibility Changes on Selection| | |
 |INPRG| | |3| |Correct camera display of game (allow scroll)| | |
-|INPRG| |13| |Code organization| | |Andrew|
-| | | |1| |Create folder for shared base behaviors| | |
+|INPRG| |13| |Code organization| | |Team|
+|COMP| | |1| |Create folder for shared base behaviors| | |
+|TODO| | |2| |Review source code for documentation| | |
 |INPRG| |14| |Event System 2.0| | |Team|
 | | | |1| |Storing the stat| | |
 | | | |2| |Display stat| | |
