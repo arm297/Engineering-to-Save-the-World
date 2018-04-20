@@ -42,13 +42,13 @@ namespace Drills
 
         // Use this for initialization.
         void Start() {
-            activeSegments = false;
+            activeSegments = true;
 
             // Set the different elements of the connection.
-            foreach (GameObject go in transform) {
-                ConnectionSegment segment = go.GetComponent<ConnectionSegment>();
+            foreach (Transform child in transform) {
+                ConnectionSegment segment = child.GetComponent<ConnectionSegment>();
                 segments.Add(segment);
-                callouts.Add(go.transform.GetChild(0).gameObject);
+                callouts.Add(child.GetChild(0).gameObject);
             }
 
             // Show connections when block is placed in endpoint.
