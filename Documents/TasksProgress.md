@@ -68,7 +68,9 @@
 | | | |3| |Display estimated weights upon user request| | | |
 | | | |4| |Calculate end score based on actual weights| | | |
 | | | |5| |Store end weights in GameControl for EndGame Function| | | |
-|INPRG| |17| |Creat Main Menu / User Screen| | |Team|
+|TODO| |17| |Develop Tutorial Level| | | |
+|TODO| |18| |Develop Game Level| | | |
+|INPRG| |19| |Creat Main Menu / User Screen| | |Team|
 | | | |1| |Start Game| | | |
 | | | |2| |Instructions| | | |
 | | | |3| |Sleek graphics| | | |
