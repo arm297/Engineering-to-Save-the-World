@@ -35,9 +35,9 @@
 |INPRG| |9| |Build Test System| | |Yong|
 |COMP| | |1| |Determine purchasing condition data| | |
 |COMP| | |2| |Build algorithm| | |
-| | | |3|Build function to calculate actual performance criteria when tested| | |Yong|
-| | | |4|Attach listener on test button to test function| | |Yong|
-| | | |5|Update GameControl NodeList with actual performance criteria| | |Yong|
+| | | |3|Build function to calculate actual performance criteria when tested| | | |
+| | | |4|Attach listener on test button to test function| | | |
+| | | |5|Update GameControl NodeList with actual performance criteria| | | |
 |COMP| |10| |Renderer System| | |Yong|
 | | | |1| |Score system| | |
 | | | |2| |Display Score| | |
@@ -51,7 +51,7 @@
 |INPRG| |13| |Event System 2.0| | |Team|
 | | | |1| |Storing the stat| | |
 | | | |2| |Display stat| | |
-| | | |3| |Allowing imporving stat| | |
+| | | |3| |Allowing improving stat| | |
 | | | |4| |Generate stat event| | |
 | | | |5| |Role against the stat| | |
 | | | |6| |Enforing the outcome| | |
