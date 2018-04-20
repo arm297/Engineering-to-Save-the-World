@@ -265,10 +265,23 @@ public class MainGame_Renderer : MonoBehaviour {
 		for(int i=0; i < names.Count; i++){
 			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
 		}
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
-			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
-			for(int i=0; i < names.Count; i++){
-				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
-			}
+		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
+		values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
+		for(int i=0; i < names.Count; i++){
+			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
+		}
+
+		float testedScore = 0, expectedScore = 0;
+
+		testedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
+		expectedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetExpectedScore ();
+
+		UpdateTotalScoreDisplay (testedScore, expectedScore);
+	}
+
+	// Called to update displacy of player current total score
+	public void UpdateTotalScoreDisplay(float tested, float expected) {
+		GameObject.Find ("TestedScoreText").GetComponent<Text>().text = tested.ToString();
+		GameObject.Find ("ExpectingScoreText").GetComponent<Text>().text = expected.ToString();
 	}
 }
