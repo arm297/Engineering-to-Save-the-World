@@ -25,8 +25,8 @@ public class LabelScoreHandler : ScoreHandler {
 
 	// Use this for initialization
 	void Start () {
-		labels = GameObject.FindGameObjectsWithTag("label");
-		blocks = GameObject.FindGameObjectsWithTag("block");
+		labels = GameObject.FindGameObjectsWithTag("block");
+		blocks = GameObject.FindGameObjectsWithTag("snap_into");
 		answers = GameObject.FindGameObjectsWithTag("answer");
 	}
 

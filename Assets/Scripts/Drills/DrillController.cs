@@ -39,6 +39,9 @@ namespace Drills
         [SerializeField]
         private ScoreHandler scoreCalculator;
 
+        // The final score of the drill.
+        private float finalScore = 0f;
+
         // Use this for initialization
         void Start() {
             if (InitDrill != null) {
@@ -72,11 +75,12 @@ namespace Drills
         // Handle drill ending for game.
         public void EndGame() {
             gameTimer.isActive = false;
+            finalScore = scoreCalculator.ComputeScore();
+            scoreCalculator.DisplayScoreInfo();
             display.EndGame();
         }
 
-        void ReturnToMainGame()
-        {
+        void ReturnToMainGame() {
             //Camera.main.gameObject.SetActive(false);
             Debug.Log("Returning to main game...");
             SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
