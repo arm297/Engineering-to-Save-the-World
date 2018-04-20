@@ -5,7 +5,8 @@ using UnityEngine;
 namespace Drills {
 
 /**
- * This class computes the reliability score for the reliability drill.
+ * This class computes the reliability score for the reliability drill,
+ * and displays the reliability and cost during the drill.
  */
 public class ReliabilityScoreHandler : ScoreHandler {
 
