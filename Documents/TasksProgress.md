@@ -35,9 +35,9 @@
 |INPRG| |9| |Build Test System| | |Yong|
 |COMP| | |1| |Determine purchasing condition data| | |
 |COMP| | |2| |Build algorithm| | |
-| | | |3|Build function to calculate actual performance criteria when tested| | | |
-| | | |4|Attach listener on test button to test function| | | |
-| | | |5|Update GameControl NodeList with actual performance criteria| | | |
+| | | |3| |Build function to calculate actual performance criteria when tested| | |
+| | | |4| |Attach listener on test button to test function| | |
+| | | |5| |Update GameControl NodeList with actual performance criteria| | |
 |COMP| |10| |Renderer System| | |Yong|
 | | | |1| |Score system| | |
 | | | |2| |Display Score| | |
