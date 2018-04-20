@@ -17,6 +17,7 @@
 | | | |1| |Node Grid| | |
 | | | |2| |Node Display| | |
 | | | |3| |Update Scene| | |
+| | | |4| |Profiling renderer| | |
 |COMP| |5| |Rebuild Player Profile Display| | |Yong|
 | | | |1| |Reattach display canvas| |
 |INPRG| |6| |Reattach Drills & Minigames| | | |Andrew|
