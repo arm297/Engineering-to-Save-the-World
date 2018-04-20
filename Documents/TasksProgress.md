@@ -54,16 +54,16 @@
 | | | |2| |Discountinue user interaction| | |
 | | | |3| |Display score/performance criteria| | |
 | | | |4| |Return user to main-menu| | |
-|INPRG| |13| |Score Function| | |Yong|
-| | | |1|Allow user to estimate weights with minigame| | | |
-| | | |2|Generate actual weights for end game comparison| | | |
-| | | |3|Display estimated weights upon user request| | | |
-| | | |4|Calculate end score based on actual weights| | | |
-| | | |5|Store end weights in GameControl for EndGame Function| | | |
-|INPRG| |15| |Creat Main Menu / User Screen| | |Team|
-| | | |1|Start Game| | | |
-| | | |2|Instructions| | | |
-| | | |3|Sleek graphics| | | |
+|INPRG| |15| |Score Function| | |Yong|
+| | | |1| |Allow user to estimate weights with minigame| | | |
+| | | |2| |Generate actual weights for end game comparison| | | |
+| | | |3| |Display estimated weights upon user request| | | |
+| | | |4| |Calculate end score based on actual weights| | | |
+| | | |5| |Store end weights in GameControl for EndGame Function| | | |
+|INPRG| |16| |Creat Main Menu / User Screen| | |Team|
+| | | |1| |Start Game| | | |
+| | | |2| |Instructions| | | |
+| | | |3| |Sleek graphics| | | |
 
 
 ### Resources
