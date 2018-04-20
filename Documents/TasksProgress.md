@@ -32,41 +32,41 @@
 |COMP| |9| |Identify settings & logic of interest| | |Team|
 | | | |1| |Test play with settings to identify improvement areas| | |
 | | | |2| |Document improvements| | |
-|INPRG| |9| |Build Test System| | |Yong|
+|COMP| |10| |Build Test System| | |Yong|
 |COMP| | |1| |Determine purchasing condition data| | |
 |COMP| | |2| |Build algorithm| | |
 | | | |3| |Build function to calculate actual performance criteria when tested| | |
 | | | |4| |Attach listener on test button to test function| | |
 | | | |5| |Update GameControl NodeList with actual performance criteria| | |
-|COMP| |10| |Renderer System| | |Yong|
+|COMP| |11| |Renderer System| | |Yong|
 | | | |1| |Score system| | |
 | | | |2| |Display Score| | |
 | | | |3| |Initialize minimum system requirements| | |
-|INPRG| |11| |Aesthetics of gameplay| | |Andrew|
+|INPRG| |12| |Aesthetics of gameplay| | |Andrew|
 |COMP| | |1| |Connecting Lines| | |
 |COMP| | |2| |Node Visibility Changes on Selection| | |
 |INPRG| | |3| |Correct camera display of game (allow scroll)| | |
-|INPRG| |12| |Code organization| | |Andrew|
+|INPRG| |13| |Code organization| | |Andrew|
 | | | |1| |Create folder for shared base behaviors| | |
-|INPRG| |13| |Event System 2.0| | |Team|
+|INPRG| |14| |Event System 2.0| | |Team|
 | | | |1| |Storing the stat| | |
 | | | |2| |Display stat| | |
 | | | |3| |Allowing improving stat| | |
 | | | |4| |Generate stat event| | |
 | | | |5| |Role against the stat| | |
 | | | |6| |Enforing the outcome| | |
-|INPRG| |14| |End Game Function| | |Andrew|
+|INPRG| |15| |End Game Function| | |Andrew|
 | | | |1| |Fill in End Game Function with handle to calculate score and stop gameplay| | |
 | | | |2| |Discountinue user interaction| | |
 | | | |3| |Display score/performance criteria| | |
 | | | |4| |Return user to main-menu| | |
-|INPRG| |15| |Score Function| | |Yong|
+|INPRG| |16| |Score Function| | |Yong|
 | | | |1| |Allow user to estimate weights with minigame| | | |
 | | | |2| |Generate actual weights for end game comparison| | | |
 | | | |3| |Display estimated weights upon user request| | | |
 | | | |4| |Calculate end score based on actual weights| | | |
 | | | |5| |Store end weights in GameControl for EndGame Function| | | |
-|INPRG| |16| |Creat Main Menu / User Screen| | |Team|
+|INPRG| |17| |Creat Main Menu / User Screen| | |Team|
 | | | |1| |Start Game| | | |
 | | | |2| |Instructions| | | |
 | | | |3| |Sleek graphics| | | |
