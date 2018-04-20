@@ -80,12 +80,12 @@ namespace Drills
             scoreCalculator.DisplayScoreInfo();
         }
 
-        void ReturnToMainGame() {
-            //Camera.main.gameObject.SetActive(false);
-            Debug.Log("Returning to main game...");
-            SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
-
-        }
+        // Loads back the main scene and readds the scoring data.
+        public void ReturnToMainGame() {
+		    Debug.Log("Returning to main game");
+		    GameController.LastDrillScore.Score = scoreCalculator.score;
+		    SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
+	    }
 
     }
 

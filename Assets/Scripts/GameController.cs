@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour {
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
+
+	public DrillScore LastDrillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float InitialFunds = 1000;
@@ -116,6 +118,13 @@ public class GameController : MonoBehaviour {
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public float Fame { get; set; }
+	}
+
+	public class DrillScore {
+
+		public float Score { get; set; }
+
+		public string Name { get; set; }
 	}
 
 	///////////////////////////////////////
