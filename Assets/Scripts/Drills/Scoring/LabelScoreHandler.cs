@@ -21,7 +21,7 @@ public class LabelScoreHandler : ScoreHandler {
 	private GameObject[] answers;
 
 	// The incorrect blocks for this assignment drill.
-	private List<GameObject> incorrect;
+	private List<GameObject> incorrect = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () {

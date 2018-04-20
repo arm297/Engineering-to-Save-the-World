@@ -76,8 +76,8 @@ namespace Drills
         public void EndGame() {
             gameTimer.isActive = false;
             finalScore = scoreCalculator.ComputeScore();
-            scoreCalculator.DisplayScoreInfo();
             display.EndGame();
+            scoreCalculator.DisplayScoreInfo();
         }
 
         void ReturnToMainGame() {
