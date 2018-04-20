@@ -121,7 +121,8 @@ public class GameController : MonoBehaviour {
 		public float Fame { get; set; }
 
 		// Parameter Weight
-		public List<float> ResourceCreterion { get; set;}
+		public List<float> ActualResourceCreterion { get; set;}
+		public List<float> ExpectedResourceCreterion { get; set;}
 	}
 
 	///////////////////////////////////////
@@ -495,7 +496,13 @@ public class GameController : MonoBehaviour {
 		Player.Fame = InitialFame;
 
 		// Weight Init
-		Player.ResourceCreterion = new List<float> {
+		Player.ExpectedResourceCreterion = new List<float> {
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f)
+		};
+		Player.ActualResourceCreterion = new List<float> {
 			Random.Range (0.0f, 5.0f),
 			Random.Range (0.0f, 5.0f),
 			Random.Range (0.0f, 5.0f),
@@ -524,8 +531,8 @@ public class GameController : MonoBehaviour {
 
 		foreach (NodeData eachNode in NodeList) {
 			if (eachNode.Purchased) {
-				for (int i = 0; i < Player.ResourceCreterion.Count; i++) {
-					expectedScore += (Player.ResourceCreterion [i] * eachNode.ParameterEstimated [i]);
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					expectedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterEstimated [i]);
 				}
 			}
 		}
@@ -539,8 +546,8 @@ public class GameController : MonoBehaviour {
 
 		foreach (NodeData eachNode in NodeList) {
 			if (eachNode.Tested) {
-				for (int i = 0; i < Player.ResourceCreterion.Count; i++) {
-					testedScore += (Player.ResourceCreterion [i] * eachNode.ParameterActuals [i]);
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					testedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterActuals [i]);
 				}
 			}
 		}
