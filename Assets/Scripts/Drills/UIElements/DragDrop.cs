@@ -57,6 +57,9 @@ namespace Drills {
         // Highlight moused over objects if not already dragging an object.
         public void OnPointerEnter(PointerEventData eventData) {
             if (eventData.pointerDrag == null) {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Debug.Log("" + mousePos);
+                Debug.Log("" + transform.position);
                 objectRenderer.SetColor(highlightColor);
                 objectRenderer.SetAlpha(1);
                 if (dragMaterial != null) {
@@ -77,6 +80,7 @@ namespace Drills {
 
         // Begin dragging the object, and set sibling index.
         public void OnBeginDrag(PointerEventData eventData) {
+            Debug.Log("Beginning the drag");
             eventData.pointerDrag = gameObject;
             returnParent = originalParent;
             transform.parent = returnParent;
@@ -93,6 +97,8 @@ namespace Drills {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = transform.position.z;
             transform.position = mousePos;
+            Debug.Log("Mouse position is at " + mousePos);
+            Debug.Log("transform position is at " + transform.position);
         }
 
         // Resets the color and sibling index of the dragged object, and sets
@@ -117,8 +123,8 @@ namespace Drills {
             GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
 
-        // Use this for initialization. This method cannot be overridden to
-        // ensure consistent behavior in subclasses.
+        // Use this for initialization. This method should be overridden in any
+        // subclass.
         public virtual void Start() {
             originalPosition = transform.position;
             originalParent = transform.parent;
