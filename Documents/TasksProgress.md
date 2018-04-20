@@ -51,13 +51,13 @@
 |COMP| | |1| |Create folder for shared base behaviors| | |
 |TODO| | |2| |Review source code for documentation| | |
 |INPRG| |14| |Event System 2.0| | |Team|
-| | | |1| |Storing the stat| | |
-| | | |2| |Display stat| | |
-| | | |3| |Allowing improving stat| | |
-| | | |4| |Generate stat event| | |
-| | | |5| |Role against the stat| | |
-| | | |6| |Enforing the outcome| | |
-|INPRG| |15| |End Game Function| | |Andrew|
+| | | |1| |Storing the stat| | |Brighid|
+| | | |2| |Display stat| | |Yong|
+| | | |3| |Allowing improving stat| |Brighid|
+| | | |4| |Generate stat event| | |Yong|
+| | | |5| |Role against the stat| | |Andrew|
+| | | |6| |Enforing the outcome| | |Andrew|
+|INPRG| |15| |End Game Function| | | |Andrew|
 | | | |1| |Fill in End Game Function with handle to calculate score and stop gameplay| | |
 | | | |2| |Discountinue user interaction| | |
 | | | |3| |Display score/performance criteria| | |
