@@ -81,6 +81,7 @@ public class GameController : MonoBehaviour {
 		public bool Visible { get; set; }
 		public bool Obscured {get; set; }
 		public bool Testable { get; set; }
+		public bool TestReady { get; set; }
 		public bool Tested { get; set; }
 		public bool Broken { get; set; }
 		public float CostToFix { get; set; }
@@ -201,6 +202,7 @@ public class GameController : MonoBehaviour {
 				n.Purchased = false;
 				n.Visible = false;
 				n.Testable = false;
+				n.TestReady = false;
 				n.Tested = false;
 				n.Broken = false;
 				n.CostToFix = n.CostActual * Random.Range(.2f,.7f);
@@ -577,6 +579,7 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
+				ObscuredVisiblityNeighborSetter();
 				CalculateSystemFeautures();
 
 				return "Purchased Node ";
@@ -620,6 +623,18 @@ public class GameController : MonoBehaviour {
 		PastTurns.CurrentTurnNodesTested = new List<int>();
 		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
 		//Debug.Log(Player.Labor);
+
+		//Testing
+		float totalTestCost = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.TestReady) {
+				totalTestCost += eachNode.LaborCost;
+				eachNode.TestReady = false;
+				eachNode.Tested = true;
+			}
+		}
+
 		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
 				|| Player.Funds <= 0.0f){
 			// Begin End of game routine
