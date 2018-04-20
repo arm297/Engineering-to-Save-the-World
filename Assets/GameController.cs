@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
+namespace Archived {
 
 public class GameController : MonoBehaviour {
 
@@ -353,5 +354,7 @@ public class GameController : MonoBehaviour {
 			}
 			return runningMult;
 	}
+
+}
 
 }
