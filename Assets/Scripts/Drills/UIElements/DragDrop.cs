@@ -58,8 +58,7 @@ namespace Drills {
         public void OnPointerEnter(PointerEventData eventData) {
             if (eventData.pointerDrag == null) {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Debug.Log("" + mousePos);
-                Debug.Log("" + transform.position);
+                Debug.Log("" + Input.mousePosition + " " + transform.position);
                 objectRenderer.SetColor(highlightColor);
                 objectRenderer.SetAlpha(1);
                 if (dragMaterial != null) {
@@ -72,6 +71,7 @@ namespace Drills {
         public void OnPointerExit(PointerEventData eventData) {
             if (eventData.pointerDrag != gameObject) {
                 objectRenderer.SetColor(defaultColor);
+                objectRenderer.SetAlpha(1);
                 if (dragMaterial != null) {
                     dragMaterial.color = materialColor;
                 }
@@ -80,25 +80,21 @@ namespace Drills {
 
         // Begin dragging the object, and set sibling index.
         public void OnBeginDrag(PointerEventData eventData) {
-            Debug.Log("Beginning the drag");
             eventData.pointerDrag = gameObject;
             returnParent = originalParent;
             transform.parent = returnParent;
             transform.SetAsLastSibling();
-            GetComponent<CanvasGroup>().blocksRaycasts = false;
             if (containingBlock != null) {
                 containingBlock.RemoveContainedObject();
                 containingBlock = null;
             }
-
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
         public void OnDrag(PointerEventData eventData) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = eventData.position;
             mousePos.z = transform.position.z;
             transform.position = mousePos;
-            Debug.Log("Mouse position is at " + mousePos);
-            Debug.Log("transform position is at " + transform.position);
         }
 
         // Resets the color and sibling index of the dragged object, and sets
@@ -127,6 +123,7 @@ namespace Drills {
         // subclass.
         public virtual void Start() {
             originalPosition = transform.position;
+            returnPosition = transform.position;
             originalParent = transform.parent;
             objectRenderer = GetComponent<CanvasRenderer>();
             defaultColor = objectRenderer.GetColor();

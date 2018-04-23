@@ -48,6 +48,10 @@ namespace Drills
             foreach (Transform child in transform) {
                 ConnectionSegment segment = child.GetComponent<ConnectionSegment>();
                 segments.Add(segment);
+
+                segment.OnMouseClicked += ColorSelectedSegments;
+                segment.OnMouseEnter += HiglightMousedSegments;
+                segment.OnMouseExit += ResetSegmentColors;
                 callouts.Add(child.GetChild(0).gameObject);
             }
 
@@ -68,6 +72,12 @@ namespace Drills
 
             connectionEnd2.OnBlockPlaced -= Enable;
             connectionEnd2.OnBlockRemoved -= Disable;
+
+            foreach(ConnectionSegment segment in segments) {
+                segment.OnMouseClicked -= ColorSelectedSegments;
+                segment.OnMouseEnter -= HiglightMousedSegments;
+                segment.OnMouseExit -= ResetSegmentColors;
+            }
         }
 
 
@@ -109,14 +119,19 @@ namespace Drills
             }
         }
 
-        // Toggles the selected color of this connection.
+        // Toggles the selected color of this connection and the callouts'
+        // states.
         public void ColorSelectedSegments() {
             if (isSelected) {
-                ResetSegmentColors();
+                foreach (ConnectionSegment segment in segments) {
+                    segment.ResetColor();
+                    segment.SetCalloutActive(false);
+                }
             }
             else {
                 foreach(ConnectionSegment segment in segments) {
                     segment.SetColor(selectedColor);
+                    segment.SetCalloutActive(true);
                 }
             }
             isSelected = !isSelected;
