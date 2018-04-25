@@ -71,9 +71,9 @@
 |TODO| |17| |Develop Tutorial Level| | | |
 |TODO| |18| |Develop Game Level| | | |
 |INPRG| |19| |Creat Main Menu / User Screen| | |Team|
-| | | |1| |Start Game| | | |
-| | | |2| |Instructions| | | |
-| | | |3| |Sleek graphics| | | |
+|INPRG| | |1| |Start Game| | | |
+|HOLD| | |2| |Instructions| | | |
+|HOLD| | |3| |Sleek graphics| | | |
 
 
 ### Resources
