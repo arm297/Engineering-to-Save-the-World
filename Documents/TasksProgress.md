@@ -55,6 +55,9 @@
 |COMP| | |2| |Display stat| |Brighid|
 |COMP| | |3| |Allowing improving stat| |Brighid|
 | | | |4| |Generate stat event| |Yong|
+|COMP| | |4.1| |Random method| |Yong|
+| | | |4.2| |Implement to event| |Yong|
+| | | |4.3| |Add to master| |Yong
 | | | |5| |Role against the stat| |Andrew|
 | | | |6| |Enforcing the outcome| |Andrew|
 |INPRG| |15| |End Game Function| | | |Andrew|
