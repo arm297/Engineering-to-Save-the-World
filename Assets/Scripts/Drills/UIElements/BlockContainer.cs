@@ -46,11 +46,10 @@ namespace Drills {
             if (IsEmpty()) {
                 blockRenderer.SetColor(highlightColor);
                 blockRenderer.SetAlpha(1);
-                Debug.Log("Is Empty");
+
                 if (eventData.pointerDrag == null) {
                     return;
                 }
-                Debug.Log("Dragging object success");
                 DragDrop dragdrop = eventData.pointerDrag.GetComponent<DragDrop>();
                 if (dragdrop != null) {
                     hoverObject = dragdrop;
@@ -80,6 +79,8 @@ namespace Drills {
         // Use this for initialization.
         public virtual void Start() {
             blockRenderer = GetComponent<CanvasRenderer>();
+            if (blockRenderer == null)
+            Debug.Log(blockRenderer);
             defaultColor = blockRenderer.GetColor();           
         }
 
@@ -112,8 +113,7 @@ namespace Drills {
         }
 
         // Removes the contained object of this block.
-        public void RemoveContainedObject()
-        {
+        public void RemoveContainedObject() {
             blockRenderer.SetColor(defaultColor);
             containedObject = null;
 

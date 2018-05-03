@@ -32,29 +32,25 @@ public class ReliabilityLabel : DragDrop {
 
 	// Reliability threshold to make labels high cost.
 	private static readonly double midCostThreshold = 2.1;
-	
-	// Initializes the reliability labels during the start.
-	public override void Start() {
-		base.Start();
-		Text labelText = transform.GetChild(0).GetComponent<Text>();
-		labelText.text += " " + reliability;
-		
-		/**if (cost < lowCostThreshold) {
-			defaultColor = cheapColor;
-		}
-		else if (cost < midCostThreshold) {
-			defaultColor = midColor;
-		}
-		else {
-			defaultColor = highColor;
-		}
-		
-		objectRenderer.SetColor(defaultColor);
-		objectRenderer.SetAlpha(1);
+
+    // Initializes the reliability labels during the start.
+    public override void Start() {
+        base.Start();
+        Text labelText = transform.GetChild(0).GetComponent<Text>();
+        labelText.text += " " + reliability;
+
+        if (cost < lowCostThreshold) {
+            materialColor = cheapColor;
+        }
+        else if (cost < midCostThreshold) {
+            materialColor = midColor;
+        }
+        else {
+            materialColor = highColor;
+        }
         if (dragMaterial != null) {
-			materialColor = defaultColor;
-            dragMaterial.color = defaultColor;
-        }**/
+            dragMaterial.color = materialColor;
+        }
 	}
 	
 }

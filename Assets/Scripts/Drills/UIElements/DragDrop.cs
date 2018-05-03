@@ -93,8 +93,9 @@ namespace Drills {
             //Vector3 newPos = Camera.main.ScreenToWorldPoint(mousePos);
             //newPos.z = transform.position.z;
             float oldZ = transform.position.z;
-            Vector3 newPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, oldZ);
-            transform.position = newPos;
+            Vector3 screenPoint = Input.mousePosition;
+            screenPoint.z = Camera.main.nearClipPlane;
+            transform.position =Camera.main.ScreenToWorldPoint(screenPoint);
         }
 
         // Resets the color and sibling index of the dragged object, and sets
@@ -132,7 +133,6 @@ namespace Drills {
                 materialColor = dragMaterial.color;
             }
 	    }
-
     }
 
 }
