@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour {
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
+
+	public DrillScore LastDrillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float Sparsity = .2f; // Higher sparsity rate means more holes on map
@@ -135,6 +137,13 @@ public class GameController : MonoBehaviour {
 		public float Fame { get; set; }
 		public Dictionary<string, int> Stats { get; set; }
 
+	}
+
+	public class DrillScore {
+
+		public float Score { get; set; }
+
+		public string Name { get; set; }
 	}
 
 	///////////////////////////////////////

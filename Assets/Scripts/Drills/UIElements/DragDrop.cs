@@ -69,6 +69,7 @@ namespace Drills {
         public void OnPointerExit(PointerEventData eventData) {
             if (eventData.pointerDrag != gameObject) {
                 objectRenderer.SetColor(defaultColor);
+                objectRenderer.SetAlpha(1);
                 if (dragMaterial != null) {
                     dragMaterial.color = materialColor;
                 }
@@ -79,20 +80,21 @@ namespace Drills {
         public void OnBeginDrag(PointerEventData eventData) {
             eventData.pointerDrag = gameObject;
             returnParent = originalParent;
-            transform.parent = returnParent;
             transform.SetAsLastSibling();
-            GetComponent<CanvasGroup>().blocksRaycasts = false;
             if (containingBlock != null) {
                 containingBlock.RemoveContainedObject();
                 containingBlock = null;
             }
-
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
         public void OnDrag(PointerEventData eventData) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = transform.position.z;
-            transform.position = mousePos;
+            //Vector3 mousePos = eventData.position;
+            //Vector3 newPos = Camera.main.ScreenToWorldPoint(mousePos);
+            //newPos.z = transform.position.z;
+            float oldZ = transform.position.z;
+            Vector3 newPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, oldZ);
+            transform.position = newPos;
         }
 
         // Resets the color and sibling index of the dragged object, and sets
@@ -117,10 +119,11 @@ namespace Drills {
             GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
 
-        // Use this for initialization. This method cannot be overridden to
-        // ensure consistent behavior in subclasses.
+        // Use this for initialization. This method should be overridden in any
+        // subclass.
         public virtual void Start() {
             originalPosition = transform.position;
+            returnPosition = transform.position;
             originalParent = transform.parent;
             objectRenderer = GetComponent<CanvasRenderer>();
             defaultColor = objectRenderer.GetColor();

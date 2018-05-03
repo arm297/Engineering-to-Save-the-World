@@ -42,13 +42,17 @@ namespace Drills
 
         // Use this for initialization.
         void Start() {
-            activeSegments = false;
+            activeSegments = true;
 
             // Set the different elements of the connection.
-            foreach (GameObject go in transform) {
-                ConnectionSegment segment = go.GetComponent<ConnectionSegment>();
+            foreach (Transform child in transform) {
+                ConnectionSegment segment = child.GetComponent<ConnectionSegment>();
                 segments.Add(segment);
-                callouts.Add(go.transform.GetChild(0).gameObject);
+
+                segment.OnMouseClicked += ColorSelectedSegments;
+                segment.OnMouseEnter += HiglightMousedSegments;
+                segment.OnMouseExit += ResetSegmentColors;
+                callouts.Add(child.GetChild(0).gameObject);
             }
 
             // Show connections when block is placed in endpoint.
@@ -68,6 +72,12 @@ namespace Drills
 
             connectionEnd2.OnBlockPlaced -= Enable;
             connectionEnd2.OnBlockRemoved -= Disable;
+
+            foreach(ConnectionSegment segment in segments) {
+                segment.OnMouseClicked -= ColorSelectedSegments;
+                segment.OnMouseEnter -= HiglightMousedSegments;
+                segment.OnMouseExit -= ResetSegmentColors;
+            }
         }
 
 
@@ -109,14 +119,19 @@ namespace Drills
             }
         }
 
-        // Toggles the selected color of this connection.
+        // Toggles the selected color of this connection and the callouts'
+        // states.
         public void ColorSelectedSegments() {
             if (isSelected) {
-                ResetSegmentColors();
+                foreach (ConnectionSegment segment in segments) {
+                    segment.ResetColor();
+                    segment.SetCalloutActive(false);
+                }
             }
             else {
                 foreach(ConnectionSegment segment in segments) {
                     segment.SetColor(selectedColor);
+                    segment.SetCalloutActive(true);
                 }
             }
             isSelected = !isSelected;
