@@ -48,8 +48,7 @@ public class ReliabilityScoreHandler : ScoreHandler {
     private List<ReliabilityLabel> labels;
 
 	// Use this for initialization
-	void Awake() {
-        Debug.Log("THis is happening");
+	void OnEnable() {
 		// Get labels and nodes.
 		GameObject[] nodeObjects = GameObject.FindGameObjectsWithTag("snap_into");
         nodes = nodeObjects.Select(n => n.GetComponent<ReliabilityNode>()).ToList();
@@ -79,7 +78,16 @@ public class ReliabilityScoreHandler : ScoreHandler {
 	}
 
     // Release all held resources.
-    private void OnDestroy() {
+    private void OnDisable() {
+        foreach (ReliabilityNode node in nodes) {
+            node.OnBlockPlaced -= DisplayCurrentStats;
+            node.OnBlockRemoved -= DisplayCurrentStats;
+
+        }
+    }
+
+        // Release all held resources.
+        private void OnDestroy() {
         foreach (ReliabilityNode node in nodes) {
             if (node != null) {
                 node.OnBlockPlaced -= DisplayCurrentStats;
