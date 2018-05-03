@@ -47,6 +47,20 @@ public class GameController : MonoBehaviour {
 	public List<float> SystemParameters = new List<float>{0.0f, 0.0f, 0.0f, 0.0f};
 	public List<float> MinRequiredSystemParameters = new List<float>{100.0f, 200.0f, 150.0f, 40.0f};
 
+	// For Player Stats
+	public List<string> StatNames = new List<string>{
+		"Acquisition Processes",
+		"Supply Processes",
+		"Life Cycle Model Management",
+		"InfrastructureManagement",
+		"PortfolioManagement",
+		"Human Resource Management",
+		"Knowledge & Information Management"
+	};
+	public float StatBaseCost = 1.0f;
+	public float StatCostScalar = 1.0f;
+
+
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
 	private string[] list_of_drills = {
@@ -70,30 +84,29 @@ public class GameController : MonoBehaviour {
     public class NodeData
     {
         public int IDX { get; set; }
-		public string Name { get; set; }
-		public int X { get; set; }
-		public int Y { get; set; }
-		public float CostActual { get; set; }
-		public float CostEstimated { get; set; }
-		public List<float> ParameterActuals { get; set; }
-		public List<float> ParameterEstimated { get; set; }
-		public List<string> ParameterNames { get; set; }
-		public bool Purchaseable { get; set; }
-		public bool Purchased { get; set; }
-		public bool Visible { get; set; }
-		public bool Obscured {get; set; }
-		public bool Testable { get; set; }
-		public bool Tested { get; set; }
-		public bool Broken { get; set; }
-		public float CostToFix { get; set; }
-		public List<int> Parents {get; set; }
-		public List<int> RequiredParents {get; set; }
-		public List<int> Children {get; set; }
-		public float ProbabilityToFail {get; set; }
-		public float ParentExpectedReliability {get; set; }
-		public float LaborCost { get; set; }
-		public bool SystReq { get; set; }
-		public int ObscuredRank {get; set;}
+				public string Name { get; set; }
+				public int X { get; set; }
+				public int Y { get; set; }
+				public float CostActual { get; set; }
+				public float CostEstimated { get; set; }
+				public List<float> ParameterActuals { get; set; }
+				public List<float> ParameterEstimated { get; set; }
+				public List<string> ParameterNames { get; set; }
+				public bool Purchased { get; set; }
+				public bool Visible { get; set; }
+				public bool Obscured {get; set; }
+				public bool Purchaseable { get; set; }
+				public bool Tested { get; set; }
+				public bool Broken { get; set; }
+				public float CostToFix { get; set; }
+				public List<int> Parents {get; set; }
+				public List<int> RequiredParents {get; set; }
+				public List<int> Children {get; set; }
+				public float ProbabilityToFail {get; set; }
+				public float ParentExpectedReliability {get; set; }
+				public float LaborCost { get; set; }
+				public bool SystReq { get; set; }
+				public int ObscuredRank {get; set;}
     }
 
 	// the below class stores turn data as well as refreshable resources.
@@ -122,10 +135,8 @@ public class GameController : MonoBehaviour {
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public float Fame { get; set; }
+		public Dictionary<string, int> Stats { get; set; }
 
-		// Parameter Weight
-		public List<float> ActualResourceCreterion { get; set;}
-		public List<float> ExpectedResourceCreterion { get; set;}
 	}
 
 	public class DrillScore {
@@ -206,10 +217,9 @@ public class GameController : MonoBehaviour {
 					"Parameter C",
 					"Parameter D"
 				};
-				n.Purchaseable = false;
 				n.Purchased = false;
 				n.Visible = false;
-				n.Testable = false;
+				n.Purchaseable = false;
 				n.Tested = false;
 				n.Broken = false;
 				n.CostToFix = n.CostActual * Random.Range(.2f,.7f);
@@ -506,19 +516,11 @@ public class GameController : MonoBehaviour {
 		Player.Title = "Project Manager";
 		Player.Fame = InitialFame;
 
-		// Weight Init
-		Player.ExpectedResourceCreterion = new List<float> {
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f)
-		};
-		Player.ActualResourceCreterion = new List<float> {
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f)
-		};
+		// Initialize Stats to 0
+		Player.Stats = new Dictionary<string, int>();
+		foreach(string statName in StatNames){
+			Player.Stats.Add(statName, 0);
+		}
 	}
 
 	// Initialize Turn Data
@@ -536,36 +538,6 @@ public class GameController : MonoBehaviour {
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
-	// Called for getting expected total score
-	public float GetExpectedScore() {
-		float expectedScore = 0;
-
-		foreach (NodeData eachNode in NodeList) {
-			if (eachNode.Purchased) {
-				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
-					expectedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterEstimated [i]);
-				}
-			}
-		}
-
-		return expectedScore;
-	}
-
-	// Called for getting tested total score
-	public float GetTestedScore() {
-		float testedScore = 0;
-
-		foreach (NodeData eachNode in NodeList) {
-			if (eachNode.Tested) {
-				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
-					testedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterActuals [i]);
-				}
-			}
-		}
-
-		return testedScore;
-	}
-
 	// Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
 	public string PurchaseNode(int idx){
 		if(NodeList[idx].Purchaseable){
@@ -577,7 +549,6 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].Purchased = true;
 				NodeList[idx].Purchaseable = false;
 				NodeList[idx].Obscured = false;
-				NodeList[idx].Testable = true;
 
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
@@ -586,10 +557,10 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
-				CalculateSystemFeautures();
-
+						CalculateSystemFeautures();
+						ObscuredVisiblityNeighborSetter();
 				return "Purchased Node ";
-			} else {
+			}else{
 				return "Insufficient Funds";
 			}
 		}else{
@@ -654,6 +625,48 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
+
+	// Determine if minimum system requirements have been Method
+	// Returns true if min reqs have been met, false otherwise
+	public bool CheckMinSystRequirements(){
+		// Go through all nodes and look for any unpurchased System Requirements
+		foreach(NodeData n in NodeList){
+			if(n.IDX >= 0 && n.SystReq && !n.Purchased){
+				return false;
+			}
+		}
+		// Compare System Features with minimum required features
+		CalculateSystemFeautures();
+		int i = 0;
+		foreach(float val in SystemParameters){
+			if(MinRequiredSystemParameters[i] > val){
+				return false;
+			}
+			i += 1;
+		}
+		return true;
+	}
+
+	// Determine Cost to purchase more stat, based off existing stat
+	public float PurchaseStatCost(string statName){
+		int lvl = Player.Stats[statName];
+		return StatBaseCost * Mathf.Exp(StatCostScalar * lvl);
+	}
+
+	// Purchase Stat
+	public string PurchasePlayerStat(string statName){
+
+		// Cost to improve stat
+		float cost = PurchaseStatCost(statName);
+		if(Player.Labor >= cost){
+			Player.Stats[statName] += 1;
+			Player.Labor -= cost;
+			return "Purchased";
+		}else{
+			return "Insuficient Labor";
+		}
+	}
+
 
 	// End of Game
 	// Tally up Score

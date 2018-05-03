@@ -37,6 +37,20 @@ public class MainGame_Renderer : MonoBehaviour {
 		EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
 		//EndTurn.onClick.AddListener(Update);
 		//GetNodes();
+
+		// Add Listeners for Purchase Stat buttons
+		Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
+		//for (int i = 0; i < playerStats.Count; i++)
+		int i = 0;
+		foreach (KeyValuePair<string, int> item in playerStats)
+			{
+				string statName = item.Key;//playerStats.Keys.ElementAt(i);
+				GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
+				delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
+				);
+
+				i+=1;
+			}
 	}
 
 	// Listeners
@@ -52,6 +66,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		//todo: logic to only updateprofile when something interesting happens
 		UpdateProfile();
 		UpdateSystemScoreDisplay();
+		UpdatePlayerStatDisplay();
 
 		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
 			RespawnNodes = false;
@@ -265,23 +280,26 @@ public class MainGame_Renderer : MonoBehaviour {
 		for(int i=0; i < names.Count; i++){
 			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
 		}
-		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
-		values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
-		for(int i=0; i < names.Count; i++){
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
-		}
-
-		float testedScore = 0, expectedScore = 0;
-
-		testedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
-		expectedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetExpectedScore ();
-
-		UpdateTotalScoreDisplay (testedScore, expectedScore);
+			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
+			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
+			for(int i=0; i < names.Count; i++){
+				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
+			}
 	}
 
-	// Called to update displacy of player current total score
-	public void UpdateTotalScoreDisplay(float tested, float expected) {
-		GameObject.Find ("TestedScoreText").GetComponent<Text>().text = tested.ToString();
-		GameObject.Find ("ExpectingScoreText").GetComponent<Text>().text = expected.ToString();
+	// Called to update Player Stat Display
+	public void UpdatePlayerStatDisplay(){
+			//Player Stats:
+			Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
+			//for (int i = 0; i < playerStats.Count; i++)
+			int i = 0;
+			foreach (KeyValuePair<string, int> item in playerStats)
+				{
+    			string statName = item.Key;//playerStats.Keys.ElementAt(i);
+          int statValue = item.Value;//playerStats[ statName ];
+					float statCost = GameObject.Find ("GameControl").GetComponent<GameController>().PurchaseStatCost(statName);
+					GameObject.Find ("Stat_"+(1+i)).GetComponent<Text> ().text = statName+":\n\tLevel: "+statValue+": \t\tCost: ("+statCost+")";
+					i+=1;
+				}
 	}
 }

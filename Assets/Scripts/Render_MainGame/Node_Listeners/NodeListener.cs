@@ -18,10 +18,6 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public Sprite PurchaseButtonNormal;
 	public Sprite PurchaseButtonBought;
 
-	public Sprite TestReadyButtonMouseOver;
-	public Sprite TestReadyButtonNormal;
-	public Sprite TestReadyButtonTested;
-
 	// Use this for initialization
 	void Start () {
 		InitializeNode();
@@ -56,50 +52,37 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		//Debug.Log("Mouse enter");
-		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Visible
+			//Debug.Log("Mouse enter");
+			if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Visible
 			&& !GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Obscured){
 			gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(10,10,10);//NodeInfoPos.localScale;
 			isOver = true;
-		}
-		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable){
-			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonMouseOver;
-		}
-		/*if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
-		    && GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
-			gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonMouseOver;
-		}*/
+			}
+			if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable){
+				gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonMouseOver;
+			}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		//Debug.Log("Mouse exit");
-		gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(0, 0, 0);
-		isOver = false;
+			//Debug.Log("Mouse exit");
+			gameObject.transform.Find("NodeInfo").transform.localScale = new Vector3(0, 0, 0);
+			isOver = false;
 
-		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable) {
-			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonNormal;
-		}
-		/*if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
-			&& GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
-			gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
-		}*/
+			if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable){
+				gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonNormal;
+			}
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
-	{
+	    {
 
-		// Purchase?
-		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable) {
-			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonBought;
-			PurchaseNode();
-		}
-
-		/*if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
-		    && GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
-			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = TestReadyButtonTested;
-		}*/
-	}
+				// Purchase?
+				if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable){
+  				gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = PurchaseButtonBought;
+					PurchaseNode();
+  			}
+	   }
 
 
 	// Send purchase request and idx to GameController
