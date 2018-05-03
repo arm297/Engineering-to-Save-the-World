@@ -57,8 +57,6 @@ namespace Drills {
         // Highlight moused over objects if not already dragging an object.
         public void OnPointerEnter(PointerEventData eventData) {
             if (eventData.pointerDrag == null) {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Debug.Log("" + Input.mousePosition + " " + transform.position);
                 objectRenderer.SetColor(highlightColor);
                 objectRenderer.SetAlpha(1);
                 if (dragMaterial != null) {
@@ -82,7 +80,6 @@ namespace Drills {
         public void OnBeginDrag(PointerEventData eventData) {
             eventData.pointerDrag = gameObject;
             returnParent = originalParent;
-            transform.parent = returnParent;
             transform.SetAsLastSibling();
             if (containingBlock != null) {
                 containingBlock.RemoveContainedObject();
@@ -92,9 +89,12 @@ namespace Drills {
         }
 
         public void OnDrag(PointerEventData eventData) {
-            Vector3 mousePos = eventData.position;
-            mousePos.z = transform.position.z;
-            transform.position = mousePos;
+            //Vector3 mousePos = eventData.position;
+            //Vector3 newPos = Camera.main.ScreenToWorldPoint(mousePos);
+            //newPos.z = transform.position.z;
+            float oldZ = transform.position.z;
+            Vector3 newPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, oldZ);
+            transform.position = newPos;
         }
 
         // Resets the color and sibling index of the dragged object, and sets
