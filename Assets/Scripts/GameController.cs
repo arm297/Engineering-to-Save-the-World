@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour {
 	public DrillScore LastDrillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
+	public float Sparsity = .2f; // Higher sparsity rate means more holes on map
 	public float InitialFunds = 1000;
 	public float InitialLabor = 20;
 	public float InitialFame = 0;
@@ -36,6 +37,7 @@ public class GameController : MonoBehaviour {
 	public float ExpectedUntestedNodeReliability = 0.98f; // 1 = no penalty, 0 = ultimate penalty
 	public float InitialLaborPerTurn = 20.0f;  // Amount of Fund Change that occurs each turn (are funds renewed or depleted?)
 	public int MaxNumberOfTurns = 10;  // Number of Turns allowed in game
+	public int MaxPurchaseablePath = 20; // Longest Path considered purchaseable
 	public List<string> ParameterNames = new List<string>{
 		"Parameter A",
 		"Parameter B",
@@ -68,28 +70,30 @@ public class GameController : MonoBehaviour {
     public class NodeData
     {
         public int IDX { get; set; }
-				public string Name { get; set; }
-				public int X { get; set; }
-				public int Y { get; set; }
-				public float CostActual { get; set; }
-				public float CostEstimated { get; set; }
-				public List<float> ParameterActuals { get; set; }
-				public List<float> ParameterEstimated { get; set; }
-				public List<string> ParameterNames { get; set; }
-				public bool Purchased { get; set; }
-				public bool Visible { get; set; }
-				public bool Obscured {get; set; }
-				public bool Purchaseable { get; set; }
-				public bool Tested { get; set; }
-				public bool Broken { get; set; }
-				public float CostToFix { get; set; }
-				public List<int> Parents {get; set; }
-				public List<int> RequiredParents {get; set; }
-				public List<int> Children {get; set; }
-				public float ProbabilityToFail {get; set; }
-				public float ParentExpectedReliability {get; set; }
-				public float LaborCost { get; set; }
-				public bool SystReq { get; set; }
+		public string Name { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
+		public float CostActual { get; set; }
+		public float CostEstimated { get; set; }
+		public List<float> ParameterActuals { get; set; }
+		public List<float> ParameterEstimated { get; set; }
+		public List<string> ParameterNames { get; set; }
+		public bool Purchaseable { get; set; }
+		public bool Purchased { get; set; }
+		public bool Visible { get; set; }
+		public bool Obscured {get; set; }
+		public bool Testable { get; set; }
+		public bool Tested { get; set; }
+		public bool Broken { get; set; }
+		public float CostToFix { get; set; }
+		public List<int> Parents {get; set; }
+		public List<int> RequiredParents {get; set; }
+		public List<int> Children {get; set; }
+		public float ProbabilityToFail {get; set; }
+		public float ParentExpectedReliability {get; set; }
+		public float LaborCost { get; set; }
+		public bool SystReq { get; set; }
+		public int ObscuredRank {get; set;}
     }
 
 	// the below class stores turn data as well as refreshable resources.
@@ -118,6 +122,10 @@ public class GameController : MonoBehaviour {
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public float Fame { get; set; }
+
+		// Parameter Weight
+		public List<float> ActualResourceCreterion { get; set;}
+		public List<float> ExpectedResourceCreterion { get; set;}
 	}
 
 	public class DrillScore {
@@ -198,9 +206,10 @@ public class GameController : MonoBehaviour {
 					"Parameter C",
 					"Parameter D"
 				};
+				n.Purchaseable = false;
 				n.Purchased = false;
 				n.Visible = false;
-				n.Purchaseable = false;
+				n.Testable = false;
 				n.Tested = false;
 				n.Broken = false;
 				n.CostToFix = n.CostActual * Random.Range(.2f,.7f);
@@ -209,10 +218,17 @@ public class GameController : MonoBehaviour {
 				n.Children = new List<int>();
 				n.ProbabilityToFail = Random.Range(.01f,.3f);
 				n.Obscured = true;
+				n.ObscuredRank = 3;
 				n.ParentExpectedReliability = 1;
 				n.LaborCost = BaseLabor * Random.Range(0.8f, 1.5f);
 				n.SystReq = false;
 
+
+				// Chance that Node is destroyed depends on sparsity
+				if(Random.Range(0.0f, 1.0f) < Sparsity){
+					//Do not add or consider relations. Never existed...
+					n.IDX = -n.IDX;
+				}else{
 				// Identify Parent, RequiredParents, Children
 				int npidx = 0;
 				foreach(NodeData _ in NodeList){
@@ -221,7 +237,7 @@ public class GameController : MonoBehaviour {
 						float x_dist = n.X - np.X;
 						float distance = Mathf.Sqrt(y_dist*y_dist + x_dist*x_dist);
 						// Node within distance of new node
-						if(distance <= MaxEuclideanDistance){
+						if(distance <= MaxEuclideanDistance && np.IDX >= 0){
 							// Node is a parent of new node
 							if (ParentChance > Random.Range(0.0f, 1.0f)){
 									NodeList[npidx].Children.Add(n.IDX);
@@ -238,37 +254,141 @@ public class GameController : MonoBehaviour {
 						npidx += 1;
 				}
 
-				NodeList.Add(n);
 			}
-			CalculateSystemFeautures();
+							NodeList.Add(n);
+			}
 		}
-
+			CalculateSystemFeautures();
 
 		//Select n_starting_purchaseable nodes to make purchaseable and visible
 		NodeList[0].Purchaseable = true;
 		NodeList[0].Visible = true;
 		NodeList[0].Obscured = true;
-		for( int i = 1; i < n_starting_purchaseable; i++){
+		int ki = 0;
+		while (ki < n_starting_purchaseable){
+		int ji = 0;
+		foreach (NodeData n in NodeList){
+		//for( int i = 1; i < n_starting_purchaseable; i++){
 			int x_pos = (int)Random.Range(0,X-1);
 			int y_pos = (int)Random.Range(0,Y-1);
 			int idx = x_pos * Y + y_pos;
-			NodeList[idx].Purchaseable = true;
-			NodeList[idx].Visible = true;
-			NodeList[idx].Obscured = false;
+			if (n.IDX == idx){
+				NodeList[idx].Purchaseable = true;
+				NodeList[idx].Visible = true;
+				NodeList[idx].Obscured = false;
+				ki += 1;
+			}
+			ji += 1;
+		}
+
 		}
 
 		//Set System Requirements
 		foreach(NodeData n in NodeList){
 			int chance = (int)Random.Range(0, 30);
-			if (chance <= 1){
+			if (chance <= 1 && n.IDX > 10){
 				int idx = n.IDX;
 				NodeList[idx].SystReq = true;
 				NodeList[idx].Visible = true;
 
 			}
 		}
-
+		// Check that all SystReqs are purchaseable.
+		WinnableGame(-1,0);
+		ObscuredVisiblityNeighborSetter();
 	}
+
+	// Returns the first neighbor within Euclidean Distance to a given Node
+	// Returns either a valid idx or -1
+	public int GetSingleEuclideanNeighbor(int idx){
+		NodeData n = NodeList[idx];
+		int npidx = 0;
+		foreach(NodeData _ in NodeList){
+				NodeData np = NodeList[npidx];
+				float y_dist = n.Y - np.Y;
+				float x_dist = n.X - np.X;
+				float distance = Mathf.Sqrt(y_dist*y_dist + x_dist*x_dist);
+				// Node within distance of new node
+				if(distance <= MaxEuclideanDistance && np.IDX >= 0){
+					return npidx;
+				}
+			}
+			return -1;
+	}
+
+	// Ensure Game is winnable with SystReqs
+	// For each SystReq, check that a purchaseable path exists
+	public void WinnableGame(int idx, int depth){
+		if (depth >= MaxPurchaseablePath && idx >= 0){
+			NodeList[idx].Purchaseable = true;
+			NodeList[idx].Visible = true;
+			NodeList[idx].Obscured = false;
+			return;
+		}else{
+			depth += 1;
+		}
+		if(idx == -1){
+			// Initial call
+		foreach(NodeData n in NodeList){
+			if(n.SystReq && !n.Purchaseable){
+				idx = n.IDX;
+				// Continue to chain up, adding parents, until a purchaseable node is found
+				if(n.Parents.Count + n.RequiredParents.Count < 1){
+					// No Parents -- Unwinnable. Add a nearby Parent
+					int neighbor = GetSingleEuclideanNeighbor(idx);
+					if(neighbor == -1){
+						// No valid neighbors; Ensure that node[idx] is not a SystReq
+						NodeList[idx].Purchaseable = true;
+						NodeList[idx].Visible = true;
+						NodeList[idx].Obscured = false;
+					}else{
+						// Make neighbor a required parent of node and move up
+						NodeList[idx].RequiredParents.Add(neighbor);
+						NodeList[neighbor].Children.Add(idx);
+						WinnableGame(neighbor, depth);
+					}
+				}else{
+					// Parents exist. Move up to each required parent and single parent
+					foreach(int rparent in n.RequiredParents){
+						WinnableGame(rparent,depth);
+					}
+					foreach(int parent in n.Parents){
+						WinnableGame(parent,depth);
+						break;
+					}
+				}
+			}
+		}
+	}else if (!NodeList[idx].Purchaseable){
+		// A recursive Call. Ensure the node is on a purchaseable path
+		NodeData n = NodeList[idx];
+		if(n.Parents.Count + n.RequiredParents.Count < 1){
+			// No Parents -- Unwinnable. Add a nearby Parent
+			int neighbor = GetSingleEuclideanNeighbor(idx);
+			if(neighbor == -1){
+				// No valid neighbors; Ensure that node is purchaseable.
+				NodeList[idx].Purchaseable = true;
+				NodeList[idx].Visible = true;
+				NodeList[idx].Obscured = false;
+			}else{
+				// Make neighbor a required parent of node and move up
+				NodeList[idx].RequiredParents.Add(neighbor);
+				NodeList[neighbor].Children.Add(idx);
+				WinnableGame(neighbor,depth);
+			}
+		}else{
+			// Parents exist. Move up to each required parent and single parent
+			foreach(int rparent in n.RequiredParents){
+				WinnableGame(rparent,depth);
+			}
+			foreach(int parent in n.Parents){
+				WinnableGame(parent,depth);
+				break;
+			}
+		}
+	}
+	}
+
 
 	// This Method will review all nodes in NodeList and check for nodes with purchased and purchaseable neighbors
 	// If neighbor is purchased -- set purchaseable to true, set visible to true, set obsured to false
@@ -312,7 +432,7 @@ public class GameController : MonoBehaviour {
 						foreach(int r in requirements){
 							if (!NodeList[r].Purchased){
 								NodeList[idxj].Purchaseable = false;
-								NodeList[idxj].Obscured = true;
+								NodeList[idxj].Obscured = false;
 								break;
 							}
 						}
@@ -326,6 +446,32 @@ public class GameController : MonoBehaviour {
 					NodeList[idxj].Visible = true;
 				}
 			}
+		}
+	}
+
+
+	// Go through all Nodes
+	// for Visible non-obscured nodes : Make all non-visible parents visible & obscured
+	public void ObscuredVisiblityNeighborSetter(){
+		int idx = 0;  // Why doesn't C# have enumerate?!
+		foreach (var node in NodeList) {
+			if(node.Visible && !node.Obscured){
+				List<int> neighbors = NodeList[idx].Parents;
+				foreach (int idxj in neighbors){
+					if(!NodeList[idxj].Visible){
+						NodeList[idxj].Visible = true;
+						NodeList[idxj].Obscured = true;
+					}
+				}
+				neighbors = NodeList[idx].RequiredParents;
+				foreach (int idxj in neighbors){
+					if(!NodeList[idxj].Visible){
+						NodeList[idxj].Visible = true;
+						NodeList[idxj].Obscured = true;
+					}
+				}
+			}
+			idx = idx + 1;
 		}
 	}
 
@@ -359,6 +505,20 @@ public class GameController : MonoBehaviour {
 		Player.Name = "todo";
 		Player.Title = "Project Manager";
 		Player.Fame = InitialFame;
+
+		// Weight Init
+		Player.ExpectedResourceCreterion = new List<float> {
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f)
+		};
+		Player.ActualResourceCreterion = new List<float> {
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f)
+		};
 	}
 
 	// Initialize Turn Data
@@ -376,6 +536,36 @@ public class GameController : MonoBehaviour {
 	//////////////////////////////////////////////////////////////////////
 	// Functions that alter GameController Data
 
+	// Called for getting expected total score
+	public float GetExpectedScore() {
+		float expectedScore = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.Purchased) {
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					expectedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterEstimated [i]);
+				}
+			}
+		}
+
+		return expectedScore;
+	}
+
+	// Called for getting tested total score
+	public float GetTestedScore() {
+		float testedScore = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.Tested) {
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					testedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterActuals [i]);
+				}
+			}
+		}
+
+		return testedScore;
+	}
+
 	// Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
 	public string PurchaseNode(int idx){
 		if(NodeList[idx].Purchaseable){
@@ -386,6 +576,9 @@ public class GameController : MonoBehaviour {
 				Player.Labor = Player.Labor - NodeList[idx].LaborCost;
 				NodeList[idx].Purchased = true;
 				NodeList[idx].Purchaseable = false;
+				NodeList[idx].Obscured = false;
+				NodeList[idx].Testable = true;
+
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
 				// calculate expected reliability based on parent state upon purchase
@@ -393,9 +586,10 @@ public class GameController : MonoBehaviour {
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
 				PastTurns.CurrentTurnNodesBought.Add(idx);
-						CalculateSystemFeautures();
+				CalculateSystemFeautures();
+
 				return "Purchased Node ";
-			}else{
+			} else {
 				return "Insufficient Funds";
 			}
 		}else{

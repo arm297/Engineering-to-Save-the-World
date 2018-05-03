@@ -1,4 +1,7 @@
-﻿using System.Collections;
+using UnityEditor;
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +14,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	public List<GameObject> Nodes = new List<GameObject>();  // List of instantiated Nodes
 	public List<int> NodeIDX = new List<int>(); // index of Node, matching Nodes in length, idx for node
 	public GameObject Node;  // Must drag and drop Node prefab onto Node in Unity
+	public GameObject conn;	// Connection GameObject prefab
 	public float X_Space;  // Spacing between nodes (horizontal)
 	public float Y_Space;  // Spacing between nodes (vertical)
 	public GameObject ProfileSettingPrefab; // Profile setting prefab
@@ -21,6 +25,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	public Button EndTurn;
 	public Sprite PurchasedImage;
 	public Sprite SystReqImage;
+	public Sprite ObscuredImage;
 
 	// Troubleshooting
 	public bool DisplayAllNodes = false;
@@ -84,11 +89,23 @@ public class MainGame_Renderer : MonoBehaviour {
 			}else{
 				// Go through logic to determine if a node should be added to list
 				// Only consider Nodes not already appended to list
-				if(NodeIDX.IndexOf(idx) == -1){
-					if(node.Visible){
-						Nodes.Add(CreateNodeGameObject(node,idx));
-						NodeIDX.Add(idx);
+				if(NodeIDX.IndexOf(idx) == -1 && node.Visible){
+					Nodes.Add(CreateNodeGameObject(node,idx));
+					NodeIDX.Add(idx);
+					// Also add parents & children to Node List
+					foreach (var node2 in temp){
+						if(node2.Children.IndexOf(idx) != -1){
+							// Child
+							Nodes.Add(CreateNodeGameObject(node2,node2.IDX));
+							NodeIDX.Add(node2.IDX);
+						}
+						if(node2.RequiredParents.IndexOf(idx) != -1 || node2.Parents.IndexOf(idx) != -1){
+							// Parent
+							Nodes.Add(CreateNodeGameObject(node2,node2.IDX));
+							NodeIDX.Add(node2.IDX);
+						}
 					}
+
 				}
 			}
 		}
@@ -128,9 +145,11 @@ public class MainGame_Renderer : MonoBehaviour {
 			NodeGameObject.GetComponent<Image>().sprite = SystReqImage;
 		}
 		if (node.Purchased){
-			NodeGameObject.GetComponent<Image>().sprite = PurchasedImage; 
+			NodeGameObject.GetComponent<Image>().sprite = PurchasedImage;
 		}
-
+		if(node.Obscured && !node.SystReq){
+			NodeGameObject.GetComponent<Image>().sprite = ObscuredImage;
+		}
 
 		return NodeGameObject;
 	}
@@ -168,23 +187,37 @@ public class MainGame_Renderer : MonoBehaviour {
 			int idx = NodeIDX[i];
 			List<int> requirements = GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].RequiredParents;
 			List<int> parents = GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].Parents;
+			List<int> children = GameObject.Find("GameControl").GetComponent<GameController>().NodeList[idx].Children;
 			// Draw Requirements
 			//todo: consider adding additional logic:
 			//	if both parents are purchased then draw different lines
 			//	else if two few requirements are purchased then draw different line
 			//	or draw line to spot where non-visible requirement node resides for child
-			foreach(int jdx in requirements){
-				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
-				if (gameObject_idx >= 0){
-					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, RequirementParentChild);
-					Lines.Add(line);
-				}
-			}
+
 			// Draw Parents
+			Color nonReq = Color.white;
 			foreach(int jdx in parents){
 				int gameObject_idx = NodeIDX.IndexOf(jdx);
 				if (gameObject_idx >= 0){
-					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, NonRequirementParentChild);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 1);
+					Lines.Add(line);
+				}
+			}
+
+			Color req = Color.red;
+			foreach(int jdx in requirements){
+				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
+				if (gameObject_idx >= 0){
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, req, 5);
+					Lines.Add(line);
+				}
+			}
+
+			Color chil = Color.blue;
+			foreach(int jdx in children){
+				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
+				if (gameObject_idx >= 0){
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 1);
 					Lines.Add(line);
 				}
 			}
@@ -195,17 +228,21 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Takes the 2 node GameObjects
 	// Draws a line between the nodes
-	public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Material mat){
+	public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Color col, int thickness){
 		Canvas canvas = gameObject.GetComponent<Canvas>();
 		Vector3 startPos = Node1.transform.position;
 		Vector3 endPos = Node2.transform.position;
-		GameObject lineGameObject =  (GameObject)Instantiate(Node, startPos, Quaternion.identity);
-		//lineGameObject.transform.SetParent(Node1.transform);
+
+
+		GameObject lineGameObject =  (GameObject)Instantiate(conn, startPos, Quaternion.identity);
+		lineGameObject.transform.SetParent(canvas.transform);
 		LineRenderer lineRenderer = lineGameObject.AddComponent<LineRenderer>();
-		lineRenderer.material = mat;
+		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+		lineRenderer.SetColors(col, col);
 		lineRenderer.widthMultiplier = LineWidth;
 		lineRenderer.SetPosition(0,startPos);
 		lineRenderer.SetPosition(1,endPos);
+		lineRenderer.SetWidth(thickness, thickness);
 		return lineGameObject;
 
 	}
@@ -228,10 +265,23 @@ public class MainGame_Renderer : MonoBehaviour {
 		for(int i=0; i < names.Count; i++){
 			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
 		}
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
-			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
-			for(int i=0; i < names.Count; i++){
-				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
-			}
+		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
+		values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
+		for(int i=0; i < names.Count; i++){
+			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
+		}
+
+		float testedScore = 0, expectedScore = 0;
+
+		testedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
+		expectedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetExpectedScore ();
+
+		UpdateTotalScoreDisplay (testedScore, expectedScore);
+	}
+
+	// Called to update displacy of player current total score
+	public void UpdateTotalScoreDisplay(float tested, float expected) {
+		GameObject.Find ("TestedScoreText").GetComponent<Text>().text = tested.ToString();
+		GameObject.Find ("ExpectingScoreText").GetComponent<Text>().text = expected.ToString();
 	}
 }
