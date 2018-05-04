@@ -139,6 +139,7 @@ public class GameController : MonoBehaviour {
 
 	}
 
+    // Holds information for the score and the name of the executed drill.
 	public class DrillScore
     {
 
@@ -315,16 +316,16 @@ public class GameController : MonoBehaviour {
 		NodeData n = NodeList[idx];
 		int npidx = 0;
 		foreach(NodeData _ in NodeList) {
-				NodeData np = NodeList[npidx];
-				float y_dist = n.Y - np.Y;
-				float x_dist = n.X - np.X;
-				float distance = Mathf.Sqrt(y_dist*y_dist + x_dist*x_dist);
-				// Node within distance of new node
-				if(distance <= MaxEuclideanDistance && np.IDX >= 0) {
-					return npidx;
-				}
+			NodeData np = NodeList[npidx];
+			float y_dist = n.Y - np.Y;
+			float x_dist = n.X - np.X;
+			float distance = Mathf.Sqrt(y_dist*y_dist + x_dist*x_dist);
+			// Node within distance of new node
+			if(distance <= MaxEuclideanDistance && np.IDX >= 0) {
+				return npidx;
 			}
-			return -1;
+		}
+		return -1;
 	}
 
 	// Ensure Game is winnable with SystReqs
@@ -359,13 +360,12 @@ public class GameController : MonoBehaviour {
 						    WinnableGame(neighbor, depth);
 					    }
 				    } else {
-					    // Parents exist. Move up to each required parent and single parent
-					    foreach (int rparent in n.RequiredParents) {
-						    WinnableGame(rparent,depth);
-					    }
+                        // Parents exist. Move up to each required parent and single parent
+                        n.RequiredParents.ForEach(rparent => WinnableGame(rparent, depth));
 					    foreach (int parent in n.Parents) {
 						    WinnableGame(parent,depth);
-						    break;
+                            //TODO: Why are we breaking after a single iteration of the for loop?
+                            break;
 					    }
 				    }
 			    }
@@ -388,10 +388,8 @@ public class GameController : MonoBehaviour {
 				    WinnableGame(neighbor,depth);
 			    }
 		    } else {
-			    // Parents exist. Move up to each required parent and single parent
-			    foreach (int rparent in n.RequiredParents) {
-				    WinnableGame(rparent,depth);
-			    }
+                // Parents exist. Move up to each required parent and single parent
+                n.RequiredParents.ForEach(rparent => WinnableGame(rparent, depth));
 			    foreach (int parent in n.Parents) {
 				    WinnableGame(parent,depth);
 				    break;
@@ -416,12 +414,9 @@ public class GameController : MonoBehaviour {
 				}
 			} else if (node.Purchaseable) {
 				List<int> neighbors = NodeList[idx].Children;
-				foreach (int idxj in neighbors) {
-					NodeList[idxj].Visible = true;
-				}
+                neighbors.ForEach((int idxj) => { NodeList[idxj].Visible = true; });
 			}
-
-			idx = idx + 1;
+			idx++;
 		}
 	}
 
@@ -431,7 +426,7 @@ public class GameController : MonoBehaviour {
         // TODO: Why is this here right now?
 		if (true) {
 			NodeData node = NodeList[idx];
-			if(node.Purchased){
+			if(node.Purchased) {
 				List<int> neighbors = node.Children;
 				foreach (int idxj in neighbors) {
 					if(!NodeList[idxj].Purchased) {
@@ -440,8 +435,8 @@ public class GameController : MonoBehaviour {
 						NodeList[idxj].Purchaseable = true;
 						NodeList[idxj].Obscured = false;
 						List<int> requirements = NodeList[idxj].RequiredParents;
-						foreach(int r in requirements){
-							if (!NodeList[r].Purchased){
+						foreach(int r in requirements) {
+							if (!NodeList[r].Purchased) {
 								NodeList[idxj].Purchaseable = false;
 								NodeList[idxj].Obscured = false;
 								break;
@@ -451,11 +446,9 @@ public class GameController : MonoBehaviour {
 						NodeList[idxj].Visible = true;
 					}
 				}
-			} else if(node.Purchaseable) {
+			} else if (node.Purchaseable) {
 				List<int> neighbors = NodeList[idx].Children;
-				foreach (int idxj in neighbors) {
-					NodeList[idxj].Visible = true;
-				}
+                neighbors.ForEach((int idxj) => { NodeList[idxj].Visible = true; });
 			}
 		}
 	}
@@ -482,7 +475,7 @@ public class GameController : MonoBehaviour {
 					}
 				}
 			}
-			idx = idx + 1;
+			idx++;
 		}
 	}
 
@@ -497,13 +490,13 @@ public class GameController : MonoBehaviour {
 		int y = NodeList[idx].Y;
 		int idxj = 0;
 		foreach (var node in NodeList) {
-			if ( idxj != idx &&	NodeList[idxj].X <= x+1
+			if (idxj != idx && NodeList[idxj].X <= x+1
 			    && NodeList[idxj].X >= x-1
 			    && NodeList[idxj].Y <= y+1
 			    && NodeList[idxj].Y >= y-1) {
 				neighbors.Add(idxj);
 			}
-			idxj = idxj + 1;
+			idxj++;
 		}
 		return neighbors;
 	}
@@ -518,9 +511,7 @@ public class GameController : MonoBehaviour {
 
 		// Initialize Stats to 0
 		Player.Stats = new Dictionary<string, int>();
-		foreach(string statName in StatNames) {
-			Player.Stats.Add(statName, 0);
-		}
+        StatNames.ForEach(s => Player.Stats.Add(s, 0));
 	}
 
 	// Initialize Turn Data
