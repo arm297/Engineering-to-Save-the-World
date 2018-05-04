@@ -1,8 +1,8 @@
 using UnityEditor;
 
-
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,11 +44,9 @@ public class MainGame_Renderer : MonoBehaviour {
 		int i = 0;
 		foreach (KeyValuePair<string, int> item in playerStats) {
 		    string statName = item.Key;//playerStats.Keys.ElementAt(i);
-			GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
-			delegate {GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
+			GameObject.Find("Purchase_Stat_"+ (++i)).GetComponent<Button>().onClick.AddListener (
+			    delegate {GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
 			);
-
-			+=1;
 		}
 	}
 
@@ -69,16 +67,12 @@ public class MainGame_Renderer : MonoBehaviour {
 		if (RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange) {
 			RespawnNodes = false;
 			GameObject.Find("GameControl").GetComponent<GameController>().NodeChange = false;
-			// Delete Existing
-			foreach(GameObject node in Nodes) {
-				Destroy(node);
-			}
-			foreach(GameObject line in Lines) {
-				Destroy(line);
-			}
-			Nodes = new List<GameObject>();
+            // Delete Existing
+            Nodes.ForEach(n => Destroy(n));
+            Lines.ForEach(l => Destroy(l));
+            Nodes.Clear();
+            Lines.Clear();
 			NodeIDX = new List<int>();
-			Lines = new List<GameObject>();
 			GetNodes();
 			DrawConnections();
 		}
@@ -235,7 +229,7 @@ public class MainGame_Renderer : MonoBehaviour {
 				}
 			}
 
-			i += 1;
+			i++;
 		}
 	}
 
@@ -278,11 +272,11 @@ public class MainGame_Renderer : MonoBehaviour {
 		for(int i=0; i < names.Count; i++) {
 			GameObject.Find("SystemFeatures").GetComponent<Text>().text += "\n" + names[i] + ":\t" + values[i];
 		}
-			GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n\n Minimum Requirements:";
-			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
-			for(int i=0; i < names.Count; i++) {
-				GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n" + names[i] + ":\t" + values[i];
-			}
+		GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n\n Minimum Requirements:";
+		values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
+		for(int i=0; i < names.Count; i++) {
+			GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n" + names[i] + ":\t" + values[i];
+		}
 	}
 
 	// Called to update Player Stat Display
