@@ -49,7 +49,9 @@
 |INPRG| | |3| |Correct camera display of game (allow scroll)| | |
 |INPRG| |13| |Code organization| | |Team|
 |COMP| | |1| |Create folder for shared base behaviors| | |
-|TODO| | |2| |Review source code for documentation| | |
+|INPRG| | |2| |Review source code for documentation| |Andrew|
+|INPRG| | |3| |Profile the code and identify code bottlenecks| |Andrew|
+|INPRG| | |4| |Review code for consistent style and conciseness| |Andrew|
 |INPRG| |14| |Event System 2.0| | |Team|
 |COMP| | |1| |Storing the stat| |Brighid|
 |COMP| | |2| |Display stat| |Brighid|
@@ -58,11 +60,11 @@
 |COMP| | |4.1| |Random method| |Yong|
 | | | |4.2| |Implement to event| |Yong|
 | | | |4.3| |Add to master| |Yong
-| | | |5| |Role against the stat| |Andrew|
-| | | |6| |Enforcing the outcome| |Andrew|
+| | | |5| |Role against the stat| |Andrew/Yong|
+| | | |6| |Enforcing the outcome| |Andrew/Yong|
 |INPRG| |15| |End Game Function| | | |Andrew|
-| | | |1| |Fill in End Game Function with handle to calculate score and stop gameplay| | |
-| | | |2| |Discountinue user interaction| | |
+|INPRG| | |1| |Fill in End Game Function with handle to calculate score and stop gameplay| | |
+|COMP| | |2| |Discountinue user interaction| | |
 | | | |3| |Display score/performance criteria| | |
 | | | |4| |Return user to main-menu| | |
 |INPRG| |16| |Score Function| | |Yong|
