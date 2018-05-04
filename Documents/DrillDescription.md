@@ -41,4 +41,5 @@ ScoreHandler class to it, and add a Return To Main button and to set the button 
 
 ### Further TODOS:
 Currently the drills are entirely based in a 2D UI architecture. If this is expanded, then the DrillView class will either need to
-be expanded, or an interface for the Basic Drill View and classes inheriting it will need to be added.
+be expanded, or an interface for the Basic Drill View and classes inheriting it will need to be added. Update the GameController to
+autogenerate new events, which should improve the creation of new drills.
