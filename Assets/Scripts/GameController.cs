@@ -615,12 +615,10 @@ public class GameController : MonoBehaviour {
 		}
 		// Compare System Features with minimum required features
 		CalculateSystemFeautures();
-		int i = 0;
-		foreach(float val in SystemParameters) {
-			if(MinRequiredSystemParameters[i] > val) {
+		for (int i = 0; i < SystemParameters.Count; i++) {
+			if (MinRequiredSystemParameters[i] > SystemParameters[i]) {
 				return false;
 			}
-			i += 1;
 		}
 		return true;
 	}
@@ -637,7 +635,7 @@ public class GameController : MonoBehaviour {
 		// Cost to improve stat
 		float cost = PurchaseStatCost(statName);
 		if (Player.Labor >= cost) {
-			Player.Stats[statName] += 1;
+			Player.Stats[statName]++;
 			Player.Labor -= cost;
 			return "Purchased";
 		} else {

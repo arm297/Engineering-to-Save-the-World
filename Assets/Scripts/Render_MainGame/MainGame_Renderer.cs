@@ -83,10 +83,7 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Instantiate Nodes if visible
 	void GetNodes() {
 		// Get a temporary copy of the NodeList to read from
-		GameController gc;
-		GameObject temp_GC = GameObject.Find("GameControl");
-		gc = temp_GC.GetComponent<GameController>();
-		var temp = gc.NodeList;
+		var temp = GameObject.Find("GameControl").GetComponent<GameController>().NodeList;
 
 		foreach (var node in temp) {
 			int idx = node.IDX;
@@ -272,7 +269,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		for(int i=0; i < names.Count; i++) {
 			GameObject.Find("SystemFeatures").GetComponent<Text>().text += "\n" + names[i] + ":\t" + values[i];
 		}
-		GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n\n Minimum Requirements:";
+		GameObject.Find("SystemFeatures").GetComponent<Text>().text += "\n\n Minimum Requirements:";
 		values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
 		for(int i=0; i < names.Count; i++) {
 			GameObject.Find ("SystemFeatures").GetComponent<Text>().text += "\n" + names[i] + ":\t" + values[i];
@@ -289,8 +286,7 @@ public class MainGame_Renderer : MonoBehaviour {
     	    string statName = item.Key;//playerStats.Keys.ElementAt(i);
             int statValue = item.Value;//playerStats[ statName ];
 			float statCost = GameObject.Find ("GameControl").GetComponent<GameController>().PurchaseStatCost(statName);
-			GameObject.Find ("Stat_"+(1+i)).GetComponent<Text>().text = statName+":\n\tLevel: "+statValue+": \t\tCost: ("+statCost+")";
-			i++;
+			GameObject.Find ("Stat_"+(++i)).GetComponent<Text>().text = statName+":\n\tLevel: "+statValue+": \t\tCost: ("+statCost+")";
 		}
 	}
 }
