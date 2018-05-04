@@ -24,22 +24,34 @@ namespace Drills {
 		[SerializeField]
 		private Color possibleColor = Color.cyan;
 
+        // Handles mouse events for the callout.
+        public delegate void MouseAction();
+
+        // Method to call on mouse entry.
+        public MouseAction OnMouseEnter;
+
 		// Renderer of this Component.
 		private CanvasRenderer calloutRenderer;
 
-		// Whether this component has been selected.
-		private bool isSelected = false;
+        // Whether this component has been selected.
+        [HideInInspector]
+        public bool isSelected { get; private set; }
 
 		// The original color of this component.
 		[SerializeField]
 		private Color defaultColor = Color.grey;
 
+        // Sets the color of the callout on pointer entry.
 		public void OnPointerEnter(PointerEventData eventData) {
 			if (!isSelected) {
 				SetColor(highlightColor);
 			}
+            if (OnMouseEnter != null) {
+                OnMouseEnter();
+            }
         }
 
+        // Resets the color of the callout on pointer exit.
 		public void OnPointerExit(PointerEventData eventData) {
 			if (!isSelected) {
 				SetColor(defaultColor);
@@ -48,11 +60,12 @@ namespace Drills {
 
 		public void OnPointerClick(PointerEventData eventData) {
 			SetColor(isSelected ? defaultColor : selectedColor);
-			isSelected = !isSelected;	
+			isSelected = !isSelected;
         }
 
         // Use this for initialization
         void Start() {
+            isSelected = false;
 			SetColor(defaultColor);
         }
 

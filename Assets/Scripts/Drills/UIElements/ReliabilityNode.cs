@@ -17,7 +17,7 @@ public class ReliabilityNode : BlockContainer {
 
 	// Setup for this node.
 	public override void Start() {
-		// Currently no additional class.
+        base.Start();
 	}
 
 	// Update is called once per frame.

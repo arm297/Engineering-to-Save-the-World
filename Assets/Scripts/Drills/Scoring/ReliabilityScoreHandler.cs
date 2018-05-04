@@ -48,7 +48,7 @@ public class ReliabilityScoreHandler : ScoreHandler {
     private List<ReliabilityLabel> labels;
 
 	// Use this for initialization
-	void Start() {
+	void OnEnable() {
 		// Get labels and nodes.
 		GameObject[] nodeObjects = GameObject.FindGameObjectsWithTag("snap_into");
         nodes = nodeObjects.Select(n => n.GetComponent<ReliabilityNode>()).ToList();
@@ -57,6 +57,7 @@ public class ReliabilityScoreHandler : ScoreHandler {
        
         // Add listeners to update reliability and cost.
         foreach (ReliabilityNode node in nodes) {
+            Debug.Log(node);
             node.OnBlockPlaced += DisplayCurrentStats;
             node.OnBlockRemoved += DisplayCurrentStats;
         }
@@ -77,12 +78,23 @@ public class ReliabilityScoreHandler : ScoreHandler {
 	}
 
     // Release all held resources.
-    private void OnDestroy() {
+    private void OnDisable() {
         foreach (ReliabilityNode node in nodes) {
             node.OnBlockPlaced -= DisplayCurrentStats;
             node.OnBlockRemoved -= DisplayCurrentStats;
+
         }
+    }
+
+        // Release all held resources.
+        private void OnDestroy() {
+        foreach (ReliabilityNode node in nodes) {
+            if (node != null) {
+                node.OnBlockPlaced -= DisplayCurrentStats;
+                node.OnBlockRemoved -= DisplayCurrentStats;
+            }
         }
+    }
 
         // Computes the score for the reliability drill.
         public override float ComputeScore() {
