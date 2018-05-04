@@ -329,9 +329,8 @@ public class GameController : MonoBehaviour {
 			NodeList[idx].Visible = true;
 			NodeList[idx].Obscured = false;
 			return;
-		} else {
-			depth += 1;
 		}
+		depth++;
 		if (idx == -1) {
 			// Initial call
 		    foreach (NodeData n in NodeList) {
@@ -407,7 +406,7 @@ public class GameController : MonoBehaviour {
 				}
 			} else if (node.Purchaseable) {
 				List<int> neighbors = NodeList[idx].Children;
-                neighbors.ForEach((int idxj) => { NodeList[idxj].Visible = true; });
+                neighbors.ForEach(idxj => { NodeList[idxj].Visible = true; });
 			}
 			idx++;
 		}
@@ -441,7 +440,7 @@ public class GameController : MonoBehaviour {
 				}
 			} else if (node.Purchaseable) {
 				List<int> neighbors = NodeList[idx].Children;
-                neighbors.ForEach((int idxj) => { NodeList[idxj].Visible = true; });
+                neighbors.ForEach(idxj => { NodeList[idxj].Visible = true; });
 			}
 		}
 	}
@@ -625,8 +624,7 @@ public class GameController : MonoBehaviour {
 
 	// Determine Cost to purchase more stat, based off existing stat
 	public float PurchaseStatCost(string statName) {
-		int lvl = Player.Stats[statName];
-		return StatBaseCost * Mathf.Exp(StatCostScalar * lvl);
+		return StatBaseCost * Mathf.Exp(StatCostScalar * Player.Stats[statName]);
 	}
 
 	// Purchase Stat
