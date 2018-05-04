@@ -395,8 +395,8 @@ public class GameController : MonoBehaviour {
 	// If neighbor is purchased -- set purchaseable to true, set visible to true, set obsured to false
 	// If neighbor is purchaseable -- set visible to true
 	public void NodeNeighborhoodCheck() {
-		int idx = 0;  // Why doesn't C# have enumerate?!
-		foreach (var node in NodeList) {
+		for (int idx = 0; idx < NodeList.Count; idx++) {
+            var node = NodeList[idx];
 			if (node.Purchased) {
 				List<int> neighbors = NodeList[idx].Children;
 				foreach (int idxj in neighbors) {
@@ -408,7 +408,6 @@ public class GameController : MonoBehaviour {
 				List<int> neighbors = NodeList[idx].Children;
                 neighbors.ForEach(idxj => { NodeList[idxj].Visible = true; });
 			}
-			idx++;
 		}
 	}
 
@@ -487,7 +486,6 @@ public class GameController : MonoBehaviour {
 			    && NodeList[idxj].Y >= y-1) {
 				neighbors.Add(idxj);
 			}
-			idxj++;
 		}
 		return neighbors;
 	}
