@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour {
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
 
-	public DrillScore LastDrillScore = new DrillScore();
+	public static DrillScore LastDrillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float Sparsity = .2f; // Higher sparsity rate means more holes on map

@@ -83,7 +83,7 @@ namespace Drills
         // Loads back the main scene and readds the scoring data.
         public void ReturnToMainGame() {
 		    Debug.Log("Returning to main game");
-		    //GameController.LastDrillScore.Score = scoreCalculator.score;
+		    GameController.LastDrillScore.Score = scoreCalculator.score;
 		    SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
 	    }
 
