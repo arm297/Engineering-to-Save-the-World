@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,12 +21,12 @@ public class DrillDisplay : MonoBehaviour {
 	private GameObject endMenu;
 
 	// The answer object for this game if any.
-	private GameObject[] answers;
+	private List<GameObject> answers;
 
 	// Use this for initialization
 	void Start() {
 		endMenu.SetActive(false);
-		answers = GameObject.FindGameObjectsWithTag("answer");
+		answers = new List<GameObject>(GameObject.FindGameObjectsWithTag("answer"));
 		endGameButton.gameObject.SetActive(false);
 		HideAnswers();
 	}
@@ -45,16 +46,12 @@ public class DrillDisplay : MonoBehaviour {
 
 	// Display all answers.
 	private void ShowAnswers() {
-		foreach(GameObject answer in answers) {
-			answer.SetActive(true);
-		}
+        answers.ForEach(a => a.SetActive(true));
 	} 
 
 	// Hide all answers.
 	private void HideAnswers() {
-		foreach (GameObject answer in answers) {
-			answer.SetActive(false);
-		}
+        answers.ForEach(a => a.SetActive(false));
 	}
 }
 
