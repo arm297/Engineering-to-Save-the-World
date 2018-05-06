@@ -28,29 +28,26 @@ public class ReliabilityLabel : DragDrop {
     private static readonly Color highColor = new Color(1, 0, 0, 1);
 
 	// Reliability threshold to make labels medium cost.
-	private static readonly double lowCostThreshold = 1.1;
+	private static readonly float lowCostThreshold = 1.1f;
 
 	// Reliability threshold to make labels high cost.
-	private static readonly double midCostThreshold = 2.1;
-
-    // Initializes the reliability labels during the start.
-    public override void Start() {
-        base.Start();
-        Text labelText = transform.GetChild(0).GetComponent<Text>();
-        labelText.text += " " + reliability;
-
-        if (cost < lowCostThreshold) {
-            materialColor = cheapColor;
-        }
-        else if (cost < midCostThreshold) {
-            materialColor = midColor;
-        }
-        else {
-            materialColor = highColor;
-        }
-        if (dragMaterial != null) {
-            dragMaterial.color = materialColor;
-        }
+	private static readonly float midCostThreshold = 2.1f;
+	
+	// Initializes the reliability labels during the start.
+	public override void Start() {
+		base.Start();
+		Text labelText = transform.GetChild(0).GetComponent<Text>();
+		labelText.text += " " + reliability;
+		if (reliability < lowCostThreshold) {
+			defaultColor = cheapColor;
+		}
+		else if (reliability < midCostThreshold) {
+			defaultColor = midColor;
+		}
+		else {
+			defaultColor = highColor;
+		}
+		objectRenderer.SetColor(defaultColor);
 	}
 	
 }

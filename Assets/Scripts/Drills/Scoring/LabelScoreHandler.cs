@@ -21,12 +21,12 @@ public class LabelScoreHandler : ScoreHandler {
 	private GameObject[] answers;
 
 	// The incorrect blocks for this assignment drill.
-	private List<GameObject> incorrect = new List<GameObject>();
+	private List<GameObject> incorrect;
 
 	// Use this for initialization
 	void Start () {
-		labels = GameObject.FindGameObjectsWithTag("block");
-		blocks = GameObject.FindGameObjectsWithTag("snap_into");
+		labels = GameObject.FindGameObjectsWithTag("label");
+		blocks = GameObject.FindGameObjectsWithTag("block");
 		answers = GameObject.FindGameObjectsWithTag("answer");
 	}
 
