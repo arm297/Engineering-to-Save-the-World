@@ -24,10 +24,9 @@ public class DrillDisplay : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		endMenu.SetActive(false);
 		answers = GameObject.FindGameObjectsWithTag("answer");
 		endGameButton.gameObject.SetActive(false);
-		HideAnswers();
+		endMenu.SetActive(false);
 	}
 
 	// Begin execution for the game.
@@ -40,7 +39,6 @@ public class DrillDisplay : MonoBehaviour {
 	public void EndGame() {
 		endGameButton.gameObject.SetActive(false);
 		endMenu.SetActive(true);
-		ShowAnswers();
 	}
 
 	// Display all answers.

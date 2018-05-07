@@ -17,20 +17,16 @@ public class ConnectionSegment : MonoBehaviour, IPointerEnterHandler,
 	public delegate void MouseAction();
 
 	// Called whenever the mouse clicks on this segment.
-	public MouseAction OnMouseClicked;
+	public event MouseAction OnMouseClicked;
 
 	// Called whenever this connection segment is moused over.
-	public MouseAction OnMouseEnter;
+	public event MouseAction OnMouseEnter;
 
 	// Called whenever the mouse exits this segment.
-	public MouseAction OnMouseExit;
+	public event MouseAction OnMouseExit;
 
 	// The default color of the segment. 
 	private Color defaultColor;
-
-    // Private flag to determine whether the the mouse entered the callout.
-    [HideInInspector]
-    public bool pointerEnteredCallout;
 
 	// Activates the event for mouse clicks.
 	public void OnPointerClick(PointerEventData eventData) {
@@ -57,37 +53,25 @@ public class ConnectionSegment : MonoBehaviour, IPointerEnterHandler,
 	void Start () {
 		defaultColor = GetComponent<CanvasRenderer>().GetColor();
 		callout = transform.GetChild(0).gameObject;
-        ConnectionCallout c = callout.GetComponent<ConnectionCallout>();
-        c.OnMouseEnter += ToggleCalloutFlag;
 	}
-    
-    // Deallocates resources before destroying segment.
-    private void OnDestroy() {
-        callout.GetComponent<ConnectionCallout>().OnMouseEnter -= ToggleCalloutFlag;
-    }
 
-    //Sets the color of the individual segment.
-    public void SetColor(Color c) {
+	//Sets the color of the individual segment.
+	public void SetColor(Color c) {
 		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		renderer.SetColor(c);
-		renderer.SetAlpha(1);
 	}
 
 	// Resets the color of the individual segment.
 	public void ResetColor() {
 		CanvasRenderer renderer = GetComponent<CanvasRenderer>();
 		renderer.SetColor(defaultColor);
-		renderer.SetAlpha(1);
 	}
 
 	// Toggles to callout state based on the provided argument.
 	public void SetCalloutActive(bool active) {
 		callout.SetActive(active);
 	}
-    
-    private void ToggleCalloutFlag() {
-       pointerEnteredCallout = !pointerEnteredCallout;
-    }
+
 }
 
 }
