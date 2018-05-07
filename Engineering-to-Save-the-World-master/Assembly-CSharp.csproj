@@ -100,11 +100,14 @@
      <Compile Include="Assets\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Scripts\Drills\DrillController.cs" />
      <Compile Include="Assets\Scripts\Drills\DrillDisplay.cs" />
+     <Compile Include="Assets\Scripts\Drills\ReturnToMain.cs" />
+     <Compile Include="Assets\Scripts\Drills\Scoring\ConceptSketchScoreHandler.cs" />
      <Compile Include="Assets\Scripts\Drills\Scoring\LabelScoreHandler.cs" />
      <Compile Include="Assets\Scripts\Drills\Scoring\ReliabilityScoreHandler.cs" />
      <Compile Include="Assets\Scripts\Drills\Scoring\ScoreHandler.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\BlockContainer.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\Connection.cs" />
+     <Compile Include="Assets\Scripts\Drills\UIElements\ConnectionCallout.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\ConnectionSegment.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\DragDrop.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\ReliabilityLabel.cs" />
