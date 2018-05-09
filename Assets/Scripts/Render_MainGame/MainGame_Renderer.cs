@@ -38,12 +38,19 @@ public class MainGame_Renderer : MonoBehaviour {
 	// The size of NodeImages needs to match or exceed number of Feautures possible in node
 	public Sprite[] NodeImages = new Sprite[5];
 
+	private bool stat_purchase_added = false;
 	// Use this for initialization
+	private Vector3 pay_attention_location; // location of pay attention graphic
+
 	void Start () {
+		pay_attention_location = GameObject.Find("[Make to pay attention]").transform.localScale;
+		HideUnHideNextTurnPayAttention(false);
 		RespawnNodes = true;
 		EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
 		//EndTurn.onClick.AddListener(Update);
 		//GetNodes();
+
+		GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
 
 		// Add Listeners for Purchase Stat buttons
 		Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
@@ -57,6 +64,7 @@ public class MainGame_Renderer : MonoBehaviour {
 					GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
 					delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
 					);
+					stat_purchase_added = true;
 				}catch (NullReferenceException e){
 					// Do nothing
 				}
@@ -66,6 +74,7 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Listeners
 	public void EndTurnListener(){
+				HideUnHideNextTurnPayAttention(false);
 		GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
 		Update();
 
@@ -73,6 +82,27 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		//if listeners weren't added, add them now:
+		if(!stat_purchase_added){
+			// Add Listeners for Purchase Stat buttons
+			Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
+
+			try{
+				int i = 0;
+				foreach (KeyValuePair<string, int> item in playerStats)
+					{
+						string statName = item.Key;//playerStats.Keys.ElementAt(i);
+						GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
+						delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
+						);
+						i += 1;
+					}
+				stat_purchase_added = true;
+			}catch (NullReferenceException e){
+				// Do nothing
+			}
+		}
 
 		//todo: logic to only updateprofile when something interesting happens
 		UpdateProfile();
@@ -325,5 +355,14 @@ public class MainGame_Renderer : MonoBehaviour {
 					GameObject.Find ("Stat_"+(1+i)).GetComponent<Text> ().text = statValue+"\t("+Mathf.Round(statCost)+")\t"+statName;
 					i+=1;
 				}
+	}
+
+	// Hide/Unhide animation around next-turn button
+	public void HideUnHideNextTurnPayAttention(bool activate){
+		if(!activate){
+			GameObject.Find("[Make to pay attention]").transform.localScale = new Vector3(0, 0, 0);
+		}else{
+			GameObject.Find("[Make to pay attention]").transform.localScale = pay_attention_location;
+		}
 	}
 }

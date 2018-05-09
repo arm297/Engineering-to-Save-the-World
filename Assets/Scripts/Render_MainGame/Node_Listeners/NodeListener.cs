@@ -24,6 +24,7 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public GameObject Purchased;
 	public GameObject Tested;
 
+	public AudioSource PurchaseSound;
 
 	// Use this for initialization
 	void Start () {
@@ -120,9 +121,19 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	// Send purchase request and idx to GameController
 	// Or Control Logic Here with understanding that it could be moved to GameController
 	void PurchaseNode(){
+		Debug.Log("Playing Sound");
+		PurchaseSound.Play();
+
+
 		// Use GameController convienence function to purchase node idx
 		Debug.Log("Purchasing Node");
-		GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
+		string return_note = GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
+
+		//if insufficient funds, recommend next Turn
+		if(return_note == "Insufficient Funds"){
+			GameObject.Find("Render_MainGame").GetComponent<MainGame_Renderer>().HideUnHideNextTurnPayAttention(true);
+		}
+
 	}
 
 	// Abstracted Initialization, as Start() will not run before end of MainGame_Renderer
@@ -134,6 +145,7 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 			Initialized = true;
 		}
 	}
+
 
 	// Hides Purchase Button
 	public void HidePurchaseButton(){
