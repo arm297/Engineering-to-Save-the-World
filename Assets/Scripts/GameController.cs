@@ -201,6 +201,7 @@ public class GameController : MonoBehaviour {
 	void ReturnToMainScene() {
 		float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore 
 			- BaseScorePercent;
+        Debug.Log(OffSetScorePercent);
 		string StatToChange =  StatNames[(int) Random.Range(0f, ((float)StatNames.Count - 1))];
 		LastDrillScore.ActiveStatChange = true;
 		// Update stats with 

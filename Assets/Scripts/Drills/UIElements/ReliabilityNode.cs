@@ -13,7 +13,7 @@ namespace Drills {
 
         // The reliability label contained in this node, if any.
         [HideInInspector]
-        public ReliabilityLabel containedLabel;
+        public ReliabilityLabel containedLabel = null;
 
         // Setup for this node.
         public override void Start() {

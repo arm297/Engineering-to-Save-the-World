@@ -24,10 +24,10 @@ namespace Drills {
         private Text reliabilityText;
 
         // Total current reliability.
-        private double reliability;
+        private double reliability = 0f;
 
         // Total current cost.
-        private double cost;
+        private double cost = 0f;
 
         // Target reliability.
         private readonly double targetReliability = 0.97;
@@ -62,11 +62,11 @@ namespace Drills {
                 node.OnBlockRemoved += DisplayCurrentStats;
             }
 
-            reliabilityText = GameObject.Find("ReliabilityText").GetComponent<Text>();
+            reliabilityText = GameObject.Find("CurrentReliabilityText").GetComponent<Text>();
             costText = GameObject.Find("CostText").GetComponent<Text>();
-            reliabilityText.text += "" + 0;
-            costText.text += "" + 0;
-            
+            reliabilityText.text += "" + reliability;
+            costText.text += "" + cost;
+
             // Display target reliability and label.
             GameObject.Find("TargetReliabilityText").GetComponent<Text>().text =
                 "Target Reliability: " + targetReliability;
@@ -116,7 +116,7 @@ namespace Drills {
             cost = 0;
             foreach (ReliabilityNode node in nodes) {
                 if (node.IsFilled()) {
-                    cost += node.containedLabel.cost;
+                    cost += ((ReliabilityLabel)node.containedObject).cost;
                 }
             }
         }
@@ -127,32 +127,34 @@ namespace Drills {
             List<double> nodeReliabilities = new List<double>();
             foreach (ReliabilityNode node in nodes) {
                 if (node.IsFilled()) {
-                    nodeReliabilities.Add(node.containedLabel.reliability);
+                    nodeReliabilities.Add(((ReliabilityLabel)node.containedObject).reliability);
                 } else {
                     nodeReliabilities.Add(1);
                 }
-                List<int> indices = new List<int>();
-                List<double> rs = new List<double>();
-                int nodeCount = 0;
-                switch (levelID) {
-                    case 1:
-                        nodeCount = 16;
-                        break;
-                    case 2:
-                        nodeCount = 9;
-                        break;
-                    case 10:
-                        nodeCount = 12;
-                        break;
-                }
-                for (int i = 1; i < nodeCount; i++) {
-                    indices.Add(nodes.FindIndex(n => n.blockID.Equals(i)));
-                }
-                foreach (int index in indices) {
-                    rs.Add(nodeReliabilities[index]);
-                }
-                reliability = GetLevelReliability(rs, levelID);
             }
+            List<int> indices = new List<int>();
+            List<double> rs = new List<double>();
+            int nodeCount = 0;
+            switch (levelID) {
+                case 1:
+                    nodeCount = 9;
+                    break;
+                case 2:
+                    nodeCount = 12;
+                    break;
+                case 10:
+                    nodeCount = 16;
+                    break;
+            }
+            for (int i = 1; i < nodeCount; i++) {
+                Debug.Log(i);
+                indices.Add(nodes.FindIndex(n => n.blockID.Equals(i)));
+            }
+            foreach (int index in indices) {
+                Debug.Log(index);
+                rs.Add(nodeReliabilities[index]);
+            }
+            reliability = GetLevelReliability(rs, levelID);
         }
 
 
@@ -179,6 +181,8 @@ namespace Drills {
 
         // Display the current reliability and cost.
         public void DisplayCurrentStats() {
+            ComputeReliability();
+            ComputeCost();
             reliabilityText.text = "Reliability: " + reliability;
             costText.text = "Cost: " + cost;
         }

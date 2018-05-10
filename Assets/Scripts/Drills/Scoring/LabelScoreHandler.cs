@@ -33,6 +33,9 @@ namespace Drills {
         // Computes and updates the final score for the drill.
         public override float ComputeScore() {
             foreach (GameObject go in blocks) {
+                if (go == null) {
+                    continue;
+                }
                 BlockContainer container = go.GetComponent<BlockContainer>();
                 DragDrop contained = container.containedObject;
                 if (contained != null) {
