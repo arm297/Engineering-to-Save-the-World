@@ -48,9 +48,15 @@ public class LabelScoreHandler : ScoreHandler {
 		return score;
 	}
 
-	public override void DisplayScoreInfo() {
+        // Computes and updates maximum possible score for the drill.
+        public override float ComputeMaxScore() {
+            maxScore = labels.Length;
+            return maxScore;
+        }
+
+        public override void DisplayScoreInfo() {
         statusText.text = "Game Over!";
-        scoreText.text = "Final Score: " + score;
+        scoreText.text = "Final Score: " + score + "\nMax Score: " + maxScore;
 	}
 }
 

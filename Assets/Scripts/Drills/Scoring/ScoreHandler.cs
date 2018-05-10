@@ -15,6 +15,8 @@ public abstract class ScoreHandler : MonoBehaviour {
 
 		// The score of the drill.
 		public float score { get; protected set; }
+
+        public float maxScore { get; protected set; }
 		
 		// The text to display the final game status.
 		public Text statusText;
@@ -24,6 +26,9 @@ public abstract class ScoreHandler : MonoBehaviour {
 
 		// Computes and sets the score at the end of the drill.
 		public abstract float ComputeScore();
+
+        // Computes the maximum possible score at the end of the drill.
+        public abstract float ComputeMaxScore();
 
 		// Displays to info for the score.
 		public abstract void DisplayScoreInfo();

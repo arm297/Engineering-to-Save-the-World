@@ -42,6 +42,9 @@ namespace Drills
         // The final score of the drill.
         private float finalScore = 0f;
 
+        // The maximum score of the drill.
+        private float maxScore = 0f;
+
         // Use this for initialization
         void Start() {
             if (InitDrill != null) {
@@ -76,6 +79,7 @@ namespace Drills
         public void EndGame() {
             gameTimer.isActive = false;
             finalScore = scoreCalculator.ComputeScore();
+            maxScore = scoreCalculator.ComputeMaxScore();
             display.EndGame();
             scoreCalculator.DisplayScoreInfo();
         }
@@ -84,6 +88,7 @@ namespace Drills
         public void ReturnToMainGame() {
 		    Debug.Log("Returning to main game");
 		    GameController.LastDrillScore.Score = scoreCalculator.score;
+            GameController.LastDrillScore.MaxScore = scoreCalculator.maxScore;
 		    SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
 	    }
 
