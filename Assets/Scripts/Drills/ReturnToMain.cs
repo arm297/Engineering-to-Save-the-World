@@ -15,7 +15,7 @@ public class ReturnToMain : MonoBehaviour {
 	private Button endGameButton;
 
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		endGameButton = GetComponent<Button>();
 		endGameButton.onClick.AddListener(drillController.ReturnToMainGame);
 	}

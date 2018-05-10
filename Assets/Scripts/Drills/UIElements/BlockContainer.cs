@@ -80,8 +80,8 @@ namespace Drills {
         public virtual void Start() {
             blockRenderer = GetComponent<CanvasRenderer>();
             if (blockRenderer == null)
-            Debug.Log(blockRenderer);
-            defaultColor = blockRenderer.GetColor();           
+                Debug.Log(blockRenderer);
+            defaultColor = blockRenderer.GetColor();
         }
 
         // Returns whether this block contained a drag-dropped object.
@@ -122,7 +122,7 @@ namespace Drills {
                 OnBlockRemoved();
             }
         }
-    
+
     }
 
 }
