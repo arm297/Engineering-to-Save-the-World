@@ -50,11 +50,22 @@ public class ConceptSketchScoreHandler : ScoreHandler {
 		return score;
 	}
 
-	// Display to final score for the concept sketch game.
-	public override void DisplayScoreInfo() {
-    	statusText.text = "Game Over!";
-        scoreText.text = "Final Score: " + score;
-	}
-}
+        // Computes the maximum possible score for the concept sketch drill.
+        public override float ComputeMaxScore() {
+            maxScore = 0;
+            foreach (DragDrop label in labels) {
+                if (label.dragID == 1) {
+                    maxScore++;
+                }
+            }
+            return maxScore;
+        }
+
+        // Display to final score for the concept sketch game.
+        public override void DisplayScoreInfo() {
+    	    statusText.text = "Game Over!";
+            scoreText.text = "Final Score: " + score + "\nMax Score: " + maxScore;
+        }
+    }
 
 }

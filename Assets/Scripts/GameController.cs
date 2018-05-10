@@ -7,6 +7,7 @@ Author: Brighid Meredith 15:01 2/16/2018
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -21,6 +22,8 @@ public class GameController : MonoBehaviour {
 	public List<NodeData> NodeList = new List<NodeData>();
 	public PlayerProfile Player = new PlayerProfile();
 	public TurnData PastTurns = new TurnData();
+
+	public static DrillScore LastDrillScore = new DrillScore();
 	public int Height = 100;
 	public int Width = 100;
 	public float Sparsity = .2f; // Higher sparsity rate means more holes on map
@@ -58,20 +61,17 @@ public class GameController : MonoBehaviour {
 	public float StatBaseCost = 1.0f;
 	public float StatCostScalar = 1.0f;
 
+	// For drills.
+	public float DrillChance = 0.5f;
+	public float BaseScorePercent = 0.5f; //The score to compare for stat increases.
 
 	// LOADABLE SCENES
 	// List of Event-Drill Scenes (all of which may be loaded)
 	private string[] list_of_drills = {
-		"reliability_cost_drill_level_1",
-		"reliability_cost_drill_level_2",
-		"reliability_cost_drill_level_3",
-		"reliability_cost_drill_level_4",
-		"reliability_cost_drill_level_5",
-		"concept_sketch_interface",
-		"drill_1",
-		"drill_2",
-		"good_requirement_bad_requirement",
-		"technical_readiness_level"};
+		"AssignmentQuestions1",
+		"Concept Sketch Interface",
+		"GoodRequirementBadRequirement",
+		"RelliabilityCostDrill1"};
 	private string MainGame = "MainGame";
 	private string UI_Menu = "UI_Menu";
 
@@ -134,18 +134,27 @@ public class GameController : MonoBehaviour {
 		public string Title { get; set; }
 		public float Fame { get; set; }
 		public Dictionary<string, int> Stats { get; set; }
+	}
 
+	// Tracks the name and score of the last drill run.
+	public class DrillScore {
+		public float Score { get; set; }
+		public float MaxScore { get; set; }
+		public Dictionary<string, int> IncreasedStats { get; set; } //Stats modified by drills and how much.
+		public bool ActiveStatChange {get; set; }
 	}
 
 	///////////////////////////////////////
 	// INITIALIZATION
 
 	// Use this for initialization
-	void Start () {
-		// Call Node Initialization
-		InitializeNodeList();
+	void Start() {
+        Random.InitState(System.DateTime.Now.Millisecond);
+        // Call Node Initialization
+        InitializeNodeList();
 		InitializePlayerProfile();
 		InitializeTurnData();
+		InitializeDrillScoreStats();
 		LoadScene(MainGame);
 	}
 
@@ -156,6 +165,63 @@ public class GameController : MonoBehaviour {
 	void LoadScene(string scene_name){
 		SceneManager.LoadScene(scene_name, LoadSceneMode.Single);
 	}
+
+	//////////////////////////////////////////
+	// Methods for handling drills.
+
+	// Initializes the drill scoring structure.
+	void InitializeDrillScoreStats() {
+		LastDrillScore.IncreasedStats = new Dictionary<string, int>();
+	}
+	
+	// Roll to determine whether to load a drill, and which drill to decide.
+	// If returned string is null, then no drill is loaded.
+	string GetDrillToLoad() {
+        float Randoms = Random.Range(0f, 01f);
+        Debug.Log(Random.Range(0f, (float)(StatNames.Count - 1)));
+		if (Randoms < EventChance) {
+			return null;
+		}
+        int drillIndex = (int)Random.Range(0f, StatNames.Count - 1);
+        Debug.Log(drillIndex);
+		return list_of_drills[(int)Random.Range(0f, ((float)(StatNames.Count- 1)))];
+	}
+
+	// Randomly determine whether to load the drill, and load the drill based
+	// on the result of the scene.
+	void ChanceForDrill() {
+		string drillScene = GetDrillToLoad();
+		if (drillScene == null) {
+			return;
+		}
+		LoadScene(drillScene);
+	}
+
+	// Return to the main scene and handle stat updates.
+	void ReturnToMainScene() {
+		float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore 
+			- BaseScorePercent;
+		string StatToChange =  StatNames[(int) Random.Range(0f, ((float)StatNames.Count - 1))];
+		LastDrillScore.ActiveStatChange = true;
+		// Update stats with 
+		// DrillScore.IncreasedStats.Append((StatToChange, (int) (10 * OffSetScorePercentage)));
+	}
+
+	void UpdateDrillStatModifications() {
+		if (LastDrillScore.ActiveStatChange) {
+			foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
+				Player.Stats[statInc.Key] += statInc.Value;
+			}
+			LastDrillScore.ActiveStatChange = false;
+		}
+		else {
+			foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
+				Player.Stats[statInc.Key] += statInc.Value;
+			}
+			LastDrillScore.IncreasedStats.Clear();
+		}
+	}
+
 
 	//////////////////////////////////////////
 	// METHODS CONTROLLING DATA STRUCTURES
@@ -544,6 +610,7 @@ public class GameController : MonoBehaviour {
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
 				// calculate expected reliability based on parent state upon purchase
+				ChanceForDrill();
 				float parentStateOnPurchase = AssessParentState(idx);
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
@@ -583,6 +650,7 @@ public class GameController : MonoBehaviour {
 	// Updates Player with changed labor and funds
 	// Resets Current Turn Data
 	public void CommitTurn(){
+		ChanceForDrill();
 		Player.Funds += PastTurns.FundChangePerTurn;
 		Player.Labor = PastTurns.LaborPerTurn;
 		PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
@@ -590,6 +658,7 @@ public class GameController : MonoBehaviour {
 		PastTurns.CurrentTurnNodesBought = new List<int>();
 		PastTurns.CurrentTurnNodesTested = new List<int>();
 		PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
+		UpdateDrillStatModifications();
 		//Debug.Log(Player.Labor);
 		if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
 				|| Player.Funds <= 0.0f){

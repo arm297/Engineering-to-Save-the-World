@@ -98,13 +98,18 @@ public class ReliabilityScoreHandler : ScoreHandler {
 
         // Computes the score for the reliability drill.
         public override float ComputeScore() {
-		ComputeCost();
-		ComputeReliability();
-		return 1f;
-	}
+		    ComputeCost();
+		    ComputeReliability();
+		    return 1f;
+	    }
 
-	// Computes the total cost of the reliability drill.
-	private void ComputeCost() {
+        // Computes the target score for the reliability drill.
+        public override float ComputeMaxScore() {
+            return 1f;
+        }
+
+        // Computes the total cost of the reliability drill.
+        private void ComputeCost() {
 		cost = 0;
 		foreach(ReliabilityNode node in nodes) {
 			if (node.IsFilled()) {
