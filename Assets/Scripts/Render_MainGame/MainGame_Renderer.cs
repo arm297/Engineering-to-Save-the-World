@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class MainGame_Renderer : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class MainGame_Renderer : MonoBehaviour {
 	public float X_Space;  // Spacing between nodes (horizontal)
 	public float Y_Space;  // Spacing between nodes (vertical)
 	public GameObject ProfileSettingPrefab; // Profile setting prefab
+	public GameObject NodeBucket; // Canvas with Node Layer for Nodes to be generated into
+	public GameObject NodeConnectionBucket; // Canvas with Node Layer for NodeConnections to be generated into
 	public Material RequirementParentChild; // Material of connection between required parent and child
 	public Material NonRequirementParentChild; // Material of connection between optional parent and child
 	public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
@@ -31,12 +34,23 @@ public class MainGame_Renderer : MonoBehaviour {
 	public bool DisplayAllNodes = false;
 	public bool RespawnNodes = false;
 
+	// List of potential node images
+	// The size of NodeImages needs to match or exceed number of Feautures possible in node
+	public Sprite[] NodeImages = new Sprite[5];
+
+	private bool stat_purchase_added = false;
 	// Use this for initialization
+	private Vector3 pay_attention_location; // location of pay attention graphic
+
 	void Start () {
+		pay_attention_location = GameObject.Find("[Make to pay attention]").transform.localScale;
+		HideUnHideNextTurnPayAttention(false);
 		RespawnNodes = true;
 		EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
 		//EndTurn.onClick.AddListener(Update);
 		//GetNodes();
+
+		GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
 
 		// Add Listeners for Purchase Stat buttons
 		Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
@@ -44,17 +58,23 @@ public class MainGame_Renderer : MonoBehaviour {
 		int i = 0;
 		foreach (KeyValuePair<string, int> item in playerStats)
 			{
-				string statName = item.Key;//playerStats.Keys.ElementAt(i);
-				GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
-				delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
-				);
-
+				//todo: check if object is active or not instead of try/except
+				try{
+					string statName = item.Key;//playerStats.Keys.ElementAt(i);
+					GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
+					delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
+					);
+					stat_purchase_added = true;
+				}catch (NullReferenceException e){
+					// Do nothing
+				}
 				i+=1;
 			}
 	}
 
 	// Listeners
 	public void EndTurnListener(){
+				HideUnHideNextTurnPayAttention(false);
 		GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
 		Update();
 
@@ -63,10 +83,34 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		//if listeners weren't added, add them now:
+		if(!stat_purchase_added){
+			// Add Listeners for Purchase Stat buttons
+			Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
+
+			try{
+				int i = 0;
+				foreach (KeyValuePair<string, int> item in playerStats)
+					{
+						string statName = item.Key;//playerStats.Keys.ElementAt(i);
+						GameObject.Find("Purchase_Stat_"+(1+i)).GetComponent<Button>().onClick.AddListener(
+						delegate{GameObject.Find("GameControl").GetComponent<GameController>().PurchasePlayerStat(statName);}
+						);
+						i += 1;
+					}
+				stat_purchase_added = true;
+			}catch (NullReferenceException e){
+				// Do nothing
+			}
+		}
+
 		//todo: logic to only updateprofile when something interesting happens
 		UpdateProfile();
-		UpdateSystemScoreDisplay();
-		UpdatePlayerStatDisplay();
+		try{UpdateSystemScoreDisplay();}
+		catch (NullReferenceException e){}
+
+		try{UpdatePlayerStatDisplay();}
+		catch (NullReferenceException e){}
 
 		if(RespawnNodes || GameObject.Find("GameControl").GetComponent<GameController>().NodeChange){
 			RespawnNodes = false;
@@ -83,6 +127,7 @@ public class MainGame_Renderer : MonoBehaviour {
 			Lines = new List<GameObject>();
 			GetNodes();
 			DrawConnections();
+
 		}
 		// Check for newly purchased nodes
 		//GetNodes();
@@ -128,7 +173,7 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Creates a node gameobject based on input parameters
 	GameObject CreateNodeGameObject(GameController.NodeData node, int idx){
-		Canvas canvas = gameObject.GetComponent<Canvas>();
+		Canvas canvas = NodeBucket.GetComponent<Canvas>();
 
 		int x = node.X;
 		int y = node.Y;
@@ -166,6 +211,19 @@ public class MainGame_Renderer : MonoBehaviour {
 			NodeGameObject.GetComponent<Image>().sprite = ObscuredImage;
 		}
 
+		//set node image (depends on first max feauture in node data)
+		int maxFeautureIDX = 0;
+		float maxFeauture = 0;
+		int ticker = 0;
+		foreach(float val in node.ParameterEstimated){
+			if(val > maxFeauture){
+				maxFeauture = val;
+				maxFeautureIDX = ticker;
+			}
+			ticker += 1;
+		}
+		NodeGameObject.transform.Find("NodeTypeImage").gameObject.GetComponent<Image>().sprite = NodeImages[maxFeautureIDX];
+
 		return NodeGameObject;
 	}
 
@@ -195,7 +253,9 @@ public class MainGame_Renderer : MonoBehaviour {
 			SettingButtonGO.GetComponentInChildren<Text> ().text = "Setting";
 		}
 	}
+
 	// Will go through GameObject Nodes and draw appropriate connectiosn
+	// todo: Ensure that connections aren't written over eachother if more than one connection type exists between two nodes
 	public void DrawConnections(){
 		int i = 0;
 		foreach(GameObject node2 in Nodes){
@@ -210,11 +270,11 @@ public class MainGame_Renderer : MonoBehaviour {
 			//	or draw line to spot where non-visible requirement node resides for child
 
 			// Draw Parents
-			Color nonReq = Color.white;
+			Color nonReq = Color.blue;
 			foreach(int jdx in parents){
 				int gameObject_idx = NodeIDX.IndexOf(jdx);
 				if (gameObject_idx >= 0){
-					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 1);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 10);
 					Lines.Add(line);
 				}
 			}
@@ -223,16 +283,16 @@ public class MainGame_Renderer : MonoBehaviour {
 			foreach(int jdx in requirements){
 				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
 				if (gameObject_idx >= 0){
-					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, req, 5);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, req, 10);
 					Lines.Add(line);
 				}
 			}
 
-			Color chil = Color.blue;
+			Color chil = Color.white;
 			foreach(int jdx in children){
 				int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
 				if (gameObject_idx >= 0){
-					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 1);
+					GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 10);
 					Lines.Add(line);
 				}
 			}
@@ -244,14 +304,14 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Takes the 2 node GameObjects
 	// Draws a line between the nodes
 	public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Color col, int thickness){
-		Canvas canvas = gameObject.GetComponent<Canvas>();
+		Canvas canvas = NodeConnectionBucket.GetComponent<Canvas>();
 		Vector3 startPos = Node1.transform.position;
 		Vector3 endPos = Node2.transform.position;
 
 
 		GameObject lineGameObject =  (GameObject)Instantiate(conn, startPos, Quaternion.identity);
 		lineGameObject.transform.SetParent(canvas.transform);
-		LineRenderer lineRenderer = lineGameObject.AddComponent<LineRenderer>();
+		LineRenderer lineRenderer = lineGameObject.GetComponent<LineRenderer>();//lineGameObject.AddComponent<LineRenderer>();
 		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
 		lineRenderer.SetColors(col, col);
 		lineRenderer.widthMultiplier = LineWidth;
@@ -264,8 +324,8 @@ public class MainGame_Renderer : MonoBehaviour {
 
 	// Called to update the Render_MainGame.Utility.Profile.(Fund&Labor)
 	public void UpdateProfile(){
-		GameObject.Find ("ProfileFundText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().Player.Funds;
-		GameObject.Find ("ProfileLaborText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor;
+		GameObject.Find ("ProfileFundText").GetComponent<Text> ().text = ""+Mathf.Round(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Funds);
+		GameObject.Find ("ProfileLaborText").GetComponent<Text> ().text = ""+Mathf.Round(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor);
 		GameObject.Find ("ProfileTurnText").GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController>().PastTurns.NumberOfTurns;
 		//Debug.Log(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor);
 	}
@@ -273,18 +333,12 @@ public class MainGame_Renderer : MonoBehaviour {
 	// Called to update display of player performance
 	public void UpdateSystemScoreDisplay(){
 		List<string> names = GameObject.Find ("GameControl").GetComponent<GameController>().ParameterNames;
-		List<float> values = GameObject.Find ("GameControl").GetComponent<GameController>().SystemParameters;
+		List<float> est = GameObject.Find ("GameControl").GetComponent<GameController>().SystemParameters;
+		List<float> min = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
 
-		//Debug.Log(values);
-		GameObject.Find ("SystemFeatures").GetComponent<Text> ().text = "System Feautures:";
 		for(int i=0; i < names.Count; i++){
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
+			GameObject.Find ("SystemFeature_"+(1+i)).GetComponent<Text> ().text = Mathf.Round(est[i]) + " / " + Mathf.Round(min[i]);//+ "\t\t" + names[i];
 		}
-			GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n\n Minimum Requirements:";
-			values = GameObject.Find ("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
-			for(int i=0; i < names.Count; i++){
-				GameObject.Find ("SystemFeatures").GetComponent<Text> ().text += "\n" + names[i] + ":\t" + values[i];
-			}
 	}
 
 	// Called to update Player Stat Display
@@ -298,8 +352,17 @@ public class MainGame_Renderer : MonoBehaviour {
     			string statName = item.Key;//playerStats.Keys.ElementAt(i);
           int statValue = item.Value;//playerStats[ statName ];
 					float statCost = GameObject.Find ("GameControl").GetComponent<GameController>().PurchaseStatCost(statName);
-					GameObject.Find ("Stat_"+(1+i)).GetComponent<Text> ().text = statName+":\n\tLevel: "+statValue+": \t\tCost: ("+statCost+")";
+					GameObject.Find ("Stat_"+(1+i)).GetComponent<Text> ().text = statValue+"\t("+Mathf.Round(statCost)+")\t"+statName;
 					i+=1;
 				}
+	}
+
+	// Hide/Unhide animation around next-turn button
+	public void HideUnHideNextTurnPayAttention(bool activate){
+		if(!activate){
+			GameObject.Find("[Make to pay attention]").transform.localScale = new Vector3(0, 0, 0);
+		}else{
+			GameObject.Find("[Make to pay attention]").transform.localScale = pay_attention_location;
+		}
 	}
 }
