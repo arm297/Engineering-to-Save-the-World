@@ -50,7 +50,7 @@ public class MainGame_Renderer : MonoBehaviour {
 		//EndTurn.onClick.AddListener(Update);
 		//GetNodes();
 
-		GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
+		//GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
 
 		// Add Listeners for Purchase Stat buttons
 		Dictionary<string,int> playerStats = GameObject.Find ("GameControl").GetComponent<GameController>().Player.Stats;
@@ -73,12 +73,12 @@ public class MainGame_Renderer : MonoBehaviour {
 	}
 
 	// Listeners
-	public void EndTurnListener(){
-				HideUnHideNextTurnPayAttention(false);
-		GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
-		Update();
+	//public void EndTurnListener(){
+	//			HideUnHideNextTurnPayAttention(false);
+	//	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
+	//	Update();
 
-	}
+	//}
 
 	// Update is called once per frame
 	void Update () {

@@ -87,6 +87,7 @@ namespace Drills {
             GameController.LastDrillScore.Score = scoreCalculator.score;
             GameController.LastDrillScore.MaxScore = scoreCalculator.maxScore;
             SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
+            GameObject.Find("GameControl").GetComponent<GameController>().UpdateDrillStatIncreases();
         }
 
     }

@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour {
 	public float StatCostScalar = 1.0f;
 
 	// For drills.
-	public float DrillChance = 0.5f;
+	public float DrillChance = 0.3f;
 	public float BaseScorePercent = 0.5f; //The score to compare for stat increases.
 
 	// LOADABLE SCENES
@@ -142,6 +142,8 @@ public class GameController : MonoBehaviour {
 		public float MaxScore { get; set; }
 		public Dictionary<string, int> IncreasedStats { get; set; } //Stats modified by drills and how much.
 		public bool ActiveStatChange {get; set; }
+
+        public bool OnTurnEnd { get; set; } // Whether this Drill was called at the turn end.
 	}
 
 	///////////////////////////////////////
@@ -149,8 +151,8 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-        Random.InitState(System.DateTime.Now.Millisecond);
         // Call Node Initialization
+        Random.InitState(System.DateTime.Now.Millisecond);
         InitializeNodeList();
 		InitializePlayerProfile();
 		InitializeTurnData();
@@ -177,38 +179,36 @@ public class GameController : MonoBehaviour {
 	// Roll to determine whether to load a drill, and which drill to decide.
 	// If returned string is null, then no drill is loaded.
 	string GetDrillToLoad() {
-        float Randoms = Random.Range(0f, 01f);
-        Debug.Log(Random.Range(0f, (float)(StatNames.Count - 1)));
-		if (Randoms < EventChance) {
+        if (Random.Range(0.0f, 1.0f) > EventChance) {
 			return null;
 		}
-        int drillIndex = (int)Random.Range(0f, StatNames.Count - 1);
-        Debug.Log(drillIndex);
-		return list_of_drills[(int)Random.Range(0f, ((float)(StatNames.Count- 1)))];
+		return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
 	}
 
 	// Randomly determine whether to load the drill, and load the drill based
 	// on the result of the scene.
-	void ChanceForDrill() {
+	bool ChanceForDrill() {
 		string drillScene = GetDrillToLoad();
 		if (drillScene == null) {
-			return;
+			return false;
 		}
 		LoadScene(drillScene);
+        return true;
 	}
 
 	// Return to the main scene and handle stat updates.
-	void ReturnToMainScene() {
+	public void UpdateDrillStatIncreases() {
 		float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore 
 			- BaseScorePercent;
-        Debug.Log(OffSetScorePercent);
 		string StatToChange =  StatNames[(int) Random.Range(0f, ((float)StatNames.Count - 1))];
 		LastDrillScore.ActiveStatChange = true;
-		// Update stats with 
-		// DrillScore.IncreasedStats.Append((StatToChange, (int) (10 * OffSetScorePercentage)));
-	}
+        LastDrillScore.IncreasedStats.Add(StatToChange, (int)(10 * OffSetScorePercent));
+        CommitTurn();
+        LastDrillScore.OnTurnEnd = false;
+    }
 
-	void UpdateDrillStatModifications() {
+    void UpdateDrillStatModifications() {
+        Debug.Log("Check if update works");
 		if (LastDrillScore.ActiveStatChange) {
 			foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
 				Player.Stats[statInc.Key] += statInc.Value;
@@ -598,6 +598,9 @@ public class GameController : MonoBehaviour {
 
 	// Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
 	public string PurchaseNode(int idx){
+        if (ChanceForDrill()) {
+            return "Drill Run Instead";
+        }
 		if(NodeList[idx].Purchaseable){
 			if(NodeList[idx].CostActual <= Player.Funds
 			&& NodeList[idx].LaborCost <= Player.Labor
@@ -611,7 +614,6 @@ public class GameController : MonoBehaviour {
 				NodeNeighborhoodCheck(idx);
 				NodeChange = true;
 				// calculate expected reliability based on parent state upon purchase
-				ChanceForDrill();
 				float parentStateOnPurchase = AssessParentState(idx);
 				NodeList[idx].ParentExpectedReliability = parentStateOnPurchase;
 				// append TurnData with node idx purchase
@@ -651,7 +653,10 @@ public class GameController : MonoBehaviour {
 	// Updates Player with changed labor and funds
 	// Resets Current Turn Data
 	public void CommitTurn(){
-		ChanceForDrill();
+        if (!LastDrillScore.OnTurnEnd && ChanceForDrill()) {
+            LastDrillScore.OnTurnEnd = true;
+            return;
+        }
 		Player.Funds += PastTurns.FundChangePerTurn;
 		Player.Labor = PastTurns.LaborPerTurn;
 		PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
