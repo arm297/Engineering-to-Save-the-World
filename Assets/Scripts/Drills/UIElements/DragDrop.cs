@@ -22,7 +22,7 @@ namespace Drills {
         // Original location of the dragged object
         [HideInInspector]
         public Vector3 originalPosition;
-    
+
         // Parent to return to.
         [HideInInspector]
         public Transform originalParent;
@@ -95,7 +95,7 @@ namespace Drills {
             float oldZ = transform.position.z;
             Vector3 screenPoint = Input.mousePosition;
             screenPoint.z = Camera.main.nearClipPlane;
-            transform.position =Camera.main.ScreenToWorldPoint(screenPoint);
+            transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
         }
 
         // Resets the color and sibling index of the dragged object, and sets
@@ -104,13 +104,12 @@ namespace Drills {
             eventData.pointerDrag = null;
             if (eventData.pointerEnter != gameObject) {
                 objectRenderer.SetColor(defaultColor);
-                if (dragMaterial != null)
-                {
+                if (dragMaterial != null) {
                     dragMaterial.color = materialColor;
                 }
             }
             transform.SetSiblingIndex(defaultSiblingIndex);
-            
+
             // Set new location of dragged object.
             if (returnParent != originalParent) {
                 containingBlock = returnParent.GetComponent<BlockContainer>();
@@ -132,7 +131,7 @@ namespace Drills {
             if ((dragMaterial = objectRenderer.GetMaterial()) != null) {
                 materialColor = dragMaterial.color;
             }
-	    }
+        }
     }
 
 }

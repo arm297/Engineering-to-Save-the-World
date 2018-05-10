@@ -4,15 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-namespace Drills
-{
+namespace Drills {
 
     /*
     The Controller for the drills. This class handles the transitions between
     drill states.
     */
-    public class DrillController : MonoBehaviour
-    {
+    public class DrillController : MonoBehaviour {
         // Function types
         [HideInInspector]
         public delegate void InitFunction();
@@ -65,14 +63,13 @@ namespace Drills
         }
 
         // Set up game for Drill Controller.
-        public void BeginGame()
-        {
+        public void BeginGame() {
             gameTimer.OnTimerEnd += EndGame;
             gameTimer.isActive = true;
             started = true;
             isActive = true;
             display.BeginGame();
-            
+
         }
 
         // Handle drill ending for game.
@@ -86,11 +83,11 @@ namespace Drills
 
         // Loads back the main scene and readds the scoring data.
         public void ReturnToMainGame() {
-		    Debug.Log("Returning to main game");
-		    GameController.LastDrillScore.Score = scoreCalculator.score;
+            Debug.Log("Returning to main game");
+            GameController.LastDrillScore.Score = scoreCalculator.score;
             GameController.LastDrillScore.MaxScore = scoreCalculator.maxScore;
-		    SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
-	    }
+            SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
+        }
 
     }
 

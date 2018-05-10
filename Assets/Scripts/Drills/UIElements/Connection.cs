@@ -8,8 +8,7 @@ using UnityEngine.EventSystems;
  * Basic Class for connection creation, highlighting, and deletion.
  */
 
-namespace Drills
-{
+namespace Drills {
     class Connection : MonoBehaviour {
         // Moused over highlight color for connections.
         [SerializeField]
@@ -34,7 +33,7 @@ namespace Drills
         private bool isSelected = false;
 
         // Individual segmemts of the drill.
-        private List<ConnectionSegment> segments = 
+        private List<ConnectionSegment> segments =
                 new List<ConnectionSegment>();
 
         // Individual callouts of the drill.
@@ -73,7 +72,7 @@ namespace Drills
             connectionEnd2.OnBlockPlaced -= Enable;
             connectionEnd2.OnBlockRemoved -= Disable;
 
-            foreach(ConnectionSegment segment in segments) {
+            foreach (ConnectionSegment segment in segments) {
                 segment.OnMouseClicked -= ColorSelectedSegments;
                 segment.OnMouseEnter -= HiglightMousedSegments;
                 segment.OnMouseExit -= ResetSegmentColors;
@@ -85,7 +84,7 @@ namespace Drills
         public void Enable() {
             if (!activeSegments) {
                 activeSegments = true;
-                foreach(ConnectionSegment segment in segments) {
+                foreach (ConnectionSegment segment in segments) {
                     segment.gameObject.SetActive(true);
                 }
                 foreach (GameObject callout in callouts) {
@@ -96,10 +95,10 @@ namespace Drills
 
         // Disable to game object if both endpoints are not filled.
         public void Disable() {
-            if (activeSegments && connectionEnd1.IsEmpty() 
+            if (activeSegments && connectionEnd1.IsEmpty()
                 && connectionEnd2.IsEmpty()) {
                 activeSegments = false;
-                foreach(ConnectionSegment segment in segments) {
+                foreach (ConnectionSegment segment in segments) {
                     segment.gameObject.SetActive(false);
                 }
             }
@@ -127,9 +126,8 @@ namespace Drills
                     segment.ResetColor();
                     segment.SetCalloutActive(false);
                 }
-            }
-            else {
-                foreach(ConnectionSegment segment in segments) {
+            } else {
+                foreach (ConnectionSegment segment in segments) {
                     segment.SetColor(selectedColor);
                     segment.SetCalloutActive(true);
                 }

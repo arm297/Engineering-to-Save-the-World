@@ -9,8 +9,7 @@ namespace Drills {
      *  Drill timer. Displays the time left, and plays the warning audio clip
      *  when the time left is small. 
      */
-    public class Timer : MonoBehaviour
-    {
+    public class Timer : MonoBehaviour {
 
         // Whether the current game is active.
         [HideInInspector]
@@ -48,26 +47,21 @@ namespace Drills {
         private bool playedWarning = false;
 
         // Use this for initialization
-        void Awake()
-        {
+        void Awake() {
             timeRemaining = initialTime;
             clock = GetComponent<Text>();
             clock.text = ((int)timeRemaining).ToString();
         }
 
         // Update is called once per frame
-        void Update()
-        {
-            if (isActive && !isPaused)
-            {
+        void Update() {
+            if (isActive && !isPaused) {
                 timeRemaining -= Time.deltaTime;
-                if (timeRemaining <= warningTime && !playedWarning)
-                {
+                if (timeRemaining <= warningTime && !playedWarning) {
                     AudioSource.PlayClipAtPoint(warningClip, transform.position);
                     playedWarning = true;
                 }
-                if (timeRemaining <= 0)
-                {
+                if (timeRemaining <= 0) {
                     timeRemaining = 0;
                     isActive = false;
                     OnTimerEnd();
