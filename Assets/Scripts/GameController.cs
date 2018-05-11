@@ -89,10 +89,12 @@ public class GameController : MonoBehaviour {
         public List<float> ParameterActuals { get; set; }
         public List<float> ParameterEstimated { get; set; }
         public List<string> ParameterNames { get; set; }
+		public bool Purchaseable { get; set; }
         public bool Purchased { get; set; }
         public bool Visible { get; set; }
         public bool Obscured { get; set; }
-        public bool Purchaseable { get; set; }
+		public bool Testable { get; set; }
+		public bool TestReady { get; set; }
         public bool Tested { get; set; }
         public bool Broken { get; set; }
         public float CostToFix { get; set; }
@@ -131,6 +133,9 @@ public class GameController : MonoBehaviour {
         public string Title { get; set; }
         public float Fame { get; set; }
         public Dictionary<string, int> Stats { get; set; }
+
+		public List<float> ActualResourceCreterion { get; set; }
+		public List<float> ExpectedResourceCreterion { get; set; }
     }
 
     // Tracks the name and score of the last drill run.
@@ -269,9 +274,11 @@ public class GameController : MonoBehaviour {
                     "Parameter C",
                     "Parameter D"
                 };
+				n.Purchaseable = false;
                 n.Purchased = false;
                 n.Visible = false;
-                n.Purchaseable = false;
+				n.Testable = false;
+				n.TestReady = false;
                 n.Tested = false;
                 n.Broken = false;
                 n.CostToFix = n.CostActual * Random.Range(.2f, .7f);
@@ -572,6 +579,20 @@ public class GameController : MonoBehaviour {
         foreach (string statName in StatNames) {
             Player.Stats.Add(statName, 0);
         }
+
+		Player.ExpectedResourceCreterion = new List<float> {
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f)
+		};
+
+		Player.ActualResourceCreterion = new List<float> {
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f),
+			Random.Range (0.0f, 5.0f)
+		};
     }
 
     // Initialize Turn Data
@@ -589,6 +610,36 @@ public class GameController : MonoBehaviour {
     //////////////////////////////////////////////////////////////////////
     // Functions that alter GameController Data
 
+	// Called for getting expected total score
+	public float GetExpectedScore() {
+		float expectedScore = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.Purchased) {
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					expectedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterEstimated [i]);
+				}
+			}
+		}
+
+		return expectedScore;
+	}
+
+	// Called for getting tested total score
+	public float GetTestedScore() {
+		float testedScore = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.Tested) {
+				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
+					testedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterActuals [i]);
+				}
+			}
+		}
+
+		return testedScore;
+	}
+
     // Given the index of the node, check if purchaseable. If so, check if adequate funds exist. If so, purchase.
     public string PurchaseNode(int idx) {
         if (ChanceForDrill()) {
@@ -600,9 +651,10 @@ public class GameController : MonoBehaviour {
             ) {
                 Player.Funds = Player.Funds - NodeList[idx].CostActual;
                 Player.Labor = Player.Labor - NodeList[idx].LaborCost;
-                NodeList[idx].Purchased = true;
                 NodeList[idx].Purchaseable = false;
+				NodeList[idx].Purchased = true;
                 NodeList[idx].Obscured = false;
+				NodeList[idx].Testable = true;
 
                 NodeNeighborhoodCheck(idx);
                 NodeChange = true;
@@ -659,6 +711,17 @@ public class GameController : MonoBehaviour {
         PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
         UpdateDrillStatModifications();
         //Debug.Log(Player.Labor);
+
+		float totalTestCost = 0;
+
+		foreach (NodeData eachNode in NodeList) {
+			if (eachNode.TestReady) {
+				totalTestCost += eachNode.LaborCost;
+				eachNode.TestReady = false;
+				eachNode.Tested = true;
+			}
+		}
+
         if (PastTurns.NumberOfTurns >= MaxNumberOfTurns
                 || Player.Funds <= 0.0f) {
             // Begin End of game routine
