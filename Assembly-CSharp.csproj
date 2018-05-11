@@ -51,7 +51,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\_Scenes\Archive_Utilites\AttributeElementScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\CameraControlScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\GameUtilityScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\NextTurnScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Persist_A.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Persist_B.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Persist_C.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Persist_D.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Persist_E.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\ProfileSettingScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\ResourceLabelScript.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\Return_to_Main.cs" />
+     <Compile Include="Assets\_Scenes\Archive_Utilites\SaveAndLoadScript.cs" />
      <Compile Include="Assets\Archive_ GameController\GameControllerScript.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\connection.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\connection_callout.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\drag_drop.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\game_controller.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\initialize_drag_drop_drill.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\reliability_calculator.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\set_button_text.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\set_end_button.cs" />
+     <Compile Include="Assets\Archive_Drills\Drill_Scripts\show_target_reliability.cs" />
      <Compile Include="Assets\Archive_Labor\LaborInfo.cs" />
      <Compile Include="Assets\Archive_Labor\LaborScript.cs" />
      <Compile Include="Assets\Archive_Node\AttributeElementForNodeScript.cs" />
@@ -75,28 +97,6 @@
      <Compile Include="Assets\Archive_Player\AttributeInfo.cs" />
      <Compile Include="Assets\Archive_Player\PlayerInfo.cs" />
      <Compile Include="Assets\Archive_Player\PlayerInfo_GameElement.cs" />
-     <Compile Include="Assets\Archive_Utilites\AttributeElementScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\CameraControlScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\GameUtilityScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\NextTurnScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\Persist_A.cs" />
-     <Compile Include="Assets\Archive_Utilites\Persist_B.cs" />
-     <Compile Include="Assets\Archive_Utilites\Persist_C.cs" />
-     <Compile Include="Assets\Archive_Utilites\Persist_D.cs" />
-     <Compile Include="Assets\Archive_Utilites\Persist_E.cs" />
-     <Compile Include="Assets\Archive_Utilites\ProfileSettingScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\ResourceLabelScript.cs" />
-     <Compile Include="Assets\Archive_Utilites\Return_to_Main.cs" />
-     <Compile Include="Assets\Archive_Utilites\SaveAndLoadScript.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\connection.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\connection_callout.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\drag_drop.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\game_controller.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\initialize_drag_drop_drill.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\reliability_calculator.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\set_button_text.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\set_end_button.cs" />
-     <Compile Include="Assets\Drills\Drill_Scripts\show_target_reliability.cs" />
      <Compile Include="Assets\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Scripts\Drills\DrillController.cs" />
      <Compile Include="Assets\Scripts\Drills\DrillDisplay.cs" />
@@ -114,9 +114,11 @@
      <Compile Include="Assets\Scripts\Drills\UIElements\ReliabilityNode.cs" />
      <Compile Include="Assets\Scripts\Drills\UIElements\Timer.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\intro_script.cs" />
      <Compile Include="Assets\Scripts\Persist.cs" />
      <Compile Include="Assets\Scripts\Render_MainGame\MainGame_Renderer.cs" />
      <Compile Include="Assets\Scripts\Render_MainGame\Node_Listeners\NodeListener.cs" />
+     <None Include="Assets\SpaceGUI\fonts\LICENSE.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -335,6 +335,12 @@ public class MainGame_Renderer : MonoBehaviour {
         for (int i = 0; i < names.Count; i++) {
             GameObject.Find("SystemFeature_" + (1 + i)).GetComponent<Text>().text = Mathf.Round(est[i]) + " / " + Mathf.Round(min[i]);//+ "\t\t" + names[i];
         }
+
+		float testedScore = 0, expectedScore = 0;
+		testedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
+		expectedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetExpectedScore ();
+
+		UpdateTotalScoreDisplay (testedScore, expectedScore);
     }
 
     // Called to update Player Stat Display
@@ -360,4 +366,10 @@ public class MainGame_Renderer : MonoBehaviour {
             GameObject.Find("[Make to pay attention]").transform.localScale = pay_attention_location;
         }
     }
+
+	// Called to update displacy of player current total score
+	public void UpdateTotalScoreDisplay(float tested, float expected) {
+		GameObject.Find ("TestedScoreText").GetComponent<Text>().text = tested.ToString();
+		GameObject.Find ("ExpectingScoreText").GetComponent<Text>().text = expected.ToString();
+	}
 }

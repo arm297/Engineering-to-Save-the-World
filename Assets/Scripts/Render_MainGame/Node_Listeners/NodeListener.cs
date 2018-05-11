@@ -18,6 +18,10 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public Sprite PurchaseButtonNormal;
 	public Sprite PurchaseButtonBought;
 
+	public Sprite TestReadyButtonMouseOver;
+	public Sprite TestReadyButtonNormal;
+	public Sprite TestReadyButtonTested;
+
 	// To Control NodeTypePanel
 	public GameObject LaborCost;
 	public GameObject FundsCost;
