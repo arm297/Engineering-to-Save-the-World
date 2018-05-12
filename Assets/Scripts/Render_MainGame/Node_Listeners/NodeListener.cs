@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 	 {
@@ -27,6 +28,7 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public GameObject FundsCost;
 	public GameObject Purchased;
 	public GameObject Tested;
+	public List<GameObject> Feautures = new List<GameObject>();
 
 	public AudioSource PurchaseSound;
 
@@ -129,9 +131,10 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	// Send purchase request and idx to GameController
 	// Or Control Logic Here with understanding that it could be moved to GameController
 	void PurchaseNode(){
-		Debug.Log("Playing Sound");
-		PurchaseSound.Play();
-
+		//Debug.Log("Playing Sound");
+		//PurchaseSound.Play();
+		//PurchaseSound.Pause();
+		//PurchaseSound.Play();
 
 		// Use GameController convienence function to purchase node idx
 		Debug.Log("Purchasing Node");
@@ -187,7 +190,19 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	void UpdateNodeInfo() {
 		FundsCost.GetComponent<Text>().text = ""+Mathf.Round(GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].CostActual);
 		LaborCost.GetComponent<Text> ().text = ""+Mathf.Round(GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].LaborCost);
-		Purchased.GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchased;
-		Tested.GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Tested;
+
+		int i = 0;
+		foreach(GameObject f in Feautures){
+			//try{
+				f.GetComponent<Text>().text = ""+Mathf.Round(GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].ParameterActuals[i]);
+			//}catch(NullReferenceException e){
+					//Debug.Log(e);
+			//}
+			i += 1;
+		}
+
+
+		//Purchased.GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchased;
+		//Tested.GetComponent<Text> ().text = ""+GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Tested;
 	}
 }
