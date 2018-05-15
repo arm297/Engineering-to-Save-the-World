@@ -19,9 +19,9 @@ public class GameController : MonoBehaviour {
     ///////////////////////////////////
     // PUBLIC PARAMTERS
 
-    public static List<NodeData> NodeList = new List<NodeData>();
-    public static PlayerProfile Player;
-    public static TurnData PastTurns;
+    public List<NodeData> NodeList = new List<NodeData>();
+    public PlayerProfile Player;
+    public TurnData PastTurns;
 
     public static DrillScore LastDrillScore = new DrillScore();
     public int Height = 100;

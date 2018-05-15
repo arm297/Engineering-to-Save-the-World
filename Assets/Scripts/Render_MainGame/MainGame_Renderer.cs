@@ -46,7 +46,7 @@ public class MainGame_Renderer : MonoBehaviour {
         pay_attention_location = GameObject.Find("[Make to pay attention]").transform.localScale;
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
-        //EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
+        EndTurn.onClick.AddListener(EndTurnListener);
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
@@ -73,7 +73,7 @@ public class MainGame_Renderer : MonoBehaviour {
 
     // Listeners
     public void EndTurnListener(){
-    	HideUnHideNextTurnPayAttention(false);
+    			HideUnHideNextTurnPayAttention(false);
     	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
     	Update();
 
@@ -169,7 +169,7 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Creates a node gameobject based on input parameters
-    GameObject CreateNodeGameObject(GameController.NodeData node, int idx) {
+    GameObject CreateNodeGameObject(NodeData node, int idx) {
         Canvas canvas = NodeBucket.GetComponent<Canvas>();
 
         int x = node.X;
@@ -266,12 +266,22 @@ public class MainGame_Renderer : MonoBehaviour {
             //	else if two few requirements are purchased then draw different line
             //	or draw line to spot where non-visible requirement node resides for child
 
+
+            Color chil = Color.white;
+            foreach (int jdx in children) {
+                int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
+                if (gameObject_idx >= 0) {
+                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 1);
+                    Lines.Add(line);
+                }
+            }
+
             // Draw Parents
             Color nonReq = Color.blue;
             foreach (int jdx in parents) {
                 int gameObject_idx = NodeIDX.IndexOf(jdx);
                 if (gameObject_idx >= 0) {
-                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 10);
+                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 5);
                     Lines.Add(line);
                 }
             }
@@ -285,14 +295,6 @@ public class MainGame_Renderer : MonoBehaviour {
                 }
             }
 
-            Color chil = Color.white;
-            foreach (int jdx in children) {
-                int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
-                if (gameObject_idx >= 0) {
-                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 10);
-                    Lines.Add(line);
-                }
-            }
 
             i += 1;
         }
