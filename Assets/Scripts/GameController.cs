@@ -19,9 +19,9 @@ public class GameController : MonoBehaviour {
     ///////////////////////////////////
     // PUBLIC PARAMTERS
 
-    public List<NodeData> NodeList = new List<NodeData>();
-    public PlayerProfile Player;
-    public TurnData PastTurns = new TurnData();
+    public static List<NodeData> NodeList = new List<NodeData>();
+    public static PlayerProfile Player;
+    public static TurnData PastTurns;
 
     public static DrillScore LastDrillScore = new DrillScore();
     public int Height = 100;
@@ -75,19 +75,6 @@ public class GameController : MonoBehaviour {
     private string MainGame = "MainGame";
     private string UI_Menu = "UI_Menu";
 
-    // the below class stores turn data as well as refreshable resources.
-    public class TurnData {
-        public float NumberOfTurns { get; set; }
-        public float LaborPerTurn { get; set; }
-        public float FundChangePerTurn { get; set; }
-        public List<int> CurrentTurnNodesBought { get; set; }
-        public List<int> CurrentTurnNodesTested { get; set; }
-        //public List<int> CurrentTurnEventsOccurred {get; set;}
-        public List<List<int>> NodesBoughtByTurn { get; set; }
-        public List<List<int>> NodesTestedByTurn { get; set; }
-        //public List<List<string>> EventsOccurredByTurn {get; set;}
-    }
-
     // Tracks the name and score of the last drill run.
     public class DrillScore {
         public float Score { get; set; }
@@ -107,7 +94,7 @@ public class GameController : MonoBehaviour {
         Random.InitState(System.DateTime.Now.Millisecond);
         InitializeNodeList();
         Player = new PlayerProfile(InitialFunds, InitialLabor, InitialFame, StatNames);
-        InitializeTurnData();
+        PastTurns = new TurnData(InitialLaborPerTurn);
         InitializeDrillScoreStats();
         LoadScene(MainGame);
     }
@@ -475,18 +462,6 @@ public class GameController : MonoBehaviour {
         return neighbors;
     }
 
-    // Initialize Turn Data
-    void InitializeTurnData() {
-        PastTurns.LaborPerTurn = InitialLaborPerTurn;
-        PastTurns.FundChangePerTurn = 0.0f;
-        PastTurns.CurrentTurnNodesBought = new List<int>();
-        PastTurns.CurrentTurnNodesTested = new List<int>();
-        PastTurns.NodesBoughtByTurn = new List<List<int>>();
-        PastTurns.NodesTestedByTurn = new List<List<int>>();
-
-        PastTurns.NumberOfTurns = 0;
-    }
-
     //////////////////////////////////////////////////////////////////////
     // Functions that alter GameController Data
 
@@ -584,11 +559,7 @@ public class GameController : MonoBehaviour {
         }
         Player.Funds += PastTurns.FundChangePerTurn;
         Player.Labor = PastTurns.LaborPerTurn;
-        PastTurns.NodesBoughtByTurn.Add(PastTurns.CurrentTurnNodesBought);
-        PastTurns.NodesTestedByTurn.Add(PastTurns.CurrentTurnNodesTested);
-        PastTurns.CurrentTurnNodesBought = new List<int>();
-        PastTurns.CurrentTurnNodesTested = new List<int>();
-        PastTurns.NumberOfTurns = 1 + PastTurns.NumberOfTurns;
+        PastTurns.UpdateForTurnEnd();
         UpdateDrillStatModifications();
         //Debug.Log(Player.Labor);
 
