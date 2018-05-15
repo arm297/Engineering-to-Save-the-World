@@ -46,11 +46,11 @@ public class MainGame_Renderer : MonoBehaviour {
         pay_attention_location = GameObject.Find("[Make to pay attention]").transform.localScale;
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
-        EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
+        //EndTurn.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn);
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
-        //GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
+        EndTurn.onClick.AddListener(EndTurnListener);
 
         // Add Listeners for Purchase Stat buttons
         Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
@@ -72,12 +72,12 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Listeners
-    //public void EndTurnListener(){
-    //			HideUnHideNextTurnPayAttention(false);
-    //	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
-    //	Update();
+    public void EndTurnListener(){
+    	HideUnHideNextTurnPayAttention(false);
+    	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
+    	Update();
 
-    //}
+    }
 
     // Update is called once per frame
     void Update() {
