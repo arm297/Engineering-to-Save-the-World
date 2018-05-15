@@ -181,7 +181,7 @@ public class GameController : MonoBehaviour {
     // Roll to determine whether to load a drill, and which drill to decide.
     // If returned string is null, then no drill is loaded.
     string GetDrillToLoad() {
-        if (Random.Range(0.0f, 1.0f) > EventChance) {
+        if (Random.Range(0.0f, 1.0f) < EventChance) {
             return null;
         }
         return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
