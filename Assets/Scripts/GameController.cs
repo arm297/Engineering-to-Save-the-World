@@ -75,39 +75,6 @@ public class GameController : MonoBehaviour {
     private string MainGame = "MainGame";
     private string UI_Menu = "UI_Menu";
 
-    ///////////////////////////////////
-    // DATA STRUCTURES
-
-    //The below class stores Node Data. It is callable through GameObject.
-    public class NodeData {
-        public int IDX { get; set; }
-        public string Name { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public float CostActual { get; set; }
-        public float CostEstimated { get; set; }
-        public List<float> ParameterActuals { get; set; }
-        public List<float> ParameterEstimated { get; set; }
-        public List<string> ParameterNames { get; set; }
-		public bool Purchaseable { get; set; }
-        public bool Purchased { get; set; }
-        public bool Visible { get; set; }
-        public bool Obscured { get; set; }
-		public bool Testable { get; set; }
-		public bool TestReady { get; set; }
-        public bool Tested { get; set; }
-        public bool Broken { get; set; }
-        public float CostToFix { get; set; }
-        public List<int> Parents { get; set; }
-        public List<int> RequiredParents { get; set; }
-        public List<int> Children { get; set; }
-        public float ProbabilityToFail { get; set; }
-        public float ParentExpectedReliability { get; set; }
-        public float LaborCost { get; set; }
-        public bool SystReq { get; set; }
-        public int ObscuredRank { get; set; }
-    }
-
     // the below class stores turn data as well as refreshable resources.
     public class TurnData {
         public float NumberOfTurns { get; set; }
