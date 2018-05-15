@@ -90,7 +90,7 @@ public class NodeData {
     // Constructs a new node with the given position, settings
     // its parameters according to the base cost and labor.
     // The initial node has no required parents or children.
-    public NodeData(int x, int y, int baseCost, int baseLabor) {
+    public NodeData(int x, int y, float baseCost, float baseLabor) {
         IDX = numNodes++;
         Name = "node " + IDX;
         X = x;

@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     // PUBLIC PARAMTERS
 
     public List<NodeData> NodeList = new List<NodeData>();
-    public PlayerProfile Player = new PlayerProfile();
+    public PlayerProfile Player;
     public TurnData PastTurns = new TurnData();
 
     public static DrillScore LastDrillScore = new DrillScore();
@@ -88,23 +88,6 @@ public class GameController : MonoBehaviour {
         //public List<List<string>> EventsOccurredByTurn {get; set;}
     }
 
-    //Stores player data
-    //todo: Display Name, Title, Fame in game
-    //todo: Allow player to set Name
-    //todo: Award Title and Fame for succesful Events
-    //todo: Base level of opportunity on Fame And/Or Title
-    public class PlayerProfile {
-        public float Funds { get; set; }
-        public float Labor { get; set; }
-        public string Name { get; set; }
-        public string Title { get; set; }
-        public float Fame { get; set; }
-        public Dictionary<string, int> Stats { get; set; }
-
-		public List<float> ActualResourceCreterion { get; set; }
-		public List<float> ExpectedResourceCreterion { get; set; }
-    }
-
     // Tracks the name and score of the last drill run.
     public class DrillScore {
         public float Score { get; set; }
@@ -123,7 +106,7 @@ public class GameController : MonoBehaviour {
         // Call Node Initialization
         Random.InitState(System.DateTime.Now.Millisecond);
         InitializeNodeList();
-        InitializePlayerProfile();
+        Player = new PlayerProfile(InitialFunds, InitialLabor, InitialFame, StatNames);
         InitializeTurnData();
         InitializeDrillScoreStats();
         LoadScene(MainGame);
@@ -212,53 +195,12 @@ public class GameController : MonoBehaviour {
         int n_starting_purchaseable = 5;  // Initial number of visible nodes at start of game
 
         // Loop through horizontal
-        int nodeIndex = 0; // index
         for (int i = 0; i <= X; i++) {
             // Loop through vertical
             for (int j = 0; j <= Y; j++) {
-                NodeData n = new NodeData();
-                n.IDX = nodeIndex;
-                nodeIndex += 1;
-                n.Name = "node " + n.IDX;
-                n.X = i;
-                n.Y = j;
-                n.CostActual = BaseCost * Random.Range(0.8f, 1.5f);
-                n.CostEstimated = n.CostActual * Random.Range(0.5f, 1.1f);
-                n.ParameterActuals = new List<float>{
-                    Random.Range(0.0f,5.0f),
-                    Random.Range(0.0f,5.0f),
-                    Random.Range(0.0f,5.0f),
-                    Random.Range(0.0f,5.0f)};
-                n.ParameterEstimated = new List<float>{
-                    n.ParameterActuals[0] * Random.Range(.95f,1.3f),
-                    n.ParameterActuals[0] * Random.Range(.95f,1.3f),
-                    n.ParameterActuals[0] * Random.Range(.95f,1.3f),
-                    n.ParameterActuals[0] * Random.Range(.95f,1.3f)
-                };
-                n.ParameterNames = new List<string>{
-                    "Parameter A",
-                    "Parameter B",
-                    "Parameter C",
-                    "Parameter D"
-                };
-				n.Purchaseable = false;
-                n.Purchased = false;
-                n.Visible = false;
-				n.Testable = false;
-				n.TestReady = false;
-                n.Tested = false;
-                n.Broken = false;
-                n.CostToFix = n.CostActual * Random.Range(.2f, .7f);
-                n.Parents = new List<int>();
-                n.RequiredParents = new List<int>();
-                n.Children = new List<int>();
-                n.ProbabilityToFail = Random.Range(.01f, .3f);
-                n.Obscured = true;
-                n.ObscuredRank = 3;
-                n.ParentExpectedReliability = 1;
-                n.LaborCost = BaseLabor * Random.Range(0.8f, 1.5f);
-                n.SystReq = false;
 
+                // Initialize node data
+                NodeData n = new NodeData(i, j, BaseCost, BaseLabor);
 
                 // Chance that Node is destroyed depends on sparsity
                 if (Random.Range(0.0f, 1.0f) < Sparsity) {
@@ -533,35 +475,6 @@ public class GameController : MonoBehaviour {
         return neighbors;
     }
 
-    // Populate Initial Player Data
-    void InitializePlayerProfile() {
-        Player.Funds = InitialFunds;
-        Player.Labor = InitialLabor;
-        Player.Name = "todo";
-        Player.Title = "Project Manager";
-        Player.Fame = InitialFame;
-
-        // Initialize Stats to 0
-        Player.Stats = new Dictionary<string, int>();
-        foreach (string statName in StatNames) {
-            Player.Stats.Add(statName, 0);
-        }
-
-		Player.ExpectedResourceCreterion = new List<float> {
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f)
-		};
-
-		Player.ActualResourceCreterion = new List<float> {
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f),
-			Random.Range (0.0f, 5.0f)
-		};
-    }
-
     // Initialize Turn Data
     void InitializeTurnData() {
         PastTurns.LaborPerTurn = InitialLaborPerTurn;
@@ -583,8 +496,8 @@ public class GameController : MonoBehaviour {
 
 		foreach (NodeData eachNode in NodeList) {
 			if (eachNode.Purchased) {
-				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
-					expectedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterEstimated [i]);
+				for (int i = 0; i < Player.ExpectedResourceCriterion.Count; i++) {
+					expectedScore += (Player.ExpectedResourceCriterion[i] * eachNode.ParameterEstimated[i]);
 				}
 			}
 		}
@@ -598,8 +511,8 @@ public class GameController : MonoBehaviour {
 
 		foreach (NodeData eachNode in NodeList) {
 			if (eachNode.Tested) {
-				for (int i = 0; i < Player.ExpectedResourceCreterion.Count; i++) {
-					testedScore += (Player.ExpectedResourceCreterion [i] * eachNode.ParameterActuals [i]);
+				for (int i = 0; i < Player.ExpectedResourceCriterion.Count; i++) {
+					testedScore += (Player.ExpectedResourceCriterion [i] * eachNode.ParameterActuals [i]);
 				}
 			}
 		}
