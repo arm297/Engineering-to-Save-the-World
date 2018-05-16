@@ -50,7 +50,7 @@ public class MainGame_Renderer : MonoBehaviour {
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
-        //GameObject.Find("Tap Area").GetComponent<Button>().onClick.AddListener(EndTurnListener);
+        EndTurn.onClick.AddListener(EndTurnListener);
 
         // Add Listeners for Purchase Stat buttons
         Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
@@ -169,7 +169,7 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Creates a node gameobject based on input parameters
-    GameObject CreateNodeGameObject(GameController.NodeData node, int idx) {
+    GameObject CreateNodeGameObject(NodeData node, int idx) {
         Canvas canvas = NodeBucket.GetComponent<Canvas>();
 
         int x = node.X;
