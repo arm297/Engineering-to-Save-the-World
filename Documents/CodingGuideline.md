@@ -25,6 +25,7 @@ For larger changes and modifying files multiple people are working on, commit yo
 2. When you create a pull request for your branch, make sure it is rebased, or merged on top of master. See more information about rebasing vs merging [here](https://hackernoon.com/git-merge-vs-rebase-whats-the-diff-76413c117333).
 3. Before creating a pull request, be sure that your modifications still build and run the project.
 4. If you changed a file someone else is working on, be sure to notify then, and try to make them review your changes.
+5. Please do not add any of the folders or files specified in the .gitignore. You should only add your changes to the Assets directory.
 
 For more information, refer to the [GitHub Help Page](https://help.github.com/).
 
