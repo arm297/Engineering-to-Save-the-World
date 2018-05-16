@@ -170,9 +170,9 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 
 	// When "Test" button pressed, it may result in either this node breaking, or other untested nodes.
 	public void TestNode(){
-		List<GameController.NodeData> nodeList = GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList;
+		List<NodeData> nodeList = GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList;
 
-		foreach (GameController.NodeData eachNode in nodeList) {
+		foreach (NodeData eachNode in nodeList) {
 			if (eachNode.Purchased) {
 				// Purchased node condition
 			}
