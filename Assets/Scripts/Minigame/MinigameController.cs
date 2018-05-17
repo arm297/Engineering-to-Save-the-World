@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Minigames {
     /**
@@ -11,12 +12,13 @@ namespace Minigames {
     public class MinigameController : MonoBehaviour {
 
         // Function types
-        [HideInInspector]
-        public delegate void InitFunction();
+        public delegate void ActionFunction();
 
         // Function to be called at the beginning of the drill.
-        [HideInInspector]
-        public InitFunction InitMinigame;
+        public ActionFunction InitMinigame;
+
+        // Handle the guess actions.
+        public ActionFunction HandleGuess;
 
         // Whether this game is currently active.
         private bool isActive = false;
@@ -33,6 +35,13 @@ namespace Minigames {
         // Update is called once per frame
         void Update() {
 
+        }
+
+
+
+        public void ReturnToMainGame() {
+            Debug.Log("Returning to main game");
+            SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
         }
     }
 }
