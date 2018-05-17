@@ -10,6 +10,21 @@ namespace Minigames {
      */
     public class MinigameController : MonoBehaviour {
 
+        // Function types
+        [HideInInspector]
+        public delegate void InitFunction();
+
+        // Function to be called at the beginning of the drill.
+        [HideInInspector]
+        public InitFunction InitMinigame;
+
+        // Whether this game is currently active.
+        private bool isActive = false;
+
+        // The labor used during each guess.
+        [SerializeField]
+        private float laborPerGuess = 1f;
+
         // Use this for initialization
         void Start() {
 

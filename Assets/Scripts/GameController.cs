@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     // PUBLIC PARAMTERS
 
     public List<NodeData> NodeList = new List<NodeData>();
-    public PlayerProfile Player;
+    public static PlayerProfile Player;
     public TurnData PastTurns;
 
     public static DrillScore LastDrillScore = new DrillScore();
@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
     public float InitialFunds = 1000;
     public float InitialLabor = 20;
     public float InitialFame = 0;
-    public float EventChance = 0.5f;
+    public float EventChance = 0.2f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
     public float ParentChance = 0.5f; // chance that an existing node within distance of new node is a parent nodes
@@ -71,7 +71,9 @@ public class GameController : MonoBehaviour {
         "AssignmentQuestions1",
         "Concept Sketch Interface",
         "GoodRequirementBadRequirement",
-        "RelliabilityCostDrill1"};
+        "RelliabilityCostDrill1",
+        "ReliabilityCostDrill2"
+    };
     private string MainGame = "MainGame";
     private string UI_Menu = "UI_Menu";
 
@@ -132,6 +134,7 @@ public class GameController : MonoBehaviour {
             return false;
         }
         LoadScene(drillScene);
+        UpdateDrillStatIncreases();
         return true;
     }
 
@@ -142,8 +145,6 @@ public class GameController : MonoBehaviour {
         string StatToChange = StatNames[(int)Random.Range(0f, ((float)StatNames.Count - 1))];
         LastDrillScore.ActiveStatChange = true;
         LastDrillScore.IncreasedStats.Add(StatToChange, (int)(10 * OffSetScorePercent));
-        CommitTurn();
-        LastDrillScore.OnTurnEnd = false;
     }
 
     void UpdateDrillStatModifications() {
@@ -553,10 +554,6 @@ public class GameController : MonoBehaviour {
     // Updates Player with changed labor and funds
     // Resets Current Turn Data
     public void CommitTurn() {
-        if (!LastDrillScore.OnTurnEnd && ChanceForDrill()) {
-            LastDrillScore.OnTurnEnd = true;
-            return;
-        }
         Player.Funds += PastTurns.FundChangePerTurn;
         Player.Labor = PastTurns.LaborPerTurn;
         PastTurns.UpdateForTurnEnd();
@@ -579,6 +576,7 @@ public class GameController : MonoBehaviour {
             EndGame();
         }
         CalculateSystemFeautures();
+        ChanceForDrill();
     }
 
     // updates global for parameter values at system level
@@ -611,6 +609,9 @@ public class GameController : MonoBehaviour {
         // Compare System Features with minimum required features
         CalculateSystemFeautures();
         int i = 0;
+        if (Player.Funds <= 0.0f) {
+            return false;
+        }
         foreach (float val in SystemParameters) {
             if (MinRequiredSystemParameters[i] > val) {
                 return false;
@@ -640,12 +641,23 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Functions to handle ending the game.
+    public bool IsVictory() {
+        for(int i = 0; i < SystemParameters.Count; i++) {
+            if (SystemParameters[i] < MinRequiredSystemParameters[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     // End of Game
     // Tally up Score
     // Victory or Defeat
     public void EndGame() {
-
+        
     }
 
 }
