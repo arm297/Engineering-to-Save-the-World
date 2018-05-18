@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour {
     public float InitialLaborPerTurn = 20.0f;  // Amount of Fund Change that occurs each turn (are funds renewed or depleted?)
     public int MaxNumberOfTurns = 10;  // Number of Turns allowed in game
     public int MaxPurchaseablePath = 20; // Longest Path considered purchaseable
-    public List<string> ParameterNames = new List<string>{
+    public static List<string> ParameterNames = new List<string>{
         "Parameter A",
         "Parameter B",
         "Parameter C",
@@ -49,7 +49,7 @@ public class GameController : MonoBehaviour {
     public List<float> MinRequiredSystemParameters = new List<float> { 100.0f, 200.0f, 150.0f, 40.0f };
 
     // For Player Stats
-    public List<string> StatNames = new List<string>{
+    public static List<string> StatNames = new List<string>{
         "Acquisition Processes",
         "Supply Processes",
         "Life Cycle Model Management",
