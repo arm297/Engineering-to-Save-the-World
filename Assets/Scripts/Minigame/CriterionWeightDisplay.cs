@@ -37,7 +37,7 @@ namespace Minigames {
         }
 
         // The function called when the enter button is clicked.
-        void EnterButtonListener() {
+        public void EnterButtonListener() {
             if (ButtonListenerFunction != null) {
                 string criterion1 = field1.text.Trim();
                 string criterion2 = field2.text.Trim();

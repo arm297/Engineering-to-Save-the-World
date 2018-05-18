@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
     public float InitialFunds = 1000;
     public float InitialLabor = 20;
     public float InitialFame = 0;
-    public float EventChance = 0.2f;
+    public float EventChance = 0.1f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
     public float ParentChance = 0.5f; // chance that an existing node within distance of new node is a parent nodes
@@ -120,7 +120,7 @@ public class GameController : MonoBehaviour {
     // Roll to determine whether to load a drill, and which drill to decide.
     // If returned string is null, then no drill is loaded.
     string GetDrillToLoad() {
-        if (Random.Range(0.0f, 1.0f) < EventChance) {
+        if (Random.Range(0.0f, 1.0f) > EventChance) {
             return null;
         }
         return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
@@ -162,6 +162,15 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    //////////////////////////////////////////
+    // METHODS FOR CONTROLLING MINIGAME initialization.
+    public void LoadMinigame() {
+        //if (Player.Labor == 0) {
+        //    return;
+        //}
+        Debug.Log("load new scene");
+        SceneManager.LoadScene("CriterionGuess", LoadSceneMode.Single);
+    }
 
     //////////////////////////////////////////
     // METHODS CONTROLLING DATA STRUCTURES

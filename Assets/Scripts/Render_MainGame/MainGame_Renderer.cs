@@ -26,6 +26,7 @@ public class MainGame_Renderer : MonoBehaviour {
     public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
     public float LineWidth = 0.4f; // width of lines
     public Button EndTurn;
+    public Button LoadMinigame;
     public Sprite PurchasedImage;
     public Sprite SystReqImage;
     public Sprite ObscuredImage;
@@ -47,6 +48,8 @@ public class MainGame_Renderer : MonoBehaviour {
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
         EndTurn.onClick.AddListener(EndTurnListener);
+        LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
+
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
@@ -329,7 +332,7 @@ public class MainGame_Renderer : MonoBehaviour {
 
     // Called to update display of player performance
     public void UpdateSystemScoreDisplay() {
-        List<string> names = GameObject.Find("GameControl").GetComponent<GameController>().ParameterNames;
+        List<string> names = GameController.ParameterNames;
         List<float> est = GameObject.Find("GameControl").GetComponent<GameController>().SystemParameters;
         List<float> min = GameObject.Find("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
 

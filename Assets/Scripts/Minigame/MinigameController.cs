@@ -86,7 +86,7 @@ namespace Minigames {
             if (criteriaDiff < -0.1f) {
                 return Comparison.LLT;
             }
-            else if (criteriaDiff < 0.05f) {
+            else if (criteriaDiff < -0.05f) {
                 return Comparison.LT;
             }
             else if (criteriaDiff < 0.05f) {
