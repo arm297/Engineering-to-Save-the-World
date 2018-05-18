@@ -20,9 +20,15 @@ namespace Minigames {
         [SerializeField]
         private Text criteriaRelationField;
 
-        // The field for displaying the labor.
+        // The field for displaying the labor used.
         [SerializeField]
-        private Text laborText;
+        private Text laborUsedText;
+
+        // The field for displaying the labor left.
+        [SerializeField]
+        private Text laborLeftText;
+
+        // The field for displaying the labor left.
 
         // The delegate function to handle the listener.
         public delegate void ClickButtonFunction(string v1, string v2);
@@ -33,7 +39,7 @@ namespace Minigames {
 
         // Use this for initialization
         void Start() {
-
+        
         }
 
         // The function called when the enter button is clicked.
@@ -47,7 +53,12 @@ namespace Minigames {
 
         // Display the labor used.
         public void DisplayLaborUsed(float laborUsed) {
-            laborText.text = "Labor Used: " + laborUsed;
+            laborUsedText.text = "Labor Used: " + laborUsed;
+        }
+
+        // Display the labor left.
+        public void DisplayLaborLeft(float laborLeft) {
+            laborLeftText.text = "Current Labor: " + laborLeft;
         }
 
         // Display the message showing criterion relation.
@@ -55,6 +66,7 @@ namespace Minigames {
             criteriaRelationField.text += newMessage + "\n";   
         }
 
+        // Clear the criteria relation field.
         public void ClearCriteriaRelationField() {
             criteriaRelationField.text = "";
         }

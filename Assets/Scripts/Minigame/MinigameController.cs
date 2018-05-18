@@ -36,6 +36,8 @@ namespace Minigames {
         
         // Use this for initialization
         void Start() {
+            display.DisplayLaborUsed(0f);
+            display.DisplayLaborLeft(GameController.Player.Labor);
             display.ButtonListenerFunction += GuessAction;
         }
 
@@ -63,6 +65,7 @@ namespace Minigames {
                 GameController.Player.Labor -= laborPerGuess;
                 laborUsed += laborPerGuess;
                 display.DisplayLaborUsed(laborUsed);
+                display.DisplayLaborLeft(GameController.Player.Labor);
                 string message = criterion1 + " " + ComparisonToString(comp)
                                 + " " + criterion2;
                 display.AddCriterionRelation(message);
