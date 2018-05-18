@@ -26,6 +26,7 @@ public class MainGame_Renderer : MonoBehaviour {
     public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
     public float LineWidth = 0.4f; // width of lines
     public Button EndTurn;
+    public Button LoadMinigame;
     public Sprite PurchasedImage;
     public Sprite SystReqImage;
     public Sprite ObscuredImage;
@@ -47,13 +48,13 @@ public class MainGame_Renderer : MonoBehaviour {
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
         EndTurn.onClick.AddListener(EndTurnListener);
+        LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
+
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
-        EndTurn.onClick.AddListener(EndTurnListener);
-
         // Add Listeners for Purchase Stat buttons
-        Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
+        Dictionary<string, int> playerStats = GameController.Player.Stats;
         //for (int i = 0; i < playerStats.Count; i++)
         int i = 0;
         foreach (KeyValuePair<string, int> item in playerStats) {
@@ -85,7 +86,7 @@ public class MainGame_Renderer : MonoBehaviour {
         //if listeners weren't added, add them now:
         if (!stat_purchase_added) {
             // Add Listeners for Purchase Stat buttons
-            Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
+            Dictionary<string, int> playerStats = GameController.Player.Stats;
 
             try {
                 int i = 0;
@@ -323,15 +324,15 @@ public class MainGame_Renderer : MonoBehaviour {
 
     // Called to update the Render_MainGame.Utility.Profile.(Fund&Labor)
     public void UpdateProfile() {
-        GameObject.Find("ProfileFundText").GetComponent<Text>().text = "" + Mathf.Round(GameObject.Find("GameControl").GetComponent<GameController>().Player.Funds);
-        GameObject.Find("ProfileLaborText").GetComponent<Text>().text = "" + Mathf.Round(GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor);
+        GameObject.Find("ProfileFundText").GetComponent<Text>().text = "" + Mathf.Round(GameController.Player.Funds);
+        GameObject.Find("ProfileLaborText").GetComponent<Text>().text = "" + Mathf.Round(GameController.Player.Labor);
         GameObject.Find("ProfileTurnText").GetComponent<Text>().text = "" + GameObject.Find("GameControl").GetComponent<GameController>().PastTurns.NumberOfTurns;
         //Debug.Log(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor);
     }
 
     // Called to update display of player performance
     public void UpdateSystemScoreDisplay() {
-        List<string> names = GameObject.Find("GameControl").GetComponent<GameController>().ParameterNames;
+        List<string> names = GameController.ParameterNames;
         List<float> est = GameObject.Find("GameControl").GetComponent<GameController>().SystemParameters;
         List<float> min = GameObject.Find("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
 
@@ -350,7 +351,7 @@ public class MainGame_Renderer : MonoBehaviour {
     // Called to update Player Stat Display
     public void UpdatePlayerStatDisplay() {
         //Player Stats:
-        Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
+        Dictionary<string, int> playerStats = GameController.Player.Stats;
         //for (int i = 0; i < playerStats.Count; i++)
         int i = 0;
         foreach (KeyValuePair<string, int> item in playerStats) {
