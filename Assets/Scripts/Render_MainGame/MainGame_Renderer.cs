@@ -337,9 +337,9 @@ public class MainGame_Renderer : MonoBehaviour {
         List<float> min = GameObject.Find("GameControl").GetComponent<GameController>().MinRequiredSystemParameters;
 
 		// Needs to be fixed
-        /*for (int i = 0; i < names.Count; i++) {
+        for (int i = 0; i < names.Count; i++) {
             GameObject.Find("SystemFeature_" + (1 + i)).GetComponent<Text>().text = Mathf.Round(est[i]) + " / " + Mathf.Round(min[i]);//+ "\t\t" + names[i];
-        }*/
+        }
 
 		float testedScore = 0, expectedScore = 0;
 		testedScore = GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
