@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
 public class MainGame_Renderer : MonoBehaviour {
 
@@ -31,6 +32,33 @@ public class MainGame_Renderer : MonoBehaviour {
     public Sprite SystReqImage;
     public Sprite ObscuredImage;
 
+
+    // Variables to control minigame (a sub window within main game)
+    // MG = MiniGame
+
+    public Button[] MG_feature_buttons = new Button[4];
+    public GameObject[] MG_feature_animations = new GameObject[4];
+    private Vector3[] MG_feature_animations_orig_loc = new Vector3[4];
+    private string[] MG_button_conversion = {"MiniGameF1", "MiniGameF2", "MiniGameF3", "MiniGameF4"};
+    private int MG_first_button = -1;
+    private int MG_second_button = -1;
+    public Button MG_request_to_compare;
+    private Vector3 MG_request_to_compare_location;
+    public Image MG_result;
+    public Vector3 MG_result_location;
+    public GameObject MG_panel;
+
+    /*
+    public string MG_first_button_name = "";
+    public string MG_second_button_name = "";
+    public int MG_buttons_selected = 0;
+    private Vector3 MG_first_button_animation_location;
+    private Vector3 MG_second_button_animation_location;
+    public Button MG_request_to_compare;
+    private Vector3 MG_request_to_compare_location;
+    public List<Button> MG_buttons = new List<Button>();
+    */
+
     // Troubleshooting
     public bool DisplayAllNodes = false;
     public bool RespawnNodes = false;
@@ -48,15 +76,30 @@ public class MainGame_Renderer : MonoBehaviour {
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
         EndTurn.onClick.AddListener(EndTurnListener);
-        LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
+        //LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
 
+        int i = 0;
+        foreach (Button b in MG_feature_buttons){
+          b.onClick.AddListener(MG_selection);
+          MG_feature_animations_orig_loc[i] = MG_feature_animations[i].transform.localScale;
+          MG_feature_animations[i].transform.localScale = new Vector3(0, 0, 0);
+          i += 1;
+        }
+        MG_request_to_compare.onClick.AddListener(MG_compare);
+        MG_request_to_compare_location = MG_request_to_compare.transform.localScale;
+        MG_request_to_compare.transform.localScale = new Vector3(0, 0, 0);
+        MG_result_location = MG_result.transform.localScale;
+        MG_result.transform.localScale = new Vector3(0, 0, 0);
+
+        MG_panel.SetActive(false);
         //EndTurn.onClick.AddListener(Update);
         //GetNodes();
 
         // Add Listeners for Purchase Stat buttons
-        Dictionary<string, int> playerStats = GameController.Player.Stats;
+        Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
+
         //for (int i = 0; i < playerStats.Count; i++)
-        int i = 0;
+        i = 0;
         foreach (KeyValuePair<string, int> item in playerStats) {
             //todo: check if object is active or not instead of try/except
             try {
@@ -80,13 +123,92 @@ public class MainGame_Renderer : MonoBehaviour {
 
     }
 
+    // MG listeners
+    // This function listens for feature buttons in minigame for comparison
+    // It will put the selected feature into either MG_first_button or MG_second_button
+    // And it will activate animations accordingly
+    public void MG_selection(){
+
+      // Get the identity of the button that was pressed
+      string button_name = EventSystem.current.currentSelectedGameObject.name;
+      int button_pressed = Array.IndexOf(MG_button_conversion, button_name);
+      //Debug.Log(button_pressed);
+
+      // Logic: If two buttons were already pressed, then replace first button with second
+      // and replace second with first
+      // else populate unpopulated button
+      if(MG_first_button == button_pressed){
+        MG_first_button = -1;
+      }else if (MG_second_button == button_pressed){
+        MG_second_button = -1;
+      }else if (MG_first_button != -1 && MG_second_button != -1){
+        MG_first_button = MG_second_button;
+        MG_second_button = button_pressed;
+      }else if (MG_first_button == -1){
+        MG_first_button = button_pressed;
+      }else{
+        MG_second_button = button_pressed;
+      }
+
+      // reset all animations and turn on based off selected buttons
+      for(int i = 0; i < 4; i++){
+        MG_feature_animations[i].transform.localScale = new Vector3(0, 0, 0);
+      }
+      if (MG_first_button != -1){
+        MG_feature_animations[MG_first_button].transform.localScale = MG_feature_animations_orig_loc[MG_first_button];
+      }
+      if (MG_second_button != -1){
+        MG_feature_animations[MG_second_button].transform.localScale = MG_feature_animations_orig_loc[MG_second_button];
+      }
+
+      // If two items selected for compare, then activate compare tool
+      // Logic: if two buttons are selected, then activate compare option
+      if (MG_first_button != -1 && MG_second_button != -1){
+        MG_request_to_compare.transform.localScale = MG_request_to_compare_location;
+      }else{
+        MG_request_to_compare.transform.localScale = new Vector3(0, 0, 0);
+      }
+
+    }
+
+    public void MG_compare(){
+      // check labor
+      if (GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor >=
+          GameObject.Find("GameControl").GetComponent<GameController>().Player.CostToPlayMiniGame){
+            GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor -= GameObject.Find("GameControl").GetComponent<GameController>().Player.CostToPlayMiniGame;
+
+            // of the two, which is most important
+            float first_val = GameObject.Find("GameControl").GetComponent<GameController>().Player.ActualResourceCriterion[MG_first_button];
+            float second_val = GameObject.Find("GameControl").GetComponent<GameController>().Player.ActualResourceCriterion[MG_second_button];
+            Image val_image = MG_feature_buttons[MG_first_button].GetComponent<Image>();
+            if(second_val > first_val){
+              val_image = MG_feature_buttons[MG_second_button].GetComponent<Image>();
+            }
+            // display the more important feature
+            MG_result.transform.localScale = MG_result_location;
+            MG_result.sprite = val_image.sprite;
+            // reset selections
+            MG_first_button = -1;
+            MG_second_button = -1;
+        }else{
+          //Insufficient Labor
+          InsufficientLabor();
+        }
+
+    }
+
+    // Call this method when insufficient funds are available
+    void InsufficientLabor(){
+      HideUnHideNextTurnPayAttention(true);
+    }
+
     // Update is called once per frame
     void Update() {
 
         //if listeners weren't added, add them now:
         if (!stat_purchase_added) {
             // Add Listeners for Purchase Stat buttons
-            Dictionary<string, int> playerStats = GameController.Player.Stats;
+            Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
 
             try {
                 int i = 0;
@@ -324,8 +446,8 @@ public class MainGame_Renderer : MonoBehaviour {
 
     // Called to update the Render_MainGame.Utility.Profile.(Fund&Labor)
     public void UpdateProfile() {
-        GameObject.Find("ProfileFundText").GetComponent<Text>().text = "" + Mathf.Round(GameController.Player.Funds);
-        GameObject.Find("ProfileLaborText").GetComponent<Text>().text = "" + Mathf.Round(GameController.Player.Labor);
+        GameObject.Find("ProfileFundText").GetComponent<Text>().text = "" + Mathf.Round(GameObject.Find("GameControl").GetComponent<GameController>().Player.Funds);
+        GameObject.Find("ProfileLaborText").GetComponent<Text>().text = "" + Mathf.Round(GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor);
         GameObject.Find("ProfileTurnText").GetComponent<Text>().text = "" + GameObject.Find("GameControl").GetComponent<GameController>().PastTurns.NumberOfTurns;
         //Debug.Log(GameObject.Find ("GameControl").GetComponent<GameController>().Player.Labor);
     }
@@ -351,7 +473,7 @@ public class MainGame_Renderer : MonoBehaviour {
     // Called to update Player Stat Display
     public void UpdatePlayerStatDisplay() {
         //Player Stats:
-        Dictionary<string, int> playerStats = GameController.Player.Stats;
+        Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
         //for (int i = 0; i < playerStats.Count; i++)
         int i = 0;
         foreach (KeyValuePair<string, int> item in playerStats) {

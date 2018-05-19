@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     // PUBLIC PARAMTERS
 
     public List<NodeData> NodeList = new List<NodeData>();
-    public static PlayerProfile Player;
+    public PlayerProfile Player;
     public TurnData PastTurns;
 
     public static DrillScore LastDrillScore = new DrillScore();
@@ -164,13 +164,13 @@ public class GameController : MonoBehaviour {
 
     //////////////////////////////////////////
     // METHODS FOR CONTROLLING MINIGAME initialization.
-    public void LoadMinigame() {
+    //public void LoadMinigame() {
         //if (Player.Labor == 0) {
         //    return;
         //}
-        Debug.Log("load new scene");
-        SceneManager.LoadScene("CriterionGuess", LoadSceneMode.Single);
-    }
+    //    Debug.Log("load new scene");
+    //    SceneManager.LoadScene("CriterionGuess", LoadSceneMode.Single);
+    //}
 
     //////////////////////////////////////////
     // METHODS CONTROLLING DATA STRUCTURES
@@ -666,7 +666,7 @@ public class GameController : MonoBehaviour {
     // Tally up Score
     // Victory or Defeat
     public void EndGame() {
-        
+
     }
 
 }
