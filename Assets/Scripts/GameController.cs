@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     // PUBLIC PARAMTERS
 
     public List<NodeData> NodeList = new List<NodeData>();
-    public static PlayerProfile Player;
+    public PlayerProfile Player;
     public TurnData PastTurns;
 
     public static DrillScore LastDrillScore = new DrillScore();
@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour {
     public float InitialLabor = 20;
     public float InitialFame = 0;
     public float EventChance = 0.1f;
+    public float EventChance2 = 0.1f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
     public float ParentChance = 0.5f; // chance that an existing node within distance of new node is a parent nodes
@@ -47,6 +48,8 @@ public class GameController : MonoBehaviour {
     };
     public List<float> SystemParameters = new List<float> { 0.0f, 0.0f, 0.0f, 0.0f };
     public List<float> MinRequiredSystemParameters = new List<float> { 100.0f, 200.0f, 150.0f, 40.0f };
+    public bool GameOver = false;
+    public bool GameVictory = false;
 
     // For Player Stats
     public static List<string> StatNames = new List<string>{
@@ -76,6 +79,7 @@ public class GameController : MonoBehaviour {
     };
     private string MainGame = "MainGame";
     private string UI_Menu = "UI_Menu";
+    private string EventSystem2_scenename = "EventSystem2";
 
     // Tracks the name and score of the last drill run.
     public class DrillScore {
@@ -98,7 +102,7 @@ public class GameController : MonoBehaviour {
         Player = new PlayerProfile(InitialFunds, InitialLabor, InitialFame, StatNames);
         PastTurns = new TurnData(InitialLaborPerTurn);
         InitializeDrillScoreStats();
-        LoadScene(MainGame);
+        //LoadScene(MainGame);
     }
 
     ///////////////////////////////////////
@@ -126,6 +130,15 @@ public class GameController : MonoBehaviour {
         return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
     }
 
+    // Roll to determine wither EventSystem2.0 is in effect
+    string LoadEvent() {
+        if (Random.Range(0.0f, 1.0f) > EventChance2) {
+            return null;
+        }
+        LoadScene(EventSystem2_scenename);
+        return null;
+    }
+
     // Randomly determine whether to load the drill, and load the drill based
     // on the result of the scene.
     bool ChanceForDrill() {
@@ -140,8 +153,7 @@ public class GameController : MonoBehaviour {
 
     // Return to the main scene and handle stat updates.
     public void UpdateDrillStatIncreases() {
-        float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore
-            - BaseScorePercent;
+        float OffSetScorePercent = LastDrillScore.Score / Mathf.Max(1,LastDrillScore.MaxScore);
         string StatToChange = StatNames[(int)Random.Range(0f, ((float)StatNames.Count - 1))];
         LastDrillScore.ActiveStatChange = true;
         LastDrillScore.IncreasedStats.Add(StatToChange, (int)(10 * OffSetScorePercent));
@@ -164,13 +176,13 @@ public class GameController : MonoBehaviour {
 
     //////////////////////////////////////////
     // METHODS FOR CONTROLLING MINIGAME initialization.
-    public void LoadMinigame() {
+    //public void LoadMinigame() {
         //if (Player.Labor == 0) {
         //    return;
         //}
-        Debug.Log("load new scene");
-        SceneManager.LoadScene("CriterionGuess", LoadSceneMode.Single);
-    }
+    //    Debug.Log("load new scene");
+    //    SceneManager.LoadScene("CriterionGuess", LoadSceneMode.Single);
+    //}
 
     //////////////////////////////////////////
     // METHODS CONTROLLING DATA STRUCTURES
@@ -567,6 +579,7 @@ public class GameController : MonoBehaviour {
         Player.Labor = PastTurns.LaborPerTurn;
         PastTurns.UpdateForTurnEnd();
         UpdateDrillStatModifications();
+        LoadEvent();
         //Debug.Log(Player.Labor);
 
 		float totalTestCost = 0;
@@ -591,6 +604,8 @@ public class GameController : MonoBehaviour {
     // updates global for parameter values at system level
     public void CalculateSystemFeautures() {
 
+      // Reset System Features
+      SystemParameters = new List<float> { 0.0f, 0.0f, 0.0f, 0.0f };
         foreach (NodeData node in NodeList) {
             if (node.Purchased) {
                 if (node.ParameterActuals.Count != SystemParameters.Count) {
@@ -652,7 +667,7 @@ public class GameController : MonoBehaviour {
 
     ///////////////////////////////////////////////////////////////////////////
     // Functions to handle ending the game.
-    public bool IsVictory() {
+    public bool SufficientFeatures() {
         for(int i = 0; i < SystemParameters.Count; i++) {
             if (SystemParameters[i] < MinRequiredSystemParameters[i]) {
                 return false;
@@ -666,7 +681,9 @@ public class GameController : MonoBehaviour {
     // Tally up Score
     // Victory or Defeat
     public void EndGame() {
-        
+      GameVictory = CheckMinSystRequirements();
+      GameOver = true;
+
     }
 
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 /**
- * The stats of the player. 
+ * The stats of the player.
  */
 public class PlayerProfile {
 
@@ -31,6 +31,8 @@ public class PlayerProfile {
 
     // The expected resources required
     public List<float> ExpectedResourceCriterion { get; set; }
+
+    public float CostToPlayMiniGame { get; set; }
 
     //Stores player data
     //todo: Display Name, Title, Fame in game
@@ -60,5 +62,6 @@ public class PlayerProfile {
             Random.Range (0.0f, 5.0f),
             Random.Range (0.0f, 5.0f)
         };
+        CostToPlayMiniGame = 3;
     }
 }
