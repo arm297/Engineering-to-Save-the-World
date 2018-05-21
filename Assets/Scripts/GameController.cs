@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
     public float InitialFunds = 1000;
     public float InitialLabor = 20;
     public float InitialFame = 0;
-    public float EventChance = 0.1f;
+    public float EventChance = 0.3f;
     public float EventChance2 = 0.1f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
@@ -143,6 +143,7 @@ public class GameController : MonoBehaviour {
     // on the result of the scene.
     bool ChanceForDrill() {
         string drillScene = GetDrillToLoad();
+        Debug.Log(drillScene);
         if (drillScene == null) {
             return false;
         }
@@ -160,15 +161,24 @@ public class GameController : MonoBehaviour {
     }
 
     void UpdateDrillStatModifications() {
-        Debug.Log("Check if update works");
+        Dictionary<string, int> modifiedStats = new Dictionary<string, int>();
         if (LastDrillScore.ActiveStatChange) {
             foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
-                Player.Stats[statInc.Key] += statInc.Value;
+                if (Player.Stats[statInc.Key] + statInc.Value < 0) {
+                    modifiedStats.Add(statInc.Key, -Player.Stats[statInc.Key]);
+                    Player.Stats[statInc.Key] = 0;
+                }
+                else {
+                    Player.Stats[statInc.Key] += statInc.Value;
+                }
             }
+            foreach(KeyValuePair<string, int> newStat in modifiedStats) {
+                LastDrillScore.IncreasedStats[newStat.Key] = newStat.Value;
+            } 
             LastDrillScore.ActiveStatChange = false;
         } else {
             foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
-                Player.Stats[statInc.Key] += statInc.Value;
+                Player.Stats[statInc.Key] = Mathf.Max(0, statInc.Value);
             }
             LastDrillScore.IncreasedStats.Clear();
         }
