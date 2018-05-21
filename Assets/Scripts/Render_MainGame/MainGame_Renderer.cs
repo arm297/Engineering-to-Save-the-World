@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MainGame_Renderer : MonoBehaviour {
 
@@ -31,6 +32,8 @@ public class MainGame_Renderer : MonoBehaviour {
     public Sprite PurchasedImage;
     public Sprite SystReqImage;
     public Sprite ObscuredImage;
+    public GameObject Victory_Panel;
+    public GameObject Defeat_Panel;
 
 
     // Variables to control minigame (a sub window within main game)
@@ -119,8 +122,44 @@ public class MainGame_Renderer : MonoBehaviour {
     public void EndTurnListener(){
     			HideUnHideNextTurnPayAttention(false);
     	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
-    	Update();
 
+      // Check with GameControl to determine if game is still active or not
+      // If game is over, display either victory or defeat panel
+      if(GameObject.Find("GameControl").GetComponent<GameController>().GameOver){
+
+        // Game has ended...Display victory or defeat panel
+        if(GameObject.Find("GameControl").GetComponent<GameController>().GameVictory){
+          Victory_Panel.SetActive(true);
+        }else{
+          Defeat_Panel.SetActive(true);
+        }
+
+        // Print Score Breakdown
+        string score_breakdown = "Score Breakdown";
+
+        score_breakdown += "\nTested Score:\t"+GameObject.Find ("GameControl").GetComponent<GameController> ().GetTestedScore ();
+    		score_breakdown += "\nExpected Score:\t"+GameObject.Find ("GameControl").GetComponent<GameController> ().GetExpectedScore ();
+        score_breakdown += "\nMinimum Features Met:\t"+GameObject.Find ("GameControl").GetComponent<GameController> ().SufficientFeatures();
+        if (!GameObject.Find("GameControl").GetComponent<GameController>().GameVictory){
+          if(GameObject.Find ("GameControl").GetComponent<GameController> ().SufficientFeatures()){
+            score_breakdown += "Missing System Required Nodes!";
+          }
+        }
+
+        GameObject.Find("Score_Breakdown").GetComponent<Text>().text = score_breakdown;
+
+        // Return to Start Listener
+        GameObject.Find("ReturnToStart").GetComponent<Button>().onClick.AddListener(ReturnToStart);
+
+      }
+
+      Update();
+
+    }
+
+    // Return user to start screen
+    public void ReturnToStart(){
+      SceneManager.LoadScene("Start_Screen", LoadSceneMode.Single);
     }
 
     // MG listeners
