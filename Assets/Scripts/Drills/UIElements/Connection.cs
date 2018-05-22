@@ -29,8 +29,12 @@ namespace Drills {
         // Whether the connection segments are active.
         private bool activeSegments;
 
+        // Whether the connection callouts are active.
+        private bool activeCallouts;
+
         // Whether this connection has been selected.
-        private bool isSelected = false;
+        [HideInInspector]
+        public bool isSelected { get; protected set; }
 
         // Individual segmemts of the drill.
         private List<ConnectionSegment> segments =

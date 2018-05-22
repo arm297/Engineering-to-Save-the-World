@@ -13,9 +13,6 @@ namespace Drills {
         [HideInInspector]
         public GameObject callout;
 
-        // Whether the callout is currently active.
-        private bool isCalloutActive;
-
         // Function type for mouse events.
         public delegate void MouseAction();
 
@@ -86,16 +83,10 @@ namespace Drills {
         // Toggles to callout state based on the provided argument.
         public void SetCalloutActive(bool active) {
             callout.SetActive(active);
-            isCalloutActive = active;
         }
 
         private void ToggleCalloutFlag() {
             pointerEnteredCallout = !pointerEnteredCallout;
-        }
-
-        // Checks whether the callout is active.
-        public bool IsCalloutActive() {
-            return isCalloutActive;
         }
     }
 

@@ -132,7 +132,7 @@ namespace Drills {
                 if (node.IsFilled()) {
                     nodeReliabilities.Add(((ReliabilityLabel)node.containedObject).reliability);
                 } else {
-                    nodeReliabilities.Add(1);
+                    nodeReliabilities.Add(1f);
                 }
             }
             List<int> indices = new List<int>();
@@ -195,6 +195,11 @@ namespace Drills {
 
         // Whether or not the result is a victory.
         private bool IsVictory() {
+            foreach (BlockContainer node in nodes) {
+                if (node.IsEmpty()) {
+                    return false;
+                }
+            }
             return (reliability > targetReliability -permissibleError) && (targetCost >= cost);
         }
     }
