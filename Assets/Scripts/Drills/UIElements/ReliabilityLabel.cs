@@ -37,7 +37,7 @@ namespace Drills {
         public override void Start() {
             base.Start();
             Text labelText = transform.GetChild(0).GetComponent<Text>();
-            labelText.text += " " + reliability;
+            labelText.text += "\n" + reliability;
 
             if (cost < lowCostThreshold) {
                 materialColor = cheapColor;

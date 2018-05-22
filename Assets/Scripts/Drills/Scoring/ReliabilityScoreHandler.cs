@@ -30,13 +30,13 @@ namespace Drills {
         private double cost = 0f;
 
         // Target reliability.
-        private readonly double targetReliability = 0.97;
+        private readonly double targetReliability = 0.97f;
 
         // Target cost.
         private readonly double targetCost = 15;
 
         // The error allowed before failure.
-        private readonly double permissibleError = 0.0001;
+        private readonly double permissibleError = 0.0001f;
 
         // Whether the target reliability has been reached.
         private bool targetReached = false;
@@ -62,14 +62,17 @@ namespace Drills {
                 node.OnBlockRemoved += DisplayCurrentStats;
             }
 
+            ComputeCost();
+            ComputeReliability();
+
             reliabilityText = GameObject.Find("CurrentReliabilityText").GetComponent<Text>();
             costText = GameObject.Find("CostText").GetComponent<Text>();
-            reliabilityText.text += "" + reliability;
+            reliabilityText.text += "" + Math.Round(reliability, 3);
             costText.text += "" + cost;
 
             // Display target reliability and label.
             GameObject.Find("TargetReliabilityText").GetComponent<Text>().text =
-                "Target Reliability: " + targetReliability;
+                "Target Reliability: " + Math.Round(targetReliability, 3);
             GameObject.Find("TargetCostText").GetComponent<Text>().text =
                 "Target Cost: " + targetCost;
         }
@@ -174,6 +177,8 @@ namespace Drills {
 
         // Display the final score info of the reliability level.
         public override void DisplayScoreInfo() {
+            ComputeReliability();
+            ComputeCost();
             statusText.text = IsVictory() ? "You win!" : "You lose!";
             scoreText.text = "Final cost: " + cost + "\n" + "Target cost: " + targetCost + "\n";
             scoreText.text += "Final reliability: " + Math.Round(reliability, 3) + "\n"
@@ -184,13 +189,13 @@ namespace Drills {
         public void DisplayCurrentStats() {
             ComputeReliability();
             ComputeCost();
-            reliabilityText.text = "Reliability: " + reliability;
+            reliabilityText.text = "Reliability: " + Math.Round(reliability, 3);
             costText.text = "Cost: " + cost;
         }
 
         // Whether or not the result is a victory.
         private bool IsVictory() {
-            return reliability - targetReliability > -permissibleError && targetCost >= cost;
+            return (reliability > targetReliability -permissibleError) && (targetCost >= cost);
         }
     }
 
