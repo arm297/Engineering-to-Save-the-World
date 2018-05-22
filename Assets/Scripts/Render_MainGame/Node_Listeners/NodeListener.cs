@@ -31,6 +31,8 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public List<GameObject> Feautures = new List<GameObject>();
 
 	public AudioSource PurchaseSound;
+	public int PurchaseSoundEffect = 0; // idx of purchase soundeffect from audiocontroller
+	public int FailedSoundEffect = 1; // idx of failed soundeffect from audiocontroller
 
 	// Use this for initialization
 	void Start () {
@@ -130,19 +132,19 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 
 	// Send purchase request and idx to GameController
 	// Or Control Logic Here with understanding that it could be moved to GameController
-	void PurchaseNode(){
-		//Debug.Log("Playing Sound");
-		//PurchaseSound.Play();
-		//PurchaseSound.Pause();
-		//PurchaseSound.Play();
+	// Send purchase request and idx to GameController
+	// Or Control Logic Here with understanding that it could be moved to GameController
+	public void PurchaseNode(){
 
 		// Use GameController convienence function to purchase node idx
-		Debug.Log("Purchasing Node");
+		Debug.Log("Can we purchase node?");
+		GameObject.Find("GameMusic").GetComponent<AudioController>().SoundEffect = PurchaseSoundEffect;
 		string return_note = GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
 
 		//if insufficient funds, recommend next Turn
 		if(return_note == "Insufficient Funds"){
 			GameObject.Find("Render_MainGame").GetComponent<MainGame_Renderer>().HideUnHideNextTurnPayAttention(true);
+			GameObject.Find("GameMusic").GetComponent<AudioController>().SoundEffect = FailedSoundEffect;
 		}
 
 	}
