@@ -104,7 +104,7 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 
 		else if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
 			&& GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
-			gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
+			//gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
 		}
 	}
 
@@ -112,19 +112,22 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	{
 		// Purchase?
 		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable) {
+			Debug.Log ("Purchased");
 			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = TestReadyButtonNormal;
 			PurchaseNode();
 		} else if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
 			&& GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
 			Debug.Log ("Change Test Status");
-			if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady == false) {
-				Debug.Log ("Testing ready");
-				gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonTested;
-				GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady = true;
-			} else {
-				Debug.Log ("Not testing ready");
-				gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
-				GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady = false;
+			if (!GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Tested) {
+				if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady == false) {
+					Debug.Log ("Testing ready");
+					gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonTested;
+					GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady = true;
+				} else {
+					Debug.Log ("Not testing ready");
+					gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
+					GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].TestReady = false;
+				}
 			}
 		}
 	}
@@ -154,6 +157,11 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 	public void InitializeNode(){
 		if(!Initialized){
 			purchase = gameObject.transform.Find("Purchase").GetComponent<Button>();
+			if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Tested) {
+				gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonTested;
+			} else if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
+				gameObject.transform.Find ("Purchase").GetComponent<Image> ().sprite = TestReadyButtonNormal;
+			}
 			test = gameObject.transform.Find("Test").GetComponent<Button>();
 			Initialized = true;
 		}
