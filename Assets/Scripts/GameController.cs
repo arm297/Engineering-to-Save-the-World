@@ -85,7 +85,9 @@ public class GameController : MonoBehaviour {
     public class DrillScore {
         public float Score { get; set; }
         public float MaxScore { get; set; }
-        public Dictionary<string, int> IncreasedStats { get; set; } //Stats modified by drills and how much.
+        public Dictionary<string, int> StatsToIncrease { get; set; } //Stats modified by drills and how much.
+
+        public Dictionary<string, int> StatsToReset { get; set; } // The previous stat increases to be reset.
         public bool ActiveStatChange { get; set; }
 
         public bool OnTurnEnd { get; set; } // Whether this Drill was called at the turn end.
@@ -118,13 +120,14 @@ public class GameController : MonoBehaviour {
 
     // Initializes the drill scoring structure.
     void InitializeDrillScoreStats() {
-        LastDrillScore.IncreasedStats = new Dictionary<string, int>();
+        LastDrillScore.StatsToIncrease = new Dictionary<string, int>();
+        LastDrillScore.StatsToReset = new Dictionary<string, int>();
     }
 
     // Roll to determine whether to load a drill, and which drill to decide.
     // If returned string is null, then no drill is loaded.
     string GetDrillToLoad() {
-        if (Random.Range(0.0f, 1.0f) > EventChance) {
+        if (Random.Range(0.0f, 1.0f) < EventChance) {
             return null;
         }
         return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
@@ -143,7 +146,6 @@ public class GameController : MonoBehaviour {
     // on the result of the scene.
     bool ChanceForDrill() {
         string drillScene = GetDrillToLoad();
-        Debug.Log(drillScene);
         if (drillScene == null) {
             return false;
         }
@@ -154,34 +156,39 @@ public class GameController : MonoBehaviour {
 
     // Return to the main scene and handle stat updates.
     public void UpdateDrillStatIncreases() {
-        float OffSetScorePercent = LastDrillScore.Score / Mathf.Max(1,LastDrillScore.MaxScore);
+        float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore;
         string StatToChange = StatNames[(int)Random.Range(0f, ((float)StatNames.Count - 1))];
-        LastDrillScore.ActiveStatChange = true;
-        LastDrillScore.IncreasedStats.Add(StatToChange, (int)(10 * OffSetScorePercent));
+        if (!LastDrillScore.StatsToIncrease.ContainsKey(StatToChange)) {
+            LastDrillScore.StatsToIncrease.Add(StatToChange, (int)(10 * OffSetScorePercent));
+        }
+        else {
+            LastDrillScore.StatsToIncrease[StatToChange] += (int)(10 * OffSetScorePercent);
+        }
     }
 
     void UpdateDrillStatModifications() {
         Dictionary<string, int> modifiedStats = new Dictionary<string, int>();
-        if (LastDrillScore.ActiveStatChange) {
-            foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
-                if (Player.Stats[statInc.Key] + statInc.Value < 0) {
-                    modifiedStats.Add(statInc.Key, -Player.Stats[statInc.Key]);
-                    Player.Stats[statInc.Key] = 0;
-                }
-                else {
-                    Player.Stats[statInc.Key] += statInc.Value;
-                }
+        foreach (KeyValuePair<string, int> statInc in LastDrillScore.StatsToIncrease) {
+            if (Player.Stats[statInc.Key] + statInc.Value < 0) {
+                modifiedStats.Add(statInc.Key, -Player.Stats[statInc.Key]);
+                Player.Stats[statInc.Key] = 0;
+            } else {
+                Player.Stats[statInc.Key] += statInc.Value;
             }
-            foreach(KeyValuePair<string, int> newStat in modifiedStats) {
-                LastDrillScore.IncreasedStats[newStat.Key] = newStat.Value;
-            } 
-            LastDrillScore.ActiveStatChange = false;
-        } else {
-            foreach (KeyValuePair<string, int> statInc in LastDrillScore.IncreasedStats) {
-                Player.Stats[statInc.Key] = Mathf.Max(0, statInc.Value);
-            }
-            LastDrillScore.IncreasedStats.Clear();
         }
+        foreach(KeyValuePair<string, int> statRes in LastDrillScore.StatsToReset) {
+                Player.Stats[statRes.Key] = Mathf.Max(0, Player.Stats[statRes.Key] - statRes.Value);
+        }
+        LastDrillScore.StatsToReset.Clear();
+        foreach (KeyValuePair<string, int> statInc in LastDrillScore.StatsToIncrease) {
+            if (modifiedStats.ContainsKey(statInc.Key)) {
+                LastDrillScore.StatsToReset.Add(statInc.Key, modifiedStats[statInc.Key]);
+            }
+            else {
+                LastDrillScore.StatsToReset.Add(statInc.Key, statInc.Value);
+            }
+        }
+        LastDrillScore.StatsToIncrease.Clear();
     }
 
     //////////////////////////////////////////
