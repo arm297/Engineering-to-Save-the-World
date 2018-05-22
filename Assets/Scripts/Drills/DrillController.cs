@@ -74,6 +74,7 @@ namespace Drills {
 
         // Handle drill ending for game.
         public void EndGame() {
+            Debug.Log(gameTimer);
             gameTimer.isActive = false;
             finalScore = scoreCalculator.ComputeScore();
             maxScore = scoreCalculator.ComputeMaxScore();

@@ -53,8 +53,8 @@ namespace Drills {
         // Computes the maximum possible score for the concept sketch drill.
         public override float ComputeMaxScore() {
             maxScore = 0;
-            foreach (DragDrop label in labels) {
-                if (label.dragID == 1) {
+            foreach (BlockContainer container in blocks) {
+                if (container.blockID == 1) {
                     maxScore++;
                 }
             }
