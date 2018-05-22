@@ -103,12 +103,12 @@ namespace Drills {
         public override float ComputeScore() {
             ComputeCost();
             ComputeReliability();
-            return 1f;
+            return IsVictory() ? 1.0f : 0.0f; 
         }
 
         // Computes the target score for the reliability drill.
         public override float ComputeMaxScore() {
-            return 1f;
+            return 1.0f;
         }
 
         // Computes the total cost of the reliability drill.
@@ -174,9 +174,10 @@ namespace Drills {
 
         // Display the final score info of the reliability level.
         public override void DisplayScoreInfo() {
-            statusText.text = "Game Over!";
-            scoreText.text = "Final cost: " + cost + "\n";
-            scoreText.text += "Final reliability: " + Math.Round(reliability, 3) + "\n";
+            statusText.text = IsVictory() ? "You win!" : "You lose!";
+            scoreText.text = "Final cost: " + cost + "\n" + "Target cost: " + targetCost + "\n";
+            scoreText.text += "Final reliability: " + Math.Round(reliability, 3) + "\n"
+                + "Target Reliability: " + Math.Round(targetReliability, 3) + "\n";
         }
 
         // Display the current reliability and cost.
@@ -185,6 +186,11 @@ namespace Drills {
             ComputeCost();
             reliabilityText.text = "Reliability: " + reliability;
             costText.text = "Cost: " + cost;
+        }
+
+        // Whether or not the result is a victory.
+        private bool IsVictory() {
+            return reliability - targetReliability > -permissibleError && targetCost >= cost;
         }
     }
 
