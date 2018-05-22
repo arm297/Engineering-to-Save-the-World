@@ -124,6 +124,8 @@ public class NodeData {
         ObscuredRank = 3;
         ParentExpectedReliability = 1;
         LaborCost = baseLabor * Random.Range(0.8f, 1.5f);
+		Tested = false;
+		TestReady = false;
     }
 
 }

@@ -343,11 +343,12 @@ public class MainGame_Renderer : MonoBehaviour {
         NodeGameObject.GetComponent<NodeListener>().InitializeNode();
 
         // If node is purchaseable, then set Purchase Button to active
-        if (node.Purchaseable) {
+		if (node.Purchaseable) {
             NodeGameObject.GetComponent<NodeListener>().purchase.interactable = true;
         } else {
             NodeGameObject.GetComponent<NodeListener>().purchase.interactable = false;
-            NodeGameObject.GetComponent<NodeListener>().HidePurchaseButton();
+			if(!node.Testable && !node.Tested)
+            	NodeGameObject.GetComponent<NodeListener>().HidePurchaseButton();
         }
         //todo implement testing
         //TESTING IS CURRENTLY DISABLED
