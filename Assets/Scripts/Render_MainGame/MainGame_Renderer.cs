@@ -35,6 +35,11 @@ public class MainGame_Renderer : MonoBehaviour {
     public GameObject Victory_Panel;
     public GameObject Defeat_Panel;
 
+	public InputField weight4;
+	public InputField weight3;
+	public InputField weight2;
+	public InputField weight1;
+
 
     // Variables to control minigame (a sub window within main game)
     // MG = MiniGame
@@ -116,6 +121,11 @@ public class MainGame_Renderer : MonoBehaviour {
             }
             i += 1;
         }
+		weight1.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [0].ToString();
+		weight2.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [1].ToString();
+		weight3.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [2].ToString();
+		weight4.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [3].ToString();
+
     }
 
     // Listeners
@@ -263,6 +273,12 @@ public class MainGame_Renderer : MonoBehaviour {
                 // Do nothing
             }
         }
+
+		GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [0] = float.Parse (weight1.text);
+		GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [1] = float.Parse (weight2.text);
+		GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [2] = float.Parse (weight3.text);
+		GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [3] = float.Parse (weight4.text);
+
 
         //todo: logic to only updateprofile when something interesting happens
         UpdateProfile();
