@@ -113,7 +113,6 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 		// Purchase?
 		if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList[idx].Purchaseable) {
 			Debug.Log ("Purchased");
-			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = TestReadyButtonNormal;
 			PurchaseNode();
 		} else if (GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Purchased
 			&& GameObject.Find ("GameControl").GetComponent<GameController> ().NodeList [idx].Testable) {
@@ -145,9 +144,11 @@ public class NodeListener : MonoBehaviour , IPointerEnterHandler, IPointerExitHa
 		string return_note = GameObject.Find("GameControl").GetComponent<GameController>().PurchaseNode(idx);
 
 		//if insufficient funds, recommend next Turn
-		if(return_note == "Insufficient Funds"){
-			GameObject.Find("Render_MainGame").GetComponent<MainGame_Renderer>().HideUnHideNextTurnPayAttention(true);
-			GameObject.Find("GameMusic").GetComponent<AudioController>().SoundEffect = FailedSoundEffect;
+		if (return_note == "Insufficient Funds") {
+			GameObject.Find ("Render_MainGame").GetComponent<MainGame_Renderer> ().HideUnHideNextTurnPayAttention (true);
+			GameObject.Find ("GameMusic").GetComponent<AudioController> ().SoundEffect = FailedSoundEffect;
+		} else {
+			gameObject.transform.Find("Purchase").GetComponent<Image>().sprite = TestReadyButtonNormal;
 		}
 
 	}
