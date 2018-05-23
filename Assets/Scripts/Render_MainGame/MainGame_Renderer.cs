@@ -450,7 +450,7 @@ public class MainGame_Renderer : MonoBehaviour {
             foreach (int jdx in children) {
                 int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
                 if (gameObject_idx >= 0) {
-                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 1);
+                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, chil, 1, 5);
                     Lines.Add(line);
                 }
             }
@@ -460,7 +460,7 @@ public class MainGame_Renderer : MonoBehaviour {
             foreach (int jdx in parents) {
                 int gameObject_idx = NodeIDX.IndexOf(jdx);
                 if (gameObject_idx >= 0) {
-                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 5);
+                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, nonReq, 5, 1);
                     Lines.Add(line);
                 }
             }
@@ -469,7 +469,7 @@ public class MainGame_Renderer : MonoBehaviour {
             foreach (int jdx in requirements) {
                 int gameObject_idx = NodeIDX.IndexOf(jdx); //find the requirement in list of node gameobjects
                 if (gameObject_idx >= 0) {
-                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, req, 10);
+                    GameObject line = CreateNodeConnection(Nodes[gameObject_idx], node2, req, 10, 1);
                     Lines.Add(line);
                 }
             }
@@ -481,7 +481,7 @@ public class MainGame_Renderer : MonoBehaviour {
 
     // Takes the 2 node GameObjects
     // Draws a line between the nodes
-    public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Color col, int thickness) {
+    public GameObject CreateNodeConnection(GameObject Node1, GameObject Node2, Color col, int thickness1, int thickness2) {
         Canvas canvas = NodeConnectionBucket.GetComponent<Canvas>();
         Vector3 startPos = Node1.transform.position;
         Vector3 endPos = Node2.transform.position;
@@ -495,7 +495,7 @@ public class MainGame_Renderer : MonoBehaviour {
         lineRenderer.widthMultiplier = LineWidth;
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
-        lineRenderer.SetWidth(thickness, thickness);
+        lineRenderer.SetWidth(thickness1, thickness2);
         return lineGameObject;
 
     }
