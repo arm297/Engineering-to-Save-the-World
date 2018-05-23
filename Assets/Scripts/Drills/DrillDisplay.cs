@@ -8,6 +8,7 @@ namespace Drills {
 
     public class DrillDisplay : MonoBehaviour {
 
+        [Header("Drill UI Elements")]
         // The start menu for this game.
         [SerializeField]
         private GameObject startMenu;

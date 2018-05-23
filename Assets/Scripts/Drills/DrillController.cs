@@ -25,6 +25,7 @@ namespace Drills {
         // Whether this game is currently active.
         private bool isActive = false;
 
+        [Header("Drill Components")]
         // The timer for this game.
         [SerializeField]
         private Timer gameTimer;
@@ -45,6 +46,7 @@ namespace Drills {
 
         // Use this for initialization
         void Start() {
+            // If a drill init method is provided by component, then call.
             if (InitDrill != null) {
                 InitDrill();
             }
@@ -74,7 +76,6 @@ namespace Drills {
 
         // Handle drill ending for game.
         public void EndGame() {
-            Debug.Log(gameTimer);
             gameTimer.isActive = false;
             finalScore = scoreCalculator.ComputeScore();
             maxScore = scoreCalculator.ComputeMaxScore();
@@ -84,9 +85,10 @@ namespace Drills {
 
         // Loads back the main scene and readds the scoring data.
         public void ReturnToMainGame() {
-            Debug.Log("Returning to main game");
-            GameController.LastDrillScore.Score = scoreCalculator.score;
-            GameController.LastDrillScore.MaxScore = scoreCalculator.maxScore;
+            if (GameController.LastDrillScore != null) { // Useful for running drill standalone.
+                GameController.LastDrillScore.Score = scoreCalculator.score;
+                GameController.LastDrillScore.MaxScore = scoreCalculator.maxScore;
+            }
             SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
             GameObject.Find("GameControl").GetComponent<GameController>().UpdateDrillStatIncreases();
         }
