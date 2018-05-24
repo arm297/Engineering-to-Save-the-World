@@ -18,24 +18,26 @@ public class GameController : MonoBehaviour {
 
     ///////////////////////////////////
     // PUBLIC PARAMTERS
-
     public List<NodeData> NodeList = new List<NodeData>();
     public PlayerProfile Player;
     public TurnData PastTurns;
-
     public static DrillScore LastDrillScore = new DrillScore();
+
+    [Header("Nodes Settings")]
     public int Height = 100;
     public int Width = 100;
     public float Sparsity = .2f; // Higher sparsity rate means more holes on map
-    public float InitialFunds = 1000;
-    public float InitialLabor = 20;
-    public float InitialFame = 0;
-    public float EventChance2 = 0.1f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
     public float ParentChance = 0.5f; // chance that an existing node within distance of new node is a parent nodes
     public float RequirementsToParent = .2f; // chance that a parent is a requirement to purchase new node
     public float ExpectedUntestedNodeReliability = 0.98f; // 1 = no penalty, 0 = ultimate penalty
+
+    [Header("Gameplay Settings")]
+    public float InitialFunds = 1000;
+    public float InitialLabor = 20;
+    public float InitialFame = 0;
+    public float EventChance2 = 0.1f;
     public float InitialLaborPerTurn = 20.0f;  // Amount of Fund Change that occurs each turn (are funds renewed or depleted?)
     public int MaxNumberOfTurns = 10;  // Number of Turns allowed in game
     public int MaxPurchaseablePath = 20; // Longest Path considered purchaseable
@@ -60,10 +62,12 @@ public class GameController : MonoBehaviour {
         "Human Resource Management",
         "Knowledge & Information Management"
     };
+    [Header("Stats Settings")]
     public float StatBaseCost = 1.0f;
     public float StatCostScalar = 1.0f;
 
     // For drills.
+    [Header("Drill Settings")]
     public float DrillChance = 0.3f;  // The chance of running a drill during an drill event roll.
     public float MaxStatChange = 10f; // The maximum possible stats for the drill change.
 
