@@ -30,7 +30,6 @@ public class GameController : MonoBehaviour {
     public float InitialFunds = 1000;
     public float InitialLabor = 20;
     public float InitialFame = 0;
-    public float EventChance = 0.3f;
     public float EventChance2 = 0.1f;
     public bool NodeChange = false; // switches to true when a node is changed. Responsibility belongs to calling function.
     public float MaxEuclideanDistance = 3.0f; // maximum euclidean distance between parent and child node
@@ -65,8 +64,8 @@ public class GameController : MonoBehaviour {
     public float StatCostScalar = 1.0f;
 
     // For drills.
-    public float DrillChance = 0.3f;
-    public float BaseScorePercent = 0.5f; //The score to compare for stat increases.
+    public float DrillChance = 0.3f;  // The chance of running a drill during an drill event roll.
+    public float MaxStatChange = 10f; // The maximum possible stats for the drill change.
 
     // LOADABLE SCENES
     // List of Event-Drill Scenes (all of which may be loaded)
@@ -127,7 +126,7 @@ public class GameController : MonoBehaviour {
     // Roll to determine whether to load a drill, and which drill to decide.
     // If returned string is null, then no drill is loaded.
     string GetDrillToLoad() {
-        if (Random.Range(0.0f, 1.0f) > EventChance) {
+        if (Random.Range(0.0f, 1.0f) > DrillChance) {
             return null;
         }
         return list_of_drills[(int)Random.Range(0f, list_of_drills.Length - 1)];
@@ -159,10 +158,10 @@ public class GameController : MonoBehaviour {
         float OffSetScorePercent = LastDrillScore.Score / LastDrillScore.MaxScore;
         string StatToChange = StatNames[(int)Random.Range(0f, ((float)StatNames.Count - 1))];
         if (!LastDrillScore.StatsToIncrease.ContainsKey(StatToChange)) {
-            LastDrillScore.StatsToIncrease.Add(StatToChange, (int)(10 * OffSetScorePercent));
+            LastDrillScore.StatsToIncrease.Add(StatToChange, (int)(MaxStatChange * OffSetScorePercent));
         }
         else {
-            LastDrillScore.StatsToIncrease[StatToChange] += (int)(10 * OffSetScorePercent);
+            LastDrillScore.StatsToIncrease[StatToChange] += (int)(MaxStatChange * OffSetScorePercent);
         }
     }
 
@@ -595,7 +594,6 @@ public class GameController : MonoBehaviour {
         Player.Funds += PastTurns.FundChangePerTurn;
         Player.Labor = PastTurns.LaborPerTurn;
         PastTurns.UpdateForTurnEnd();
-        UpdateDrillStatModifications();
         LoadEvent();
         //Debug.Log(Player.Labor);
 
@@ -616,6 +614,7 @@ public class GameController : MonoBehaviour {
         }
         CalculateSystemFeautures();
         ChanceForDrill();
+        UpdateDrillStatModifications();
     }
 
     // updates global for parameter values at system level
