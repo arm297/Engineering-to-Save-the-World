@@ -86,12 +86,15 @@ public class MainGame_Renderer : MonoBehaviour {
     private Vector3 pay_attention_location; // location of pay attention graphic
 
     void Start() {
+        GameController controller = GameObject.Find("GameControl").GetComponent<GameController>();
+
         pay_attention_location = GameObject.Find("[Make to pay attention]").transform.localScale;
         HideUnHideNextTurnPayAttention(false);
         RespawnNodes = true;
         EndTurn.onClick.AddListener(EndTurnListener);
         //LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
 
+        // Initialize the minigame settings.
         int i = 0;
         foreach (Button b in MG_feature_buttons) {
           b.onClick.AddListener(MG_selection);
@@ -108,7 +111,7 @@ public class MainGame_Renderer : MonoBehaviour {
         MG_panel.SetActive(false);
 
         // Add Listeners for Purchase Stat buttons
-        Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;
+        Dictionary<string, int> playerStats = controller.Player.Stats;
 
         //for (int i = 0; i < playerStats.Count; i++)
         i = 0;
@@ -125,10 +128,11 @@ public class MainGame_Renderer : MonoBehaviour {
             }
             i += 1;
         }
-		weight1.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [0].ToString();
-		weight2.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [1].ToString();
-		weight3.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [2].ToString();
-		weight4.text = GameObject.Find ("GameControl").GetComponent<GameController> ().Player.ExpectedResourceCriterion [3].ToString();
+
+		weight1.text = controller.Player.ExpectedResourceCriterion [0].ToString();
+		weight2.text = controller.Player.ExpectedResourceCriterion [1].ToString();
+		weight3.text = controller.Player.ExpectedResourceCriterion [2].ToString();
+		weight4.text = controller.Player.ExpectedResourceCriterion [3].ToString();
 
     }
 
