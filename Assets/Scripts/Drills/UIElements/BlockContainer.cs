@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -30,6 +31,12 @@ namespace Drills {
 
         // Drag-dropped hovering object if any.
         private DragDrop hoverObject;
+
+        // Event for adding listener when the block is placed.
+        public UnityEvent blockPlacedEvent;
+
+        // Event for added listener when the block is removed.
+        public UnityEvent blockRemovedEvent;
 
         // Function types for actions performed during drop and pick up.
         public delegate void OnBlockAction();
@@ -79,9 +86,13 @@ namespace Drills {
         // Use this for initialization.
         public virtual void Start() {
             blockRenderer = GetComponent<CanvasRenderer>();
-            if (blockRenderer == null)
-                Debug.Log(blockRenderer);
             defaultColor = blockRenderer.GetColor();
+            if (blockPlacedEvent == null) {
+                blockPlacedEvent = new UnityEvent();
+            }
+            if(blockRemovedEvent == null) {
+                blockRemovedEvent = new UnityEvent();
+            }  
         }
 
         // Returns whether this block contained a drag-dropped object.
@@ -107,6 +118,11 @@ namespace Drills {
                 if (OnBlockPlaced != null) {
                     OnBlockPlaced();
                 }
+
+                // Invoke event if provided.
+                if (blockPlacedEvent != null) {
+                    blockPlacedEvent.Invoke();
+                }
                 return true;
             }
             return false;
@@ -120,6 +136,11 @@ namespace Drills {
             // Call delegate if provided.
             if (OnBlockRemoved != null) {
                 OnBlockRemoved();
+            }
+
+            // Invoke event if provided
+            if (blockRemovedEvent != null) {
+                blockRemovedEvent.Invoke();
             }
         }
 
