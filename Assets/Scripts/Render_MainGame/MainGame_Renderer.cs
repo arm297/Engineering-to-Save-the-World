@@ -31,16 +31,17 @@ public class MainGame_Renderer : MonoBehaviour {
     public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
     public float LineWidth = 0.4f; // width of lines
 
-    [Header("Display Settings")]
-    public Button EndTurn;
-    public Button LoadMinigame;
-    public Sprite PurchasedImage;
+    [Header("Display")]
+    public Button EndTurn;          // The button to end turn.
+    public Button LoadMinigame;     // The button to load a new minigame.
+    public Sprite PurchasedImage;   // Image for purchased nodes.
     public Sprite SystReqImage;
     public Sprite ObscuredImage;
-    public GameObject Victory_Panel;
-    public GameObject Defeat_Panel;
+    public GameObject Victory_Panel; // Panel to show on victory at game end.
+    public GameObject Defeat_Panel;  // Panel to show on defeat at game end.
 
-	public InputField weight4;
+
+	public InputField weight4;      
 	public InputField weight3;
 	public InputField weight2;
 	public InputField weight1;
@@ -92,7 +93,7 @@ public class MainGame_Renderer : MonoBehaviour {
         //LoadMinigame.onClick.AddListener(GameObject.Find("GameControl").GetComponent<GameController>().LoadMinigame);
 
         int i = 0;
-        foreach (Button b in MG_feature_buttons){
+        foreach (Button b in MG_feature_buttons) {
           b.onClick.AddListener(MG_selection);
           MG_feature_animations_orig_loc[i] = MG_feature_animations[i].transform.localScale;
           MG_feature_animations[i].transform.localScale = new Vector3(0, 0, 0);
@@ -132,16 +133,16 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Listeners
-    public void EndTurnListener(){
+    public void EndTurnListener() {
     			HideUnHideNextTurnPayAttention(false);
     	GameObject.Find("GameControl").GetComponent<GameController>().CommitTurn();
 
       // Check with GameControl to determine if game is still active or not
       // If game is over, display either victory or defeat panel
-      if(GameObject.Find("GameControl").GetComponent<GameController>().GameOver){
+      if(GameObject.Find("GameControl").GetComponent<GameController>().GameOver) {
 
         // Game has ended...Display victory or defeat panel
-        if(GameObject.Find("GameControl").GetComponent<GameController>().GameVictory){
+        if(GameObject.Find("GameControl").GetComponent<GameController>().GameVictory) {
           Victory_Panel.SetActive(true);
         }else{
           Defeat_Panel.SetActive(true);
@@ -171,7 +172,7 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Return user to start screen
-    public void ReturnToStart(){
+    public void ReturnToStart() {
       SceneManager.LoadScene("Start_Screen", LoadSceneMode.Single);
     }
 
@@ -189,51 +190,51 @@ public class MainGame_Renderer : MonoBehaviour {
       // Logic: If two buttons were already pressed, then replace first button with second
       // and replace second with first
       // else populate unpopulated button
-      if(MG_first_button == button_pressed){
+      if(MG_first_button == button_pressed) {
         MG_first_button = -1;
-      }else if (MG_second_button == button_pressed){
+      } else if (MG_second_button == button_pressed) {
         MG_second_button = -1;
-      }else if (MG_first_button != -1 && MG_second_button != -1){
+      } else if (MG_first_button != -1 && MG_second_button != -1) {
         MG_first_button = MG_second_button;
         MG_second_button = button_pressed;
-      }else if (MG_first_button == -1){
+      } else if (MG_first_button == -1) {
         MG_first_button = button_pressed;
-      }else{
+      } else {
         MG_second_button = button_pressed;
       }
 
       // reset all animations and turn on based off selected buttons
-      for(int i = 0; i < 4; i++){
+      for(int i = 0; i < 4; i++) {
         MG_feature_animations[i].transform.localScale = new Vector3(0, 0, 0);
       }
-      if (MG_first_button != -1){
+      if (MG_first_button != -1) {
         MG_feature_animations[MG_first_button].transform.localScale = MG_feature_animations_orig_loc[MG_first_button];
       }
-      if (MG_second_button != -1){
+      if (MG_second_button != -1) {
         MG_feature_animations[MG_second_button].transform.localScale = MG_feature_animations_orig_loc[MG_second_button];
       }
 
       // If two items selected for compare, then activate compare tool
       // Logic: if two buttons are selected, then activate compare option
-      if (MG_first_button != -1 && MG_second_button != -1){
+      if (MG_first_button != -1 && MG_second_button != -1) {
         MG_request_to_compare.transform.localScale = MG_request_to_compare_location;
-      }else{
+      } else {
         MG_request_to_compare.transform.localScale = new Vector3(0, 0, 0);
       }
 
     }
 
-    public void MG_compare(){
+    public void MG_compare() {
       // check labor
       if (GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor >=
-          GameObject.Find("GameControl").GetComponent<GameController>().Player.CostToPlayMiniGame){
+          GameObject.Find("GameControl").GetComponent<GameController>().Player.CostToPlayMiniGame) {
             GameObject.Find("GameControl").GetComponent<GameController>().Player.Labor -= GameObject.Find("GameControl").GetComponent<GameController>().Player.CostToPlayMiniGame;
 
             // of the two, which is most important
             float first_val = GameObject.Find("GameControl").GetComponent<GameController>().Player.ActualResourceCriterion[MG_first_button];
             float second_val = GameObject.Find("GameControl").GetComponent<GameController>().Player.ActualResourceCriterion[MG_second_button];
             Image val_image = MG_feature_buttons[MG_first_button].GetComponent<Image>();
-            if(second_val > first_val){
+            if(second_val > first_val) {
               val_image = MG_feature_buttons[MG_second_button].GetComponent<Image>();
             }
             // display the more important feature
@@ -242,7 +243,7 @@ public class MainGame_Renderer : MonoBehaviour {
             // reset selections
             MG_first_button = -1;
             MG_second_button = -1;
-        }else{
+        } else {
           //Insufficient Labor
           InsufficientLabor();
         }
@@ -250,7 +251,7 @@ public class MainGame_Renderer : MonoBehaviour {
     }
 
     // Call this method when insufficient funds are available
-    void InsufficientLabor(){
+    void InsufficientLabor() {
       HideUnHideNextTurnPayAttention(true);
     }
 
