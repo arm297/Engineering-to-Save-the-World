@@ -46,6 +46,8 @@ namespace Drills {
             if (!isSelected) {
                 SetColor(highlightColor);
             }
+
+            // Call delegate if provided.
             if (OnMouseEnter != null) {
                 OnMouseEnter();
             }
@@ -69,10 +71,12 @@ namespace Drills {
             SetColor(defaultColor);
         }
 
+        // Called when the callout is enabled. Sets to the default color.
         void OnEnable() {
             SetColor(defaultColor);
         }
 
+        // Sets the color of this callout to c.
         private void SetColor(Color c) {
             calloutRenderer = GetComponent<CanvasRenderer>();
             calloutRenderer.SetColor(c);

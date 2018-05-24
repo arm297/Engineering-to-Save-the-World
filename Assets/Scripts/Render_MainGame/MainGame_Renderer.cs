@@ -12,8 +12,11 @@ using UnityEngine.SceneManagement;
 public class MainGame_Renderer : MonoBehaviour {
 
     // Define Parameters
+    [Header("Canvas Settings")]
     public int CanvasHeight;
     public int CanvasWidth;
+
+    [Header("Node Settings")]
     public List<GameObject> Nodes = new List<GameObject>();  // List of instantiated Nodes
     public List<int> NodeIDX = new List<int>(); // index of Node, matching Nodes in length, idx for node
     public GameObject Node;  // Must drag and drop Node prefab onto Node in Unity
@@ -27,6 +30,8 @@ public class MainGame_Renderer : MonoBehaviour {
     public Material NonRequirementParentChild; // Material of connection between optional parent and child
     public List<GameObject> Lines = new List<GameObject>(); // List of instantiated lines between nodes
     public float LineWidth = 0.4f; // width of lines
+
+    [Header("Display Settings")]
     public Button EndTurn;
     public Button LoadMinigame;
     public Sprite PurchasedImage;
@@ -40,10 +45,13 @@ public class MainGame_Renderer : MonoBehaviour {
 	public InputField weight2;
 	public InputField weight1;
 
+    // List of potential node images
+    // The size of NodeImages needs to match or exceed number of Feautures possible in node
+    public Sprite[] NodeImages = new Sprite[5];
 
     // Variables to control minigame (a sub window within main game)
     // MG = MiniGame
-
+    [Header("Minigame Settings")]
     public Button[] MG_feature_buttons = new Button[4];
     public GameObject[] MG_feature_animations = new GameObject[4];
     private Vector3[] MG_feature_animations_orig_loc = new Vector3[4];
@@ -68,12 +76,9 @@ public class MainGame_Renderer : MonoBehaviour {
     */
 
     // Troubleshooting
+    [Header("Debug Settings")]
     public bool DisplayAllNodes = false;
     public bool RespawnNodes = false;
-
-    // List of potential node images
-    // The size of NodeImages needs to match or exceed number of Feautures possible in node
-    public Sprite[] NodeImages = new Sprite[5];
 
     private bool stat_purchase_added = false;
     // Use this for initialization
@@ -100,8 +105,6 @@ public class MainGame_Renderer : MonoBehaviour {
         MG_result.transform.localScale = new Vector3(0, 0, 0);
 
         MG_panel.SetActive(false);
-        //EndTurn.onClick.AddListener(Update);
-        //GetNodes();
 
         // Add Listeners for Purchase Stat buttons
         Dictionary<string, int> playerStats = GameObject.Find("GameControl").GetComponent<GameController>().Player.Stats;

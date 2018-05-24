@@ -88,10 +88,9 @@ namespace Drills {
             GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
+        // Sets the position of the dragged object while the object is being
+        // dragged to the mouse's position.
         public void OnDrag(PointerEventData eventData) {
-            //Vector3 mousePos = eventData.position;
-            //Vector3 newPos = Camera.main.ScreenToWorldPoint(mousePos);
-            //newPos.z = transform.position.z;
             float oldZ = transform.position.z;
             Vector3 screenPoint = Input.mousePosition;
             screenPoint.z = Camera.main.nearClipPlane;
