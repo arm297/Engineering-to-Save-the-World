@@ -9,10 +9,19 @@ using UnityEngine.SceneManagement;
 
 public class EventSystem2 : MonoBehaviour {
 
+    // The display for the player's current stats.
 	public GameObject StatDisplay;
+
+    // The display for the player's current labor.
 	public GameObject LaborDisplay;
+
+    // The display for the player's current funds.
 	public GameObject FundsDisplay;
+
+    // The display used by the event for giving user info.
 	public GameObject EventText;
+
+    // The option buttons for the different choices.
 	public Button Opt1Button;
 	public Button Opt2Button;
 	public Button Opt3Button;
@@ -20,15 +29,20 @@ public class EventSystem2 : MonoBehaviour {
 
 	private Event[] events = new Event[1];
 
+    // The current event running.
 	private Event this_event;
 
+    // The labor for each skill.
 	private float skill1Labor = 0.0f;
 	private float skill2Labor;
 	private float skill3Labor;
+
+    // The cost for each skill.
 	private float skill1Cost = 0.0f;
 	private float skill2Cost;
 	private float skill3Cost;
 
+    // This inner class stores the information about a single event.
 	public class Event
 	{
 		public string EventText { get; set; }
